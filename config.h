@@ -90,7 +90,7 @@ static const Rule rules[] = {
     {"float",                NULL,                 NULL,             0,            1,          0,          0,        -1 }, // 浮动
     {"global",               NULL,                 NULL,             TAGMASK,      0,          1,          0,        -1 }, // 全局
     {"noborder",             NULL,                 NULL,             0,            0,          0,          1,        -1 }, // 无边框
-    {"FG",                   NULL,                 NULL,             TAGMASK,      1,          1,          1,        -1 }, // 浮动 + 全局
+    {"FG",                   NULL,                 NULL,             TAGMASK,      1,          1,          0,        -1 }, // 浮动 + 全局
     {"FN",                   NULL,                 NULL,             0,            1,          0,          1,        -1 }, // 浮动 + 无边框
     {"GN",                   NULL,                 NULL,             TAGMASK,      0,          1,          1,        -1 }, // 全局 + 无边框
     {"FGN",                  NULL,                 NULL,             TAGMASK,      1,          1,          1,        -1 }, // 浮动 + 全局 + 无边框
@@ -140,6 +140,7 @@ static Key keys[] = {
     { MODKEY,              XK_f,            fullscreen,       {0} },                     /* super f            |  开启/关闭 全屏 */
     { MODKEY|ShiftMask,    XK_f,            togglebar,        {0} },                     /* super shift f      |  开启/关闭 状态栏 */
     { MODKEY,              XK_g,            toggleglobal,     {0} },                     /* super g            |  开启/关闭 全局 */
+    { MODKEY,              XK_u,            toggleborder,     {0} },                     /* super u            |  开启/关闭 边框 */
     { MODKEY,              XK_e,            incnmaster,       {.i = +1} },               /* super e            |  改变主工作区窗口数量 (1 2中切换) */
 
     { MODKEY,              XK_b,            focusmon,         {.i = +1} },               /* super b            |  光标移动到另一个显示器 */
@@ -176,7 +177,7 @@ static Key keys[] = {
     { MODKEY|ShiftMask,    XK_d,      spawn, SHCMD("~/scripts/call_rofi.sh drun") },                            /* super shift d    | rofi: 执行drun         */
     { MODKEY,              XK_p,      spawn, SHCMD("~/scripts/call_rofi.sh custom") },                          /* super p          | rofi: 执行自定义脚本   */
     { MODKEY|ShiftMask,    XK_p,      spawn, SHCMD("~/scripts/call_rofi.sh window") },                          /* super shift p    | rofi: 执行window       */
-    { MODKEY,              XK_l,      spawn, SHCMD("~/scripts/blurlock.sh") },                                  /* super k          | 锁定屏幕               */
+    { MODKEY,              XK_l,      spawn, SHCMD("~/scripts/blurlock.sh") },                                  /* super l          | 锁定屏幕               */
     { MODKEY|ShiftMask,    XK_Up,     spawn, SHCMD("~/scripts/set_vol.sh up") },                                /* super shift up   | 音量加                 */
     { MODKEY|ShiftMask,    XK_Down,   spawn, SHCMD("~/scripts/set_vol.sh down") },                              /* super shift down | 音量减                 */
     { MODKEY|ShiftMask,    XK_a,      spawn, SHCMD("flameshot gui -c -p ~/Pictures/screenshots") },             /* super shift a    | 截图                   */
@@ -195,7 +196,7 @@ static Key keys[] = {
     TAGKEYS(XK_F1,3, "pcmanfm")
     TAGKEYS(XK_9, 4, "obs")
     TAGKEYS(XK_c, 5, "google-chrome-stable")
-//    TAGKEYS(XK_m, 6, "~/scripts/music_player.sh")
+    TAGKEYS(XK_m, 6, "~/scripts/music_player.sh")
     TAGKEYS(XK_0, 7, "linuxqq")
     TAGKEYS(XK_w, 8, "/opt/apps/com.qq.weixin.deepin/files/run.sh")
     TAGKEYS(XK_l, 9, "/opt/apps/com.qq.weixin.work.deepin/files/run.sh")

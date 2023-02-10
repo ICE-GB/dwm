@@ -22,22 +22,22 @@ static const unsigned int snap           = 10;        /* 边缘依附宽度 */
 static const unsigned int baralpha       = 0xc0;      /* 状态栏透明度 */
 static const unsigned int borderalpha    = 0xdd;      /* 边框透明度 */
 static const char *fonts[]               = { "JetBrainsMono Nerd Font:style=medium:size=13", "monospace:size=13" };
-static const char *colors[][3]           = {          /* 颜色设置 ColFg, ColBg, ColBorder */ 
+static const char *colors[][3]           = {          /* 颜色设置 ColFg, ColBg, ColBorder */
     [SchemeNorm] = { "#bbbbbb", "#333333", "#444444" },
     [SchemeSel] = { "#ffffff", "#37474F", "#42A5F5" },
     [SchemeSelGlobal] = { "#ffffff", "#37474F", "#FFC0CB" },
     [SchemeHid] = { "#dddddd", NULL, NULL },
     [SchemeSystray] = { NULL, "#7799AA", NULL },
-    [SchemeUnderline] = { "#7799AA", NULL, NULL }, 
+    [SchemeUnderline] = { "#7799AA", NULL, NULL },
     [SchemeNormTag] = { "#bbbbbb", "#333333", NULL },
     [SchemeSelTag] = { "#eeeeee", "#333333", NULL },
     [SchemeBarEmpty] = { NULL, "#111111", NULL },
 };
-static const unsigned int alphas[][3]    = {          /* 透明度设置 ColFg, ColBg, ColBorder */ 
-    [SchemeNorm] = { OPAQUE, baralpha, borderalpha }, 
+static const unsigned int alphas[][3]    = {          /* 透明度设置 ColFg, ColBg, ColBorder */
+    [SchemeNorm] = { OPAQUE, baralpha, borderalpha },
     [SchemeSel] = { OPAQUE, baralpha, borderalpha },
     [SchemeSelGlobal] = { OPAQUE, baralpha, borderalpha },
-    [SchemeNormTag] = { OPAQUE, baralpha, borderalpha }, 
+    [SchemeNormTag] = { OPAQUE, baralpha, borderalpha },
     [SchemeSelTag] = { OPAQUE, baralpha, borderalpha },
     [SchemeBarEmpty] = { NULL, 0xa0a, NULL },
     [SchemeStatusText] = { OPAQUE, 0x88, NULL },
@@ -53,11 +53,10 @@ static const char scratchpadname[] = "scratchpad";
 /* 自定义tag名称 */
 /* 自定义特定实例的显示状态 */
 //            ﮸  ﭮ 切
-static const char *tags[] = { 
+static const char *tags[] = {
     "", // tag:0  key:1  desc:terminal1
     "", // tag:1  key:2  desc:terminal2
     "", // tag:2  key:3  desc:terminal3
-    "󰉋", // tag:3  key:F1 desc:pcmanfm file manager
     "󰕧", // tag:4  key:9  desc:obs
     "", // tag:5  key:c  desc:chrome
     "", // tag:6  key:m  desc:music
@@ -65,35 +64,44 @@ static const char *tags[] = {
     "﬐", // tag:8  key:w  desc:wechat
     "", // tag:9  key:l  desc:wxwork
 };
-static const Rule rules[] = {
-    /* class                 instance              title             tags mask     isfloating  isglobal    isnoborder monitor */
 
+/* 自定义窗口显示规则 */
+/* class instance title 主要用于定位窗口适合哪个规则 */
+/* tags mask 定义符合该规则的窗口的tag 0 表示当前tag */
+/* isfloating 定义符合该规则的窗口是否浮动 */
+/* isglobal 定义符合该规则的窗口是否全局浮动 */
+/* isnoborder 定义符合该规则的窗口是否无边框 */
+/* monitor 定义符合该规则的窗口显示在哪个显示器上 -1 为当前屏幕 */
+/* floatposition 定义符合该规则的窗口显示的位置 0 中间，1到9分别为9宫格位置，例如1左上，9右下，3右上 */
+static const Rule rules[] = {
+    /* class                 instance              title             tags mask     isfloating  isglobal    isnoborder monitor floatposition */
     /** 部分需要固定tag的规则 */
-    {"pcmanfm",              NULL,                 NULL,             1 << 3,       0,          0,          0,        -1 },
-    {"obs",                  NULL,                 NULL,             1 << 4,       0,          0,          0,        -1 },
-    {"chrome",               NULL,                 NULL,             1 << 5,       0,          0,          0,        -1 },
-    {"Chromium",             NULL,                 NULL,             1 << 5,       0,          0,          0,        -1 },
-    {"music",                NULL,                 NULL,             1 << 6,       1,          0,          1,        -1 },
-    { NULL,                 "qq",                  NULL,             1 << 7,       0,          0,          1,        -1 },
-    { NULL,                 "wechat.exe",          NULL,             1 << 8,       0,          0,          0,        -1 },
-    { NULL,                 "wxwork.exe",          NULL,             1 << 9,       0,          0,          0,        -1 },
+    {"obs",                  NULL,                 NULL,             1 << 3,       0,          0,          0,        -1,      0},
+    {"chrome",               NULL,                 NULL,             1 << 4,       0,          0,          0,        -1,      0},
+    {"Chromium",             NULL,                 NULL,             1 << 4,       0,          0,          0,        -1,      0},
+    {"music",                NULL,                 NULL,             1 << 5,       1,          0,          1,        -1,      0},
+    { NULL,                 "qq",                  NULL,             1 << 6,       0,          0,          1,        -1,      0},
+    { NULL,                 "wechat.exe",          NULL,             1 << 7,       0,          0,          0,        -1,      0},
+    { NULL,                 "wxwork.exe",          NULL,             1 << 8,       0,          0,          0,        -1,      0},
 
     /** 部分特殊app的规则 */
-    { NULL,                  NULL,                "broken",          0,            1,          0,          0,        -1 },
-    { "图片查看",           "图片查看",           "图片查看",        0,            1,          0,          0,        -1 },
-    { "图片预览",           "图片预览",           "图片预览",        0,            1,          0,          0,        -1 },
-    { NULL,                  NULL,                "crx_",            0,            1,          0,          0,        -1 },
-    {"flameshot",            NULL,                 NULL,             0,            1,          0,          0,        -1 },
-    {"wemeetapp",            NULL,                 NULL,             TAGMASK,      1,          1,          0,        -1 }, // 腾讯会议在切换tag时有诡异bug导致退出 变成global来规避该问题
+    { NULL,                  NULL,                "broken",          0,            1,          0,          0,        -1,      0},
+    { "图片查看",           "图片查看",           "图片查看",        0,            1,          0,          0,        -1,      0},
+    { "图片预览",           "图片预览",           "图片预览",        0,            1,          0,          0,        -1,      0},
+    { NULL,                  NULL,                "crx_",            0,            1,          0,          0,        -1,      0},
+    {"flameshot",            NULL,                 NULL,             0,            1,          0,          0,        -1,      0},
+    {"wemeetapp",            NULL,                 NULL,             TAGMASK,      1,          1,          0,        -1,      0}, // 腾讯会议在切换tag时有诡异bug导致退出 变成global来规避该问题
+    {"scratchpad",          "scratchpad",         "scratchpad",      TAGMASK,      1,          1,          1,        -1,      2}, // scratchpad 全局、浮动、无边框 位置在屏幕顶部
+    {"Pcmanfm",              NULL,                 NULL,             0,            1,          0,          1,        -1,      3}, // pcmanfm 默认浮动无边框且位于右上角落
 
     /** 部分特殊class的规则 */
-    {"float",                NULL,                 NULL,             0,            1,          0,          0,        -1 }, // 浮动
-    {"global",               NULL,                 NULL,             TAGMASK,      0,          1,          0,        -1 }, // 全局
-    {"noborder",             NULL,                 NULL,             0,            0,          0,          1,        -1 }, // 无边框
-    {"FG",                   NULL,                 NULL,             TAGMASK,      1,          1,          0,        -1 }, // 浮动 + 全局
-    {"FN",                   NULL,                 NULL,             0,            1,          0,          1,        -1 }, // 浮动 + 无边框
-    {"GN",                   NULL,                 NULL,             TAGMASK,      0,          1,          1,        -1 }, // 全局 + 无边框
-    {"FGN",                  NULL,                 NULL,             TAGMASK,      1,          1,          1,        -1 }, // 浮动 + 全局 + 无边框
+    {"float",                NULL,                 NULL,             0,            1,          0,          0,        -1,      0}, // 浮动
+    {"global",               NULL,                 NULL,             TAGMASK,      0,          1,          0,        -1,      0}, // 全局
+    {"noborder",             NULL,                 NULL,             0,            0,          0,          1,        -1,      0}, // 无边框
+    {"FGN",                  NULL,                 NULL,             TAGMASK,      1,          1,          1,        -1,      0}, // 浮动 + 全局 + 无边框
+    {"FG",                   NULL,                 NULL,             TAGMASK,      1,          1,          0,        -1,      0}, // 浮动 + 全局
+    {"FN",                   NULL,                 NULL,             0,            1,          0,          1,        -1,      0}, // 浮动 + 无边框
+    {"GN",                   NULL,                 NULL,             TAGMASK,      0,          1,          1,        -1,      0}, // 全局 + 无边框
 };
 static const char *overviewtag = "OVERVIEW";
 static const Layout overviewlayout = { "舘",  overview };
@@ -193,13 +201,12 @@ static Key keys[] = {
     TAGKEYS(XK_1, 0, 0)
     TAGKEYS(XK_2, 1, 0)
     TAGKEYS(XK_3, 2, 0)
-    TAGKEYS(XK_F1,3, "pcmanfm")
-    TAGKEYS(XK_9, 4, "obs")
-    TAGKEYS(XK_c, 5, "google-chrome-stable")
-    TAGKEYS(XK_m, 6, "~/scripts/music_player.sh")
-    TAGKEYS(XK_0, 7, "linuxqq")
-    TAGKEYS(XK_w, 8, "/opt/apps/com.qq.weixin.deepin/files/run.sh")
-    TAGKEYS(XK_l, 9, "/opt/apps/com.qq.weixin.work.deepin/files/run.sh")
+    TAGKEYS(XK_9, 3, "obs")
+    TAGKEYS(XK_c, 4, "google-chrome-stable")
+    TAGKEYS(XK_m, 5, "~/scripts/music_player.sh")
+    TAGKEYS(XK_0, 6, "linuxqq")
+    TAGKEYS(XK_w, 7, "/opt/apps/com.qq.weixin.deepin/files/run.sh")
+    TAGKEYS(XK_l, 8, "/opt/apps/com.qq.weixin.work.deepin/files/run.sh")
 };
 static Button buttons[] = {
     /* click               event mask       button            function       argument  */

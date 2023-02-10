@@ -60,9 +60,9 @@ notify() {
 
 click() {
   case "$1" in
-  L) notify ;;                                           # 仅通知
-  M) pactl set-sink-mute @DEFAULT_SINK@ toggle ;;        # 切换静音
-  R) killall pavucontrol || pavucontrol --class=FGN & ;; # 打开pavucontrol
+  L) notify ;;                                    # 仅通知
+  M) pactl set-sink-mute @DEFAULT_SINK@ toggle ;; # 切换静音
+  R) kcmshell5 kcm_pulseaudio ;;                  # 配置音频设备和音量
   U)
     pactl set-sink-volume @DEFAULT_SINK@ +5%
     notify

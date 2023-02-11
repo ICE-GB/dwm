@@ -24,12 +24,18 @@ daemons() {
 
   [ $1 ] && sleep $1
 
-  $DWM/statusbar/statusbar.sh cron &        # 开启状态栏定时更新
-  fcitx5 &                                  # 开启输入法
-  flameshot &                               # 截图要跑一个程序在后台 不然无法将截图保存到剪贴板
-  barrier &                                 # 键鼠共享
-  dunst -conf ~/scripts/config/dunst.conf & # 开启通知server
-  picom >>/dev/null 2>&1 &                  # 开启picom
+  $DWM/statusbar/statusbar.sh cron &                                           # 开启状态栏定时更新
+  fcitx5 &                                                                     # 开启输入法
+  flameshot &                                                                  # 截图要跑一个程序在后台 不然无法将截图保存到剪贴板
+  barrier &                                                                    # 键鼠共享
+  dunst -conf ~/scripts/config/dunst.conf &                                    # 开启通知server
+  picom_need_experimental=$(picom --help | grep experimental-backends | wc -l) # 开启picom
+  picom_need_experimental=0
+  if [ "$picom_need_experimental" -ge 1 ]; then
+    picom --experimental-backends >>/dev/null 2>&1 &
+  else
+    picom >>/dev/null 2>&1 &
+  fi
 
   #  lemonade server &                                                                     # 开启lemonade 远程剪切板支持
   #  xss-lock -- ~/scripts/blurlock.sh &                                                   # 开启自动锁屏程序

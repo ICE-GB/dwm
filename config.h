@@ -186,7 +186,7 @@ static Key keys[] = {
     { MODKEY,              XK_space,  spawn, SHCMD("st -c float") },                                            /* super space      | 打开浮动st终端         */
     { MODKEY,              XK_d,      spawn, SHCMD("~/scripts/call_rofi.sh run") },                             /* super d          | rofi: 执行run          */
     { MODKEY|ShiftMask,    XK_d,      spawn, SHCMD("~/scripts/call_rofi.sh drun") },                            /* super shift d    | rofi: 执行drun         */
-    { Mod1Mask,            XK_space,  spawn, SHCMD("~/scripts/call_rofi.sh drun") },                            /* alt space        | rofi: 执行drun         */
+    { Mod1Mask,            XK_space,  spawn, SHCMD("~/.config/rofi/launchers/type-3/launcher.sh") },                            /* alt space        | rofi: 执行drun         */
     { MODKEY,              XK_p,      spawn, SHCMD("~/scripts/call_rofi.sh custom") },                          /* super p          | rofi: 执行自定义脚本   */
     { MODKEY|ShiftMask,    XK_p,      spawn, SHCMD("~/scripts/call_rofi.sh window") },                          /* super shift p    | rofi: 执行window       */
     { MODKEY,              XK_l,      spawn, SHCMD("~/scripts/blurlock.sh") },                                  /* super l          | 锁定屏幕               */
@@ -234,6 +234,6 @@ static Button buttons[] = {
     { ClkStatusText,       0,               Button5,          clickstatusbar,{0} },                                   // 鼠标滚轮下  |  状态栏       |  根据状态栏的信号执行 ~/scripts/dwmstatusbar.sh $signal D
                                                                                                                       //
     /* 点击bar空白处 */
-    { ClkBarEmpty,         0,               Button1,          spawn, SHCMD("~/scripts/call_rofi.sh window") },        // 左键        |  bar空白处    |  rofi 执行 window
-    { ClkBarEmpty,         0,               Button3,          spawn, SHCMD("~/scripts/call_rofi.sh drun") },          // 右键        |  bar空白处    |  rofi 执行 drun
+    { ClkBarEmpty,         0,               Button1,          spawn, SHCMD("~/.config/rofi/launchers/type-3/launcher.sh") },        // 左键        |  bar空白处    |  rofi 执行 window
+    { ClkBarEmpty,         0,               Button3,          spawn, SHCMD("~/.config/rofi/launchers/type-3/launcher.sh") },          // 右键        |  bar空白处    |  rofi 执行 drun
 };

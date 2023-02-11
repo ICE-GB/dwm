@@ -19,7 +19,7 @@ update() {
   mem_buffers=$(cat /proc/meminfo | grep "Buffers:" | awk '{print $2}')
   mem_cached=$(cat /proc/meminfo | grep -w "Cached:" | awk '{print $2}')
   men_usage_rate=$(((mem_total - mem_free - mem_buffers - mem_cached) * 100 / mem_total))
-  mem_text=$(echo $men_usage_rate | awk '{printf "%02d%", $1}')
+  mem_text=$(echo $men_usage_rate | awk '{printf "%02d", $1}')
 
   icon=" $mem_icon "
   text=" $mem_text "

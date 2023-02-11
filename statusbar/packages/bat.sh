@@ -18,6 +18,15 @@ signal=$(echo "^s$this^" | sed 's/_//')
 update() {
   bat_text=$(acpi -b | sed 2d | awk '{print $4}' | grep -Eo "[0-9]+")
   [ ! "$bat_text" ] && bat_text=$(acpi -b | sed 2d | awk '{print $5}' | grep -Eo "[0-9]+")
+
+  if [ ! "$bat_text" ]; then
+    icon="  "
+    text=""
+    sed -i '/^export '$this'=.*$/d' $tempfile
+    printf "export %s='%s%s%s%s%s'\n" $this "$signal" "$icon_color" "$icon" "$text_color" "$text" >>$tempfile
+    return
+  fi
+
   [ ! "$(acpi -b | grep 'Battery 0' | grep Discharging)" ] && charge_icon=" "
   if [ "$bat_text" -ge 95 ]; then
     bat_icon=""
@@ -61,7 +70,7 @@ notify() {
 click() {
   case "$1" in
   L) notify ;;
-  R) killall xfce4-power-manager-settings || xfce4-power-manager-settings & ;;
+  R) kcmshell5 kcm_powerdevilprofilesconfig ;;
   esac
 }
 

@@ -15,14 +15,14 @@ signal=$(echo "^s$this^" | sed 's/_//')
 with_temp() {
   # check
   [ ! "$(command -v sensors)" ] && echo command not found: sensors && return
-
-  temp_text=$(sensors | grep Tctl | awk '{printf "%d°C", $2}')
-  text="$cpu_text $temp_text "
+  
+  temp_text=$(sensors 2>/dev/null | grep Tctl | awk '{printf "%d°C", $2}')
+  [ ! "$temp_text" = "" ] && text=" $cpu_text $temp_text " || text=" $cpu_text "
 }
 
 update() {
   cpu_icon="閭"
-  cpu_text=$(top -n 1 -b | sed -n '3p' | awk '{printf "%02d%", 100 - $8}')
+  cpu_text=$(top -n 1 -b | sed -n '3p' | awk '{printf "%02d", 100 - $8}')
 
   icon=" $cpu_icon "
   text=" $cpu_text "

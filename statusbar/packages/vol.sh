@@ -33,17 +33,18 @@ update() {
   [ "$sink" = "" ] && $(pactl info | grep '默认音频入口' | awk '{print $2}')
   volunmuted=$(pactl get-default-sink | xargs pactl get-sink-mute | grep 'Mute: 否')
   [ "$volunmuted" = "" ] && volunmuted=$(pactl get-default-sink | xargs pactl get-sink-mute | grep 'Mute: no')
-  vol_text=$(pactl get-default-sink | xargs pactl get-sink-volume | awk '{printf $5}')
+  vol_text=$(pactl get-default-sink | xargs pactl get-sink-volume | head -1 | awk '{print $5}')
+  vol_int=$(echo $vol_text | grep -Eo "[0-9]+")
   if [ ! "$volunmuted" ]; then
     vol_text="mute"
     vol_icon="ﱝ"
-  elif [ "$vol_text" -eq 0 ]; then
+  elif [ "$vol_int" -eq 0 ]; then
     vol_text="00"
     vol_icon="婢"
-  elif [ "$vol_text" -lt 10 ]; then
+  elif [ "$vol_int" -lt 10 ]; then
     vol_icon="奔"
     vol_text=0$vol_text
-  elif [ "$vol_text" -le 50 ]; then
+  elif [ "$vol_int" -le 50 ]; then
     vol_icon="奔"
   else vol_icon="墳"; fi
 

@@ -32,6 +32,7 @@ update() {
   sink=$(pactl info | grep 'Default Sink' | awk '{print $3}')
   [ "$sink" = "" ] && $(pactl info | grep '默认音频入口' | awk '{print $2}')
   volunmuted=$(pactl get-default-sink | xargs pactl get-sink-mute | grep 'Mute: 否')
+  [ "$volunmuted" = "" ] && volunmuted=$(pactl get-default-sink | xargs pactl get-sink-mute | grep 'Mute: no')
   vol_text=$(pactl get-default-sink | xargs pactl get-sink-volume | awk '{printf $5}')
   if [ ! "$volunmuted" ]; then
     vol_text="mute"

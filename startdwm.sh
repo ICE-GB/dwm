@@ -2,6 +2,8 @@
 
 source ~/.profile
 
+ ~/scripts/set_screen.sh two # 设置显示器
+
 # 在不登出和退出程序程序的情况下重启dwm
 # super ctrl f12 重启
 # pkill dwm 真正地退出

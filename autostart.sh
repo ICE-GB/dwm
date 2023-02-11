@@ -9,7 +9,6 @@ settings() {
   [ $1 ] && sleep $1
   xset -b                     # 关闭蜂鸣器
   syndaemon -i 1 -t -K -R -d  # 设置使用键盘时触控板短暂失效
-  ~/scripts/set_screen.sh two # 设置显示器
 }
 
 daemons() {

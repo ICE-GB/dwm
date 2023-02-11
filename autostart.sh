@@ -32,13 +32,15 @@ daemons() {
   picom_need_experimental=$(picom --help | grep experimental-backends | wc -l) # 开启picom
   picom_need_experimental=0
   if [ "$picom_need_experimental" -ge 1 ]; then
-    picom --experimental-backends >>/dev/null 2>&1 &
+    picom --experimental-backends >>/dev/null 2>&1 &                  
   else
     picom >>/dev/null 2>&1 &
   fi
 
   #  lemonade server &                                                                     # 开启lemonade 远程剪切板支持
   #  xss-lock -- ~/scripts/blurlock.sh &                                                   # 开启自动锁屏程序
+
+  [ ! "$(command -v /usr/bin/vmware-user-suid-wrapper)" ] && echo command not found: /usr/bin/vmware-user-suid-wrapper || /usr/bin/vmware-user-suid-wrapper & # 开启open-vm-tools-desktop
 }
 
 cron() {

@@ -14,5 +14,7 @@ while true; do
     # No error logging
     #dwm >/dev/null 2>&1
     # log all
-    dwm >>$DWM/dwm.log 2>>$DWM/dwm.log
+    # dwm >>$DWM/dwm.log 2>>$DWM/dwm.log
+    # log stderror to a file
+    dwm 2>$DWM/dwm.log
 done

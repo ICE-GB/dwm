@@ -31,9 +31,9 @@ daemons() {
   picom_need_experimental=$(picom --help | grep experimental-backends | wc -l) # 开启picom
   picom_need_experimental=0
   if [ "$picom_need_experimental" -ge 1 ]; then
-    picom --experimental-backends >>/dev/null 2>&1 &                  
+    picom --experimental-backends --config ~/scripts/config/picom.conf >>/dev/null 2>&1 &                  
   else
-    picom >>/dev/null 2>&1 &
+    picom --config ~/scripts/config/picom.conf >>/dev/null 2>&1 &
   fi
 
   #  lemonade server &                                                                     # 开启lemonade 远程剪切板支持

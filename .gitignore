@@ -15,3 +15,6 @@ DEF/statusbar/temp
 
 # log
 *log
+
+# 测试文件
+test*.*

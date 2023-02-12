@@ -182,11 +182,11 @@ static Key keys[] = {
     { MODKEY,              XK_s,      togglescratch, SHCMD("st -t scratchpad -c float") },                      /* super s          | 打开scratch终端        */
     { MODKEY,              XK_k,      spawn, SHCMD("konsole") },                                                /* super k          | 打开konsole终端        */
     { MODKEY,              XK_Return, spawn, SHCMD("st") },                                                     /* super enter      | 打开st终端             */
-    { MODKEY,              XK_minus,  spawn, SHCMD("st -c FG") },                                               /* super +          | 打开全局st终端         */
+    { MODKEY,              XK_minus,  spawn, SHCMD("st -c FG") },                                               /* super -          | 打开全局st终端         */
     { MODKEY,              XK_space,  spawn, SHCMD("st -c float") },                                            /* super space      | 打开浮动st终端         */
     { MODKEY,              XK_d,      spawn, SHCMD("~/scripts/call_rofi.sh run") },                             /* super d          | rofi: 执行run          */
     { MODKEY|ShiftMask,    XK_d,      spawn, SHCMD("~/scripts/call_rofi.sh drun") },                            /* super shift d    | rofi: 执行drun         */
-    { Mod1Mask,            XK_space,  spawn, SHCMD("~/.config/rofi/launchers/type-3/launcher.sh") },                            /* alt space        | rofi: 执行drun         */
+    { Mod1Mask,            XK_space,  spawn, SHCMD("~/.config/rofi/launchers/type-3/launcher.sh") },            /* alt space        | rofi: 执行drun         */
     { MODKEY,              XK_p,      spawn, SHCMD("~/scripts/call_rofi.sh custom") },                          /* super p          | rofi: 执行自定义脚本   */
     { MODKEY|ShiftMask,    XK_p,      spawn, SHCMD("~/scripts/call_rofi.sh window") },                          /* super shift p    | rofi: 执行window       */
     { MODKEY,              XK_l,      spawn, SHCMD("~/scripts/blurlock.sh") },                                  /* super l          | 锁定屏幕               */
@@ -196,7 +196,7 @@ static Key keys[] = {
     { MODKEY|ShiftMask,    XK_k,      spawn, SHCMD("~/scripts/screenkey.sh") },                                 /* super shift k    | 打开键盘输入显示       */
     { MODKEY|ShiftMask,    XK_q,      spawn, SHCMD("kill -9 $(xprop | grep _NET_WM_PID | awk '{print $3}')") }, /* super shift q    | 选中某个窗口并强制kill */
     { ShiftMask|ControlMask, XK_c,    spawn, SHCMD("xclip -o | xclip -selection c") },                          /* super shift c    | 进阶复制               */
-    { MODKEY,              XK_c,      spawn, SHCMD("google-chrome-stable --force-device-scale-factor=1.25") },                                   /* super c    | chrome               */
+    { MODKEY,              XK_c,      spawn, SHCMD("google-chrome-stable --force-device-scale-factor=1.25") },  /* super c    | chrome               */
     { MODKEY,              XK_i,      spawn, SHCMD("/home/gb/opt/idea-IU-213.5744.223/bin/idea.sh") },          /* super i    | idea               */
 
     /* super key : 跳转到对应tag (可附加一条命令 若目标目录无窗口，则执行该命令) */

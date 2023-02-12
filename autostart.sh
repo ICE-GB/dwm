@@ -4,6 +4,7 @@
 # 部分配置文件在 ~/scripts/config 目录下
 
 source ~/.profile
+source ~/.dwm/.profile
 
 settings() {
   [ $1 ] && sleep $1
@@ -22,6 +23,7 @@ daemons() {
   pkill barrier
   pkill picom
   pkill pcmanfm
+  pkill greenclip
 
   [ $1 ] && sleep $1
 
@@ -38,6 +40,7 @@ daemons() {
   barrier &                                                                    # 键鼠共享
   dunst -conf ~/scripts/config/dunst.conf &                                    # 开启通知server
   pcmanfm -d &                                                                 # 开启PCManFM
+  greenclip daemon >> $DWM/logs/greenclip.log 2>&1 &                                                           # 开启剪切板
 
   #  lemonade server &                                                                     # 开启lemonade 远程剪切板支持
   #  xss-lock -- ~/scripts/blurlock.sh &                                                   # 开启自动锁屏程序

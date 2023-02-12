@@ -1,6 +1,7 @@
 #! /usr/bin/bash
 
 source ~/.profile
+source ~/.dwm/.profile
 
  ~/scripts/set_screen.sh two # 设置显示器
 

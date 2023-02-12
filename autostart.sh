@@ -20,14 +20,10 @@ daemons() {
   pkill dunst
   pkill barrier
   pkill picom
+  pkill pcmanfm
 
   [ $1 ] && sleep $1
 
-  $DWM/statusbar/statusbar.sh cron &                                           # 开启状态栏定时更新
-  fcitx5 &                                                                     # 开启输入法
-  flameshot &                                                                  # 截图要跑一个程序在后台 不然无法将截图保存到剪贴板
-  barrier &                                                                    # 键鼠共享
-  dunst -conf ~/scripts/config/dunst.conf &                                    # 开启通知server
   picom_need_experimental=$(picom --help | grep experimental-backends | wc -l) # 开启picom
   picom_need_experimental=0
   if [ "$picom_need_experimental" -ge 1 ]; then
@@ -35,6 +31,12 @@ daemons() {
   else
     picom --config ~/scripts/config/picom.conf >>/dev/null 2>&1 &
   fi
+  $DWM/statusbar/statusbar.sh cron &                                           # 开启状态栏定时更新
+  fcitx5 &                                                                     # 开启输入法
+  flameshot &                                                                  # 截图要跑一个程序在后台 不然无法将截图保存到剪贴板
+  barrier &                                                                    # 键鼠共享
+  dunst -conf ~/scripts/config/dunst.conf &                                    # 开启通知server
+  pcmanfm -d &                                                                 # 开启PCManFM
 
   #  lemonade server &                                                                     # 开启lemonade 远程剪切板支持
   #  xss-lock -- ~/scripts/blurlock.sh &                                                   # 开启自动锁屏程序
@@ -55,5 +57,5 @@ cron() {
 }
 
 settings 1 & # 初始化设置项
-daemons 3 &  # 后台程序项
+daemons 1 &  # 后台程序项
 cron 5 &     # 定时任务项

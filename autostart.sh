@@ -38,7 +38,7 @@ daemons() {
   fcitx5 &                                                                     # 开启输入法
   flameshot &                                                                  # 截图要跑一个程序在后台 不然无法将截图保存到剪贴板
   barrier &                                                                    # 键鼠共享
-  dunst -conf ~/scripts/config/dunst.conf &                                    # 开启通知server
+  dunst &                                                                      # 开启通知server
   pcmanfm -d &                                                                 # 开启PCManFM
   greenclip daemon >> $DWM/logs/greenclip.log 2>&1 &                                                           # 开启剪切板
 

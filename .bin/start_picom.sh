@@ -8,8 +8,8 @@ while true; do
 
   picom_need_experimental=$(picom --help | grep -c experimental-backends) # 开启picom
   if [ "$picom_need_experimental" -ge 1 ]; then
-    picom --experimental-backends "$HOME"/.config/picom.conf >>"$log_file" 2>&1 
+    picom --experimental-backends "$DWM"/.config/picom.conf >>"$log_file" 2>&1
   else
-    picom --config "$HOME"/.config/picom.conf >>"$log_file" 2>&1 
+    picom --config "$DWM"/.config/picom.conf >>"$log_file" 2>&1
   fi
 done

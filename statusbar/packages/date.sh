@@ -1,8 +1,8 @@
 #! /bin/bash
 # DATE 获取日期和时间的脚本
 
-tempfile=$(
-  cd $(dirname $0)
+temp_file=$(
+  cd "$(dirname "$0")" || exit
   cd ..
   pwd
 )/temp
@@ -32,33 +32,34 @@ update() {
   icon=" $time_icon "
   text=" $time_text "
 
-  sed -i '/^export '$this'=.*$/d' $tempfile
-  printf "export %s='%s%s%s%s%s'\n" $this "$signal" "$icon_color" "$icon" "$text_color" "$text" >>$tempfile
+  sed -i '/^export '$this'=.*$/d' "$temp_file"
+  printf "export %s='%s%s%s%s%s'\n" $this "$signal" "$icon_color" "$icon" "$text_color" "$text" >>"$temp_file"
 }
 
 notify() {
   _cal=$(cal | sed 's/..7m/<b><span color="#ff79c6">/;s/..27m/<\/span><\/b>/')
-  _todo=$(cat ~/.todo.md | sed 's/\(- \[x\] \)\(.*\)/<span color="#ff79c6">\1<s>\2<\/s><\/span>/' | sed 's/- \[[ |x]\] //')
+  _todo=$(sed 's/\(- \[x\] \)\(.*\)/<span color="#ff79c6">\1<s>\2<\/s><\/span>/' <"$HOME"/.todo.md | sed 's/- \[[ |x]\] //')
   notify-send "  Calendar" "\n$_cal\n————————————————————\n$_todo" -r 9527
 }
 
 call_todo() {
-  pid1=$(ps aux | grep 'st -t statusutil' | grep -v grep | awk '{print $2}')
-  pid2=$(ps aux | grep 'st -t statusutil_todo' | grep -v grep | awk '{print $2}')
+  pid1=$(pgrep -f 'st -t status_util')
+  pid2=$(pgrep -f 'st -t status_util_todo')
   mx=$(xdotool getmouselocation --shell | grep X= | sed 's/X=//')
   my=$(xdotool getmouselocation --shell | grep Y= | sed 's/Y=//')
-  kill $pid1 && kill $pid2 || st -t statusutil_todo -g 50x15+$((mx - 200))+$((my + 20)) -c FGN -e nvim ~/.todo.md
+  # shellcheck disable=SC2015
+  kill "$pid1" && kill "$pid2" || st -t status_util_todo -g 50x15+$((mx - 200))+$((my + 20)) -c FGN -e nvim ~/.todo.md
 }
 
 click() {
   case "$1" in
   L) notify ;;
-  R) notify ;;  # todo 使用kde日历
+  R) notify ;; # todo 使用kde日历
   esac
 }
 
 case "$1" in
-click) click $2 ;;
+click) click "$2" ;;
 notify) notify ;;
 *) update ;;
 esac

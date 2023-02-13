@@ -1,8 +1,8 @@
 #! /bin/bash
 # 电池电量
 
-tempfile=$(
-  cd $(dirname $0)
+temp_file=$(
+  cd "$(dirname "$0")" || exit
   cd ..
   pwd
 )/temp
@@ -22,12 +22,14 @@ update() {
   if [ ! "$bat_text" ]; then
     icon="  "
     text=""
-    sed -i '/^export '$this'=.*$/d' $tempfile
-    printf "export %s='%s%s%s%s%s'\n" $this "$signal" "$icon_color" "$icon" "$text_color" "$text" >>$tempfile
+    sed -i '/^export '$this'=.*$/d' "$temp_file"
+    printf "export %s='%s%s%s%s%s'\n" $this "$signal" "$icon_color" "$icon" "$text_color" "$text" >>"$temp_file"
     return
   fi
 
-  [ ! "$(acpi -b | grep 'Battery 0' | grep Discharging)" ] && charge_icon=" "
+  if (acpi -b | grep 'Battery 0' | grep -q Discharging); then
+    charge_icon=" "
+  fi
   if [ "$bat_text" -ge 95 ]; then
     bat_icon=""
     charge_icon=""
@@ -54,8 +56,8 @@ update() {
   icon=" $charge_icon$bat_icon "
   text=" $bat_text% "
 
-  sed -i '/^export '$this'=.*$/d' $tempfile
-  printf "export %s='%s%s%s%s%s'\n" $this "$signal" "$icon_color" "$icon" "$text_color" "$text" >>$tempfile
+  sed -i '/^export '$this'=.*$/d' "$temp_file"
+  printf "export %s='%s%s%s%s%s'\n" $this "$signal" "$icon_color" "$icon" "$text_color" "$text" >>"$temp_file"
 }
 
 notify() {
@@ -75,7 +77,7 @@ click() {
 }
 
 case "$1" in
-click) click $2 ;;
+click) click "$2" ;;
 notify) notify ;;
 *) update ;;
 esac

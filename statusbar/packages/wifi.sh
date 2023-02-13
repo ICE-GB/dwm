@@ -1,7 +1,7 @@
 #! /bin/bash
 
-tempfile=$(
-  cd $(dirname $0)
+temp_file=$(
+  cd "$(dirname "$0")" || exit
   cd ..
   pwd
 )/temp
@@ -16,11 +16,15 @@ signal=$(echo "^s$this^" | sed 's/_//')
 
 # 中英文适配
 wifi_grep_keyword="connected to"
+# shellcheck disable=SC2034
 wifi_disconnected="disconnected"
+# shellcheck disable=SC2034
 wifi_disconnected_notify="disconnected"
 
 wifi_grep_keyword_zh_CN="已连接 到"
+# shellcheck disable=SC2034
 wifi_disconnected_zh_CN="未连接"
+# shellcheck disable=SC2034
 wifi_disconnected_notify_zh_CN="未连接到网络"
 
 
@@ -28,13 +32,13 @@ update() {
   wifi_icon="褐"
   wifi_text=$(nmcli | grep "$wifi_grep_keyword" | sed "s/$wifi_grep_keyword//" | awk '{print $2}' | paste -d " " -s)
   [ "$wifi_text" = "" ] && wifi_text=$(nmcli | grep "$wifi_grep_keyword_zh_CN" | sed "s/$wifi_grep_keyword_zh_CN//" | awk '{print $2}' | paste -d " " -s)
-  [ "$wifi_text" = "" ] && wifi_text=$wifi_disconnected
+  [ "$wifi_text" = "" ] && wifi_text=$wifi_disconnected_zh_CN
 
   icon=" $wifi_icon "
   text=" $wifi_text "
 
-  sed -i '/^export '$this'=.*$/d' $tempfile
-  printf "export %s='%s%s%s%s%s'\n" $this "$signal" "$icon_color" "$icon" "$text_color" "$text" >>$tempfile
+  sed -i '/^export '$this'=.*$/d' "$temp_file"
+  printf "export %s='%s%s%s%s%s'\n" $this "$signal" "$icon_color" "$icon" "$text_color" "$text" >>"$temp_file"
 }
 
 notify() {
@@ -54,7 +58,7 @@ click() {
 }
 
 case "$1" in
-click) click $2 ;;
+click) click "$2" ;;
 notify) notify ;;
 *) update ;;
 esac

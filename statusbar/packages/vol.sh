@@ -14,8 +14,8 @@
 # 静音 -> Mute: no
 # 音量 -> Volume: front-left: 13183 /  20% / -41.79 dB,   front-right: 13183 /  20% / -41.79 dB
 
-tempfile=$(
-  cd $(dirname $0)
+temp_file=$(
+  cd "$(dirname "$0")" || exit
   cd ..
   pwd
 )/temp
@@ -30,12 +30,12 @@ signal=$(echo "^s$this^" | sed 's/_//')
 
 update() {
   sink=$(pactl info | grep 'Default Sink' | awk '{print $3}')
-  [ "$sink" = "" ] && $(pactl info | grep '默认音频入口' | awk '{print $2}')
-  volunmuted=$(pactl get-default-sink | xargs pactl get-sink-mute | grep 'Mute: 否')
-  [ "$volunmuted" = "" ] && volunmuted=$(pactl get-default-sink | xargs pactl get-sink-mute | grep 'Mute: no')
+  [ "$sink" = "" ] && sink=$(pactl info | grep '默认音频入口' | awk '{print $2}')
+  muted=$(pactl get-default-sink | xargs pactl get-sink-mute | grep 'Mute: 否')
+  [ "$muted" = "" ] && muted=$(pactl get-default-sink | xargs pactl get-sink-mute | grep 'Mute: no')
   vol_text=$(pactl get-default-sink | xargs pactl get-sink-volume | head -1 | awk '{print $5}')
-  vol_int=$(echo $vol_text | grep -Eo "[0-9]+")
-  if [ ! "$volunmuted" ]; then
+  vol_int=$(echo "$vol_text" | grep -Eo "[0-9]+")
+  if [ ! "$muted" ]; then
     vol_text="mute"
     vol_icon="ﱝ"
   elif [ "$vol_int" -eq 0 ]; then
@@ -51,8 +51,8 @@ update() {
   icon=" $vol_icon "
   text=" $vol_text "
 
-  sed -i '/^export '$this'=.*$/d' $tempfile
-  printf "export %s='%s%s%s%s%s'\n" $this "$signal" "$icon_color" "$icon" "$text_color" "$text" >>$tempfile
+  sed -i '/^export '$this'=.*$/d' "$temp_file"
+  printf "export %s='%s%s%s%s%s'\n" $this "$signal" "$icon_color" "$icon" "$text_color" "$text" >>"$temp_file"
 }
 
 notify() {
@@ -77,7 +77,7 @@ click() {
 }
 
 case "$1" in
-click) click $2 ;;
+click) click "$2" ;;
 notify) notify ;;
 *) update ;;
 esac

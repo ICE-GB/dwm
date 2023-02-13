@@ -27,12 +27,7 @@ daemons() {
 
   [ "$1" ] && sleep "$1"
 
-  picom_need_experimental=$(picom --help | grep -c experimental-backends) # 开启picom
-  if [ "$picom_need_experimental" -ge 1 ]; then
-    picom --experimental-backends --config ~/scripts/config/picom.conf >>"$DWM"/logs/picom.log 2>&1 &
-  else
-    picom --config ~/scripts/config/picom.conf >>"$DWM"/logs/picom.log 2>&1 &
-  fi
+  "$DWM"/.bin/start_picom.sh
   "$DWM"/statusbar/statusbar.sh cron &                # 开启状态栏定时更新
   fcitx5 &                                            # 开启输入法
   flameshot &                                         # 截图要跑一个程序在后台 不然无法将截图保存到剪贴板

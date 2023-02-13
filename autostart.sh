@@ -3,18 +3,18 @@
 # 搭配 https://github.com/yaocccc/scripts 仓库使用 目录位置 ~/scripts
 # 部分配置文件在 ~/scripts/config 目录下
 
-source ~/.profile
-source ~/.dwm/.profile
+source "$HOME"/.profile
+source "$HOME"/.dwm/.profile
 
 settings() {
-  [ $1 ] && sleep $1
-  xset -b                     # 关闭蜂鸣器
-  syndaemon -i 1 -t -K -R -d  # 设置使用键盘时触控板短暂失效
-  xrdb -merge $DWM/xresources # 为st进行设置
+  [ "$1" ] && sleep "$1"
+  xset -b                       # 关闭蜂鸣器
+  syndaemon -i 1 -t -K -R -d    # 设置使用键盘时触控板短暂失效
+  xrdb -merge "$DWM"/xresources # 为st进行设置
 }
 
 daemons() {
-  [ $1 ] && sleep $1
+  [ "$1" ] && sleep "$1"
 
   pkill statusbar.sh
   pkill fcitx5
@@ -25,27 +25,31 @@ daemons() {
   pkill pcmanfm
   pkill greenclip
 
-  [ $1 ] && sleep $1
+  [ "$1" ] && sleep "$1"
 
-  picom_need_experimental=$(picom --help | grep experimental-backends | wc -l) # 开启picom
+  picom_need_experimental=$(picom --help | grep -c experimental-backends) # 开启picom
   picom_need_experimental=0
   if [ "$picom_need_experimental" -ge 1 ]; then
-    picom --experimental-backends --config ~/scripts/config/picom.conf >>/dev/null 2>&1 &                  
+    picom --experimental-backends --config ~/scripts/config/picom.conf >>/dev/null 2>&1 &
   else
     picom --config ~/scripts/config/picom.conf >>/dev/null 2>&1 &
   fi
-  $DWM/statusbar/statusbar.sh cron &                                           # 开启状态栏定时更新
-  fcitx5 &                                                                     # 开启输入法
-  flameshot &                                                                  # 截图要跑一个程序在后台 不然无法将截图保存到剪贴板
-  barrier &                                                                    # 键鼠共享
-  dunst &                                                                      # 开启通知server
-  pcmanfm -d &                                                                 # 开启PCManFM
-  greenclip daemon >> $DWM/logs/greenclip.log 2>&1 &                                                           # 开启剪切板
+  "$DWM"/statusbar/statusbar.sh cron &                # 开启状态栏定时更新
+  fcitx5 &                                            # 开启输入法
+  flameshot &                                         # 截图要跑一个程序在后台 不然无法将截图保存到剪贴板
+  barrier &                                           # 键鼠共享
+  dunst &                                             # 开启通知server
+  pcmanfm -d &                                        # 开启PCManFM
+  greenclip daemon >>"$DWM"/logs/greenclip.log 2>&1 & # 开启剪切板
 
   #  lemonade server &                                                                     # 开启lemonade 远程剪切板支持
-  #  xss-lock -- ~/scripts/blurlock.sh &                                                   # 开启自动锁屏程序
+  #  xss-lock -- ~/scripts/blur_lock.sh &                                                   # 开启自动锁屏程序
 
-  [ ! "$(command -v /usr/bin/vmware-user-suid-wrapper)" ] && echo command not found: /usr/bin/vmware-user-suid-wrapper || /usr/bin/vmware-user-suid-wrapper & # 开启open-vm-tools-desktop
+  if [[ ! "$(command -v /usr/bin/vmware-user-suid-wrapper)" ]]; then
+    echo "command not found: /usr/bin/vmware-user-suid-wrapper"
+  else
+    /usr/bin/vmware-user-suid-wrapper & # 开启open-vm-tools-desktop
+  fi
 }
 
 cron() {

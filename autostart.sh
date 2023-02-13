@@ -28,11 +28,10 @@ daemons() {
   [ "$1" ] && sleep "$1"
 
   picom_need_experimental=$(picom --help | grep -c experimental-backends) # 开启picom
-  picom_need_experimental=0
   if [ "$picom_need_experimental" -ge 1 ]; then
-    picom --experimental-backends --config ~/scripts/config/picom.conf >>/dev/null 2>&1 &
+    picom --experimental-backends --config ~/scripts/config/picom.conf >>"$DWM"/logs/picom.log 2>&1 &
   else
-    picom --config ~/scripts/config/picom.conf >>/dev/null 2>&1 &
+    picom --config ~/scripts/config/picom.conf >>"$DWM"/logs/picom.log 2>&1 &
   fi
   "$DWM"/statusbar/statusbar.sh cron &                # 开启状态栏定时更新
   fcitx5 &                                            # 开启输入法

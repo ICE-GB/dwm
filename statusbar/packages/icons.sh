@@ -40,7 +40,7 @@ notify() {
 }
 
 call_menu() {
-  ~/.config/rofi/scripts/powermenu_t3
+  ~/.config/rofi/scripts/powermenu_t2
 }
 
 click() {

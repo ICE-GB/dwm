@@ -39,11 +39,14 @@ swap:\t $(echo "$free_result" | sed -n 3p | awk '{print $3}')/$(echo "$free_resu
 }
 
 call_btop() {
-  pid1=$(pgrep -f 'st -t status_util')
   pid2=$(pgrep -f 'st -t status_util_mem')
   mx=$(xdotool getmouselocation --shell | grep X= | sed 's/X=//')
   my=$(xdotool getmouselocation --shell | grep Y= | sed 's/Y=//')
-  kill "$pid1" && kill "$pid2" || st -t status_util_mem -g 82x25+$((mx - 328))+$((my + 20)) -c FGN -e btop
+  if [[ ! "" = "$pid2" ]]; then
+    kill "$pid2"
+  else
+    st -t status_util_mem -g 140x30+$((mx - 328))+$((my + 20)) -c FGN -e btop -p 1
+  fi
 }
 
 call_plasma-systemmonitor() {
@@ -61,7 +64,7 @@ call_htop() {
 click() {
   case "$1" in
   L) notify ;;
-  R) call_htop ;;
+  R) call_btop ;;
   esac
 }
 

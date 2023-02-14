@@ -43,18 +43,20 @@ notify() {
 }
 
 call_todo() {
-  pid1=$(pgrep -f 'st -t status_util')
   pid2=$(pgrep -f 'st -t status_util_todo')
   mx=$(xdotool getmouselocation --shell | grep X= | sed 's/X=//')
   my=$(xdotool getmouselocation --shell | grep Y= | sed 's/Y=//')
-  # shellcheck disable=SC2015
-  kill "$pid1" && kill "$pid2" || st -t status_util_todo -g 50x15+$((mx - 200))+$((my + 20)) -c FGN -e nvim ~/.todo.md
+  if [[ ! "" = "$pid2" ]]; then
+    kill "$pid2"
+  else
+    st -t status_util_todo -g 80x15+$((mx - 200))+$((my + 20)) -c FGN -e vim ~/.todo.md
+  fi
 }
 
 click() {
   case "$1" in
   L) notify ;;
-  R) notify ;; # todo 使用kde日历
+  R) call_todo ;; # todo 使用kde日历
   esac
 }
 

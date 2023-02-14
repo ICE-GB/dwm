@@ -6,17 +6,17 @@ static const unsigned int borderpx       = 2;         /* 窗口边框大小 */
 static const unsigned int systraypinning = 1;         /* 托盘跟随的显示器 0代表不指定显示器 */
 static const unsigned int systrayspacing = 1;         /* 托盘间距 */
 static const unsigned int systrayspadding = 5;        /* 托盘和状态栏的间隙 */
-static int gappi                         = 10;        /* 窗口与窗口 缝隙大小 */
-static int gappo                         = 10;        /* 窗口与边缘 缝隙大小 */
-static const int _gappo                  = 10;        /* 窗口与窗口 缝隙大小 不可变 用于恢复时的默认值 */
-static const int _gappi                  = 10;        /* 窗口与边缘 缝隙大小 不可变 用于恢复时的默认值 */
+static int gappi                         = 6;         /* 窗口与窗口 缝隙大小 */
+static int gappo                         = 6;         /* 窗口与边缘 缝隙大小 */
+static const int _gappo                  = 6;         /* 窗口与窗口 缝隙大小 不可变 用于恢复时的默认值 */
+static const int _gappi                  = 6;         /* 窗口与边缘 缝隙大小 不可变 用于恢复时的默认值 */
 static const int vertpad                 = 5;         /* vertical padding of bar */
 static const int sidepad                 = 5;         /* horizontal padding of bar */
 static const int overviewgappi           = 24;        /* overview时 窗口与边缘 缝隙大小 */
 static const int overviewgappo           = 60;        /* overview时 窗口与窗口 缝隙大小 */
 static const int showbar                 = 1;         /* 是否显示状态栏 */
 static const int topbar                  = 1;         /* 指定状态栏位置 0底部 1顶部 */
-static const float mfact                 = 0.6;       /* 主工作区 大小比例 */
+static const float mfact                 = 0.6f;      /* 主工作区 大小比例 */
 static const int   nmaster               = 1;         /* 主工作区 窗口数量 */
 static const unsigned int snap           = 10;        /* 边缘依附宽度 */
 static const unsigned int baralpha       = 0xc0;      /* 状态栏透明度 */
@@ -39,8 +39,8 @@ static const unsigned int alphas[][3]    = {          /* 透明度设置 ColFg, 
     [SchemeSelGlobal] = { OPAQUE, baralpha, borderalpha },
     [SchemeNormTag] = { OPAQUE, baralpha, borderalpha },
     [SchemeSelTag] = { OPAQUE, baralpha, borderalpha },
-    [SchemeBarEmpty] = { NULL, 0xa0a, NULL },
-    [SchemeStatusText] = { OPAQUE, 0x88, NULL },
+    [SchemeBarEmpty] = {((const unsigned int) 0), 0xa0a, ((const unsigned int) 0) },
+    [SchemeStatusText] = { OPAQUE, 0x88, ((const unsigned int) 0) },
 };
 
 /* 自定义脚本位置 */
@@ -138,8 +138,8 @@ static Key keys[] = {
 
     { MODKEY,              XK_a,            toggleoverview,   {0} },                     /* super a            |  显示所有tag 或 跳转到聚焦窗口的tag */
 
-    { MODKEY,              XK_comma,        setmfact,         {.f = -0.05} },            /* super ,            |  缩小主工作区 */
-    { MODKEY,              XK_period,       setmfact,         {.f = +0.05} },            /* super .            |  放大主工作区 */
+    { MODKEY,              XK_comma,        setmfact,         {.f = -0.05f} },          /* super ,            |  缩小主工作区 */
+    { MODKEY,              XK_period,       setmfact,         {.f = +0.05f} },          /* super .            |  放大主工作区 */
 
     { MODKEY,              XK_h,            hidewin,          {0} },                     /* super h            |  隐藏 窗口 */
     { MODKEY|ShiftMask,    XK_h,            restorewin,       {0} },                     /* super shift h      |  取消隐藏 窗口 */

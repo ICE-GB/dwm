@@ -2625,9 +2625,15 @@ spawn(const Arg *arg)
     if (fork() == 0) {
         if (dpy)
             close(ConnectionNumber(dpy));
-        setsid();
+        fprintf(stdout, "这里是子进程 %s %s %s %s\n", ((char **)arg->v)[0], ((char **)arg->v)[1], ((char **)arg->v)[2], ((char **)arg->v)[3]);
+        fprintf(stdout, "pid为 %d ppid为 %d \n", getpid(), getppid());
+        if (setsid() != 0) {
+            fprintf(stderr, "dwm: setsid error: %s %s %s %s\n", ((char **)arg->v)[0], ((char **)arg->v)[1], ((char **)arg->v)[2], ((char **)arg->v)[3]);
+        } else{
+            fprintf(stdout, "dwm: setsid success: %s %s %s %s\n", ((char **)arg->v)[0], ((char **)arg->v)[1], ((char **)arg->v)[2], ((char **)arg->v)[3]);
+        }
         execvp(((char **)arg->v)[0], (char **)arg->v);
-        fprintf(stderr, "dwm: execvp %s", ((char **)arg->v)[0]);
+        fprintf(stderr, "dwm: execvp %s %s %s %s\n", ((char **)arg->v)[0], ((char **)arg->v)[1], ((char **)arg->v)[2], ((char **)arg->v)[3]);
         perror(" failed");
         exit(EXIT_SUCCESS);
     }

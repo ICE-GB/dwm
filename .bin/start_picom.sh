@@ -1,4 +1,4 @@
-#! /usr/bin/bash
+#! /usr/bin/env bash
 
 source "$HOME"/.profile
 source "$HOME"/.dwm/.profile

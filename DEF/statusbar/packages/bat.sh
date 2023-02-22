@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /usr/bin/env bash
 # 电池电量
 
 tempfile=$(cd $(dirname $0);cd ..;pwd)/temp

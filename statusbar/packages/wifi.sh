@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /usr/bin/env bash
 
 temp_file=$(
   cd "$(dirname "$0")" || exit

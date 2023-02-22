@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /usr/bin/env bash
 # 电池电量
 
 temp_file=$(

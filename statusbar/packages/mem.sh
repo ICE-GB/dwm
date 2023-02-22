@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /usr/bin/env bash
 # MEM
 
 temp_file=$(

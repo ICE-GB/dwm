@@ -44,8 +44,8 @@ static const unsigned int alphas[][3]    = {          /* 透明度设置 ColFg, 
 };
 
 /* 自定义脚本位置 */
-static const char *autostartscript = "$DWM/autostart.sh";
-static const char *statusbarscript = "$DWM/statusbar/statusbar.sh";
+static const char *autostartscript = "/home/gb/workspace/dwm/autostart.sh";
+static const char *statusbarscript = "/home/gb/workspace/dwm/statusbar/statusbar.sh";
 
 /* 自定义 scratchpad instance */
 static const char scratchpadname[] = "scratchpad";
@@ -190,7 +190,7 @@ static Key keys[] = {
     { MODKEY,              XK_p,      spawn, SHCMD("~/scripts/call_rofi.sh custom") },                          /* super p          | rofi: 执行自定义脚本   */
     { MODKEY|ShiftMask,    XK_p,      spawn, SHCMD("~/scripts/call_rofi.sh window") },                          /* super shift p    | rofi: 执行window       */
     { MODKEY,              XK_l,      spawn, SHCMD("~/scripts/blurlock.sh") },                                  /* super l          | 锁定屏幕               */
-    { MODKEY,              XK_v,      spawn, SHCMD("$DWM/.bin/clip_history.sh") },                              /* super v          | 剪切板历史             */
+    { MODKEY,              XK_v,      spawn, SHCMD("/home/gb/workspace/dwm/.bin/clip_history.sh") },                              /* super v          | 剪切板历史             */
     { MODKEY|ShiftMask,    XK_Up,     spawn, SHCMD("~/scripts/set_vol.sh up") },                                /* super shift up   | 音量加                 */
     { MODKEY|ShiftMask,    XK_Down,   spawn, SHCMD("~/scripts/set_vol.sh down") },                              /* super shift down | 音量减                 */
     { MODKEY|ShiftMask,    XK_a,      spawn, SHCMD("flameshot gui -c -p ~/Pictures/screenshots") },             /* super shift a    | 截图                   */

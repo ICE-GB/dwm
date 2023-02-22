@@ -1,2 +1,2 @@
 export DWM=$HOME/.dwm
-export PATH=$DWM/.bin:$PATH
+export PATH=/home/gb/workspace/dwm/.bin:$PATH

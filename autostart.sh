@@ -10,7 +10,7 @@ settings() {
   [ "$1" ] && sleep "$1"
   xset -b                       # 关闭蜂鸣器
   syndaemon -i 1 -t -K -R -d    # 设置使用键盘时触控板短暂失效
-  xrdb -merge /home/gb/workspace/dwm/xresources # 为st进行设置
+  xrdb -merge "$DWM"/xresources # 为st进行设置
 }
 
 daemons() {
@@ -27,14 +27,14 @@ daemons() {
 
   [ "$1" ] && sleep "$1"
 
-  /home/gb/workspace/dwm/.bin/start_picom.sh
-  /home/gb/workspace/dwm/statusbar/statusbar.sh cron &                # 开启状态栏定时更新
+  "$DWM"/.bin/start_picom.sh
+  "$DWM"/statusbar/statusbar.sh cron &                # 开启状态栏定时更新
   fcitx5 &                                            # 开启输入法
   flameshot &                                         # 截图要跑一个程序在后台 不然无法将截图保存到剪贴板
   barrier &                                           # 键鼠共享
   dunst &                                             # 开启通知server
   pcmanfm -d &                                        # 开启PCManFM
-  greenclip daemon >>/home/gb/workspace/dwm/logs/greenclip.log 2>&1 & # 开启剪切板
+  greenclip daemon >>"$DWM"/logs/greenclip.log 2>&1 & # 开启剪切板
 
   #  lemonade server &                                                                     # 开启lemonade 远程剪切板支持
   #  xss-lock -- ~/scripts/blur_lock.sh &                                                   # 开启自动锁屏程序

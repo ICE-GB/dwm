@@ -33,8 +33,14 @@ daemons() {
 
   [ "$1" ] && sleep "$1"
 
-  # "$_thisdir"/.bin/start_picom.sh &                        # 开启picom
-  "$_thisdir"/statusbar/statusbar.sh cron &                # 开启状态栏定时更新
+  if [ 0 == "$(pgrep -c picom)" ]; then
+    "$_thisdir"/.bin/start_picom.sh & # 开启picom
+  fi
+
+  if [ 0 == "$(pgrep -cf statusbar.sh)" ]; then
+    "$_thisdir"/statusbar/statusbar.sh cron & # 开启状态栏定时更新
+  fi
+
   fcitx5 &                                                 # 开启输入法
   flameshot &                                              # 截图要跑一个程序在后台 不然无法将截图保存到剪贴板
   dunst &                                                  # 开启通知server

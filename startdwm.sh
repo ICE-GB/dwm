@@ -18,5 +18,13 @@ while true; do
   # log all
   # dwm >>$DWM/dwm.log 2>>$DWM/dwm.log
   # log stderror to a file
-  dwm 2>"$log_file"
+  # dwm 2>"$log_file"
+
+  run_dwm="$HOME"/.dwm/dwm
+  if [ -f "$run_dwm" ]; then
+    echo "$run_dwm"
+    $run_dwm 2>"$log_file"
+  else
+    dwm 2>"$log_file"
+  fi
 done

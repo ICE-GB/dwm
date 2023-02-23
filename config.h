@@ -181,9 +181,9 @@ static Key keys[] = {
     /* spawn + SHCMD 执行对应命令(已下部分建议完全自己重新定义) */
     { MODKEY,              XK_s,      togglescratch, SHCMD("st -t scratchpad -c float") },                      /* super s          | 打开scratch终端        */
     { MODKEY,              XK_k,      spawn, SHCMD("konsole") },                                                /* super k          | 打开konsole终端        */
-    { MODKEY,              XK_Return, spawn, SHCMD("st") },                                                     /* super enter      | 打开st终端             */
-    { MODKEY,              XK_minus,  spawn, SHCMD("st -c FG") },                                               /* super -          | 打开全局st终端         */
-    { MODKEY,              XK_space,  spawn, SHCMD("st -c float") },                                            /* super space      | 打开浮动st终端         */
+    { MODKEY,              XK_Return, spawn, SHCMD("st -e fish") },                                                     /* super enter      | 打开st终端             */
+    { MODKEY,              XK_minus,  spawn, SHCMD("st -c FG -e fish") },                                               /* super -          | 打开全局st终端         */
+    { MODKEY,              XK_space,  spawn, SHCMD("st -c float -e fish") },                                            /* super space      | 打开浮动st终端         */
     { MODKEY,              XK_d,      spawn, SHCMD("~/scripts/call_rofi.sh run") },                             /* super d          | rofi: 执行run          */
     { MODKEY|ShiftMask,    XK_d,      spawn, SHCMD("~/scripts/call_rofi.sh drun") },                            /* super shift d    | rofi: 执行drun         */
     { Mod1Mask,            XK_space,  spawn, SHCMD("~/.config/rofi/launchers/type-3/launcher.sh") },            /* alt space        | rofi: 执行drun         */
@@ -208,7 +208,7 @@ static Key keys[] = {
     TAGKEYS(XK_3, 2, 0)
     TAGKEYS(XK_9, 3, "obs")
     TAGKEYS(XK_c, 4, "google-chrome-stable --force-device-scale-factor=1.25")
-    TAGKEYS(XK_m, 5, "~/scripts/music_player.sh")
+    TAGKEYS(XK_m, 5, "st ncmpcpp")
     TAGKEYS(XK_0, 6, "linuxqq")
     TAGKEYS(XK_w, 7, "/opt/apps/com.qq.weixin.deepin/files/run.sh")
     TAGKEYS(XK_l, 8, "/opt/apps/com.qq.weixin.work.deepin/files/run.sh")

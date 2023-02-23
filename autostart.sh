@@ -21,18 +21,19 @@ settings() {
 daemons() {
   [ "$1" ] && sleep "$1"
 
-  pkill statusbar.sh
+  pkill -f statusbar.sh
   pkill fcitx5
   pkill flameshot
   pkill dunst
   pkill barrier
+  pkill -f start_picom.sh
   pkill picom
   pkill pcmanfm
   pkill greenclip
 
   [ "$1" ] && sleep "$1"
 
-  "$_thisdir"/.bin/start_picom.sh &                        # 开启picom
+  # "$_thisdir"/.bin/start_picom.sh &                        # 开启picom
   "$_thisdir"/statusbar/statusbar.sh cron &                # 开启状态栏定时更新
   fcitx5 &                                                 # 开启输入法
   flameshot &                                              # 截图要跑一个程序在后台 不然无法将截图保存到剪贴板

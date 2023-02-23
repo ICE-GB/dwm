@@ -36,13 +36,18 @@ daemons() {
   "$_thisdir"/statusbar/statusbar.sh cron &                # 开启状态栏定时更新
   fcitx5 &                                                 # 开启输入法
   flameshot &                                              # 截图要跑一个程序在后台 不然无法将截图保存到剪贴板
-  barrier &                                                # 键鼠共享
   dunst &                                                  # 开启通知server
   pcmanfm -d &                                             # 开启PCManFM
   greenclip daemon >>"$_thisdir"/logs/greenclip.log 2>&1 & # 开启剪切板
 
   #  lemonade server &                                                                     # 开启lemonade 远程剪切板支持
   #  xss-lock -- ~/scripts/blur_lock.sh &                                                   # 开启自动锁屏程序
+
+  if [[ ! "$(command -v barrier)" ]]; then
+    echo "command not found: barrier"
+  else
+    barrier & # 键鼠共享
+  fi
 
   if [[ ! "$(command -v /usr/bin/vmware-user-suid-wrapper)" ]]; then
     echo "command not found: /usr/bin/vmware-user-suid-wrapper"

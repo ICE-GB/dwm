@@ -3,7 +3,7 @@
 source "$HOME"/.profile
 source "$HOME"/.dwm/.profile
 
-"$HOME"/scripts/set_screen.sh two # 设置显示器
+# "$HOME"/scripts/set_screen.sh two # 设置显示器
 
 # 在不登出和退出程序程序的情况下重启dwm
 # super ctrl f12 重启

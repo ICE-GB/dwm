@@ -6,11 +6,16 @@
 source "$HOME"/.profile
 source "$HOME"/.dwm/.profile
 
+_thisdir=$(
+  cd "$(dirname "$0")" || exit
+  pwd
+)
+
 settings() {
   [ "$1" ] && sleep "$1"
-  xset -b                       # 关闭蜂鸣器
-  syndaemon -i 1 -t -K -R -d    # 设置使用键盘时触控板短暂失效
-  xrdb -merge "$DWM"/xresources # 为st进行设置
+  xset -b                            # 关闭蜂鸣器
+  syndaemon -i 1 -t -K -R -d         # 设置使用键盘时触控板短暂失效
+  xrdb -merge "$_thisdir"/xresources # 为st进行设置
 }
 
 daemons() {
@@ -27,14 +32,14 @@ daemons() {
 
   [ "$1" ] && sleep "$1"
 
-  "$DWM"/.bin/start_picom.sh
-  "$DWM"/statusbar/statusbar.sh cron &                # 开启状态栏定时更新
-  fcitx5 &                                            # 开启输入法
-  flameshot &                                         # 截图要跑一个程序在后台 不然无法将截图保存到剪贴板
-  barrier &                                           # 键鼠共享
-  dunst &                                             # 开启通知server
-  pcmanfm -d &                                        # 开启PCManFM
-  greenclip daemon >>"$DWM"/logs/greenclip.log 2>&1 & # 开启剪切板
+  "$_thisdir"/.bin/start_picom.sh &                        # 开启picom
+  "$_thisdir"/statusbar/statusbar.sh cron &                # 开启状态栏定时更新
+  fcitx5 &                                                 # 开启输入法
+  flameshot &                                              # 截图要跑一个程序在后台 不然无法将截图保存到剪贴板
+  barrier &                                                # 键鼠共享
+  dunst &                                                  # 开启通知server
+  pcmanfm -d &                                             # 开启PCManFM
+  greenclip daemon >>"$_thisdir"/logs/greenclip.log 2>&1 & # 开启剪切板
 
   #  lemonade server &                                                                     # 开启lemonade 远程剪切板支持
   #  xss-lock -- ~/scripts/blur_lock.sh &                                                   # 开启自动锁屏程序

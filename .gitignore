@@ -21,3 +21,6 @@ test*.*
 
 # patch
 patch/*.patch
+
+# vscode
+.vscode

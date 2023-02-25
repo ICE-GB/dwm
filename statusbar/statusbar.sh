@@ -25,6 +25,7 @@ click() {
 
 # 更新状态栏
 refresh() {
+  _net_speed=''
   _icons=''
   _wifi=''
   _cpu=''
@@ -33,8 +34,8 @@ refresh() {
   _vol=''
   _bat='' # 重置所有模块的状态为空
   # shellcheck source=./temp
-  source "$tempfile"                                       # 从 temp 文件中读取模块的状态
-  xsetroot -name "$_icons$_wifi$_cpu$_mem$_date$_vol$_bat" # 更新状态栏
+  source "$tempfile"                                                  # 从 temp 文件中读取模块的状态
+  xsetroot -name "$_net_speed$_wifi$_cpu$_mem$_date$_vol$_bat$_icons" # 更新状态栏
 }
 
 # 启动定时更新状态栏 不同的模块有不同的刷新周期 注意不要重复启动该func
@@ -42,13 +43,13 @@ cron() {
   echo >"$tempfile"
   ((i = 0))
   while true; do
-    to=()                                                     # 存放本次需要更新的模块
-    [ $((i % 10)) -eq 0 ] && to=("${to[@]}" wifi)             # 每 10秒  更新 wifi
-    [ $((i % 1)) -eq 0 ] && to=("${to[@]}" cpu mem vol icons) # 每 1秒  更新 cpu mem vol icons
-    [ $((i % 300)) -eq 0 ] && to=("${to[@]}" bat)             # 每 300秒 更新 bat
-    [ $((i % 1)) -eq 0 ] && to=("${to[@]}" date)              # 每 1秒   更新 date
-    [ "$i" -lt 30 ] && to=(wifi cpu mem date vol icons bat)   # 前 30秒  更新所有模块
-    update "${to[@]}"                                         # 将需要更新的模块传递给 update
+    to=()                                                               # 存放本次需要更新的模块
+    [ $((i % 10)) -eq 0 ] && to=("${to[@]}" wifi)                       # 每 10秒  更新 wifi
+    [ $((i % 1)) -eq 0 ] && to=("${to[@]}" cpu mem vol icons net_speed) # 每 1秒  更新 cpu mem vol icons
+    [ $((i % 300)) -eq 0 ] && to=("${to[@]}" bat)                       # 每 300秒 更新 bat
+    [ $((i % 1)) -eq 0 ] && to=("${to[@]}" date)                        # 每 1秒   更新 date
+    [ "$i" -lt 30 ] && to=(wifi cpu mem date vol icons bat)             # 前 30秒  更新所有模块
+    update "${to[@]}"                                                   # 将需要更新的模块传递给 update
     sleep 1
     ((i += 1))
   done &

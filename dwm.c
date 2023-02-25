@@ -48,8 +48,8 @@
 /* macros */
 #define BUTTONMASK              (ButtonPressMask|ButtonReleaseMask)
 #define CLEANMASK(mask)         (mask & ~(numlockmask|LockMask) & (ShiftMask|ControlMask|Mod1Mask|Mod2Mask|Mod3Mask|Mod4Mask|Mod5Mask))
-#define INTERSECT(x,y,w,h,m)    (MAX(0, MIN((x)+(w),(m)->wx+(m)->ww) - MAX((x),(m)->wx)) \
-                               * MAX(0, MIN((y)+(h),(m)->wy+(m)->wh) - MAX((y),(m)->wy)))
+#define INTERSECT(x,y,w,h,m)    (MAX(0, MIN((x)+(w),(m)->mx+(m)->mw) - MAX((x),(m)->mx)) \
+                               * MAX(0, MIN((y)+(h),(m)->my+(m)->mh) - MAX((y),(m)->my)))
 #define ISVISIBLE(C)            ((C->mon->isoverview || C->isglobal || C->tags & C->mon->tagset[C->mon->seltags]))
 #define HIDDEN(C)               ((getstate(C->win) == IconicState))
 #define LENGTH(X)               (sizeof X / sizeof X[0])
@@ -483,7 +483,7 @@ applyrules(Client *c)
         c->isscratchpad = 1;
         c->isfloating = 1;
         c->isglobal = 1; // scratchpad is default global
-    } 
+    }
     if (ch.res_class)
         XFree(ch.res_class);
     if (ch.res_name)
@@ -626,7 +626,7 @@ buttonpress(XEvent *e)
     if (ev->window == selmon->barwin || (!c && selmon->showbar && (topbar ? ev->y <= selmon->wy : ev->y >= selmon->wy + selmon->wh))) { // 点击在bar上
         i = x = 0;
         blw = TEXTW(selmon->ltsymbol);
-        
+
         if (selmon->isoverview) {
             x += TEXTW(overviewtag);
             i = ~0;
@@ -713,10 +713,6 @@ cleanup(void)
     if (showsystray) {
         XUnmapWindow(dpy, systray->win);
         XDestroyWindow(dpy, systray->win);
-        if (!usealtbar) {
-            XUnmapWindow(dpy, systray->win);
-            XDestroyWindow(dpy, systray->win);
-        }
         free(systray);
     }
     for (i = 0; i < CurLast; i++)
@@ -741,8 +737,10 @@ cleanupmon(Monitor *mon)
         for (m = mons; m && m->next != mon; m = m->next);
         m->next = mon->next;
     }
-    XUnmapWindow(dpy, mon->barwin);
-    XDestroyWindow(dpy, mon->barwin);
+    if (!usealtbar) {
+        XUnmapWindow(dpy, mon->barwin);
+        XDestroyWindow(dpy, mon->barwin);
+    }
     free(mon);
 }
 
@@ -859,8 +857,6 @@ configurenotify(XEvent *e)
                     if (c->isfullscreen)
                         resizeclient(c, m->mx, m->my, m->mw, m->mh);
                 resizebarwin(m);
-                // todo 解决问题
-				XMoveResizeWindow(dpy, m->barwin, m->wx, m->by, m->ww, m->bh);
             }
             focus(NULL);
             arrange(NULL);
@@ -963,13 +959,12 @@ destroynotify(XEvent *e)
 
     if ((c = wintoclient(ev->window)))
         unmanage(c, 1);
-    // todo
-	else if (usealtbar && (m = wintomon(ev->window)) && m->barwin == ev->window)
+    // 还是有些疑问
+    else if (usealtbar && (m = wintomon(ev->window)) && m->barwin == ev->window)
 		unmanagealtbar(ev->window);
-	else if (usealtbar && m->traywin == ev->window)
+	if (usealtbar && m->traywin == ev->window)
 		unmanagetray(ev->window);
-	// todo end
-    else if ((c = wintosystrayicon(ev->window))) {
+    if (!usealtbar && (c = wintosystrayicon(ev->window))) {
         removesystrayicon(c);
         resizebarwin(selmon);
         updatesystray();
@@ -2014,8 +2009,8 @@ movewin(const Arg *arg)
                 // 若浮动tc c的顶边会穿过tc的底边 
                 if (!ISVISIBLE(tc) || !tc->isfloating || tc == c) continue;
                 if (c->x + WIDTH(c) < tc->x || c->x > tc->x + WIDTH(tc)) continue;
-                buttom = tc->y + HEIGHT(tc) + gappi;  
-                if (top > buttom && ny < buttom) {  
+                buttom = tc->y + HEIGHT(tc) + gappi;
+                if (top > buttom && ny < buttom) {
                     tar = MAX(tar, buttom);
                 };
             }
@@ -2031,7 +2026,7 @@ movewin(const Arg *arg)
                 if (!ISVISIBLE(tc) || !tc->isfloating || tc == c) continue;
                 if (c->x + WIDTH(c) < tc->x || c->x > tc->x + WIDTH(tc)) continue;
                 top = tc->y - gappi;
-                if (buttom < top && (ny + HEIGHT(c)) > top) {  
+                if (buttom < top && (ny + HEIGHT(c)) > top) {
                     tar = MIN(tar, top - HEIGHT(c));
                 };
             }
@@ -2120,7 +2115,7 @@ resizewin(const Arg *arg)
                 if (!ISVISIBLE(tc) || !tc->isfloating || tc == c) continue;
                 if (c->x + WIDTH(c) < tc->x || c->x > tc->x + WIDTH(tc)) continue;
                 top = tc->y - gappi;
-                if (buttom < top && (c->y + nh) > top) {  
+                if (buttom < top && (c->y + nh) > top) {
                     tar = MAX(tar, top - c->y - 2 * c->bw);
                 };
             }
@@ -2251,7 +2246,7 @@ resizebarwin(Monitor *m) {
     uint system_w = getsystraywidth();
     if (showsystray && m == systraytomon(m))
         w -= system_w;
-    XMoveResizeWindow(dpy, m->barwin, m->wx + sp, m->by + vp, w -  2 * sp - (m == systraytomon(m) && system_w ? systrayspadding : 0), bh); // 如果托盘存在 额外减去systrayspadding
+    XMoveResizeWindow(dpy, m->barwin, m->wx + sp, m->by + vp, w -  2 * sp - (m == systraytomon(m) && system_w ? systrayspadding : 0), m->bh); // 如果托盘存在 额外减去systrayspadding
 }
 
 void
@@ -2821,11 +2816,8 @@ togglebar(const Arg *arg)
     selmon->showbar = selmon->pertag->showbars[selmon->pertag->curtag] = !selmon->showbar;
     updatebarpos(selmon);
     resizebarwin(selmon);
-    // todo
-    XMoveResizeWindow(dpy, selmon->barwin, selmon->wx, selmon->by, selmon->ww, selmon->bh);
     if (usealtbar)
-    	XMoveResizeWindow(dpy, selmon->traywin, selmon->tx, selmon->by, selmon->tw, selmon->bh);
-    // todo end
+    	XMoveResizeWindow(dpy, selmon->traywin, selmon->tx + sp, selmon->by + vp, selmon->tw, selmon->bh);
 
     if (showsystray) {
         XWindowChanges wc;
@@ -3073,7 +3065,7 @@ unmapnotify(XEvent *e)
 		unmanagealtbar(ev->window);
 	else if (usealtbar && m->traywin == ev->window)
 		unmanagetray(ev->window);
-    else if ((c = wintosystrayicon(ev->window))) {
+    else if (!usealtbar && (c = wintosystrayicon(ev->window))) {
         /* KLUDGE! sometimes icons occasionally unmap their windows, but do
          * _not_ destroy them. We map those windows back */
         XMapRaised(dpy, c->win);
@@ -3084,8 +3076,10 @@ unmapnotify(XEvent *e)
 void
 updatebars(void)
 {
-	if (usealtbar)
-		return;
+	if (usealtbar){
+        fprintf(stderr, "使用自定义bar");
+        return;
+    }
 
     unsigned int w;
     Monitor *m;
@@ -3120,11 +3114,11 @@ updatebarpos(Monitor *m)
     m->wy = m->my;
     m->wh = m->mh;
     if (m->showbar) {
-        m->wh -= m->bh;
+        m->wh = m->wh - vertpad - m->bh;
         m->by = m->topbar ? m->wy : m->wy + m->wh + vertpad;
-        m->wy = m->topbar ? m->wy + bh + vp : m->wy;
+        m->wy = m->topbar ? m->wy + m->bh + vp : m->wy;
     } else
-        m->by = -m->bh;
+        m->by = -m->bh - vp;
 }
 
 void

@@ -11,8 +11,6 @@ text_color="^c#000080^^b#3870560x88^"
 signal=$(echo "^s$this^" | sed 's/_//')
 
 TMP=""
-RX_pre
-TX_pre
 net_speed_text=""
 
 calculate() {

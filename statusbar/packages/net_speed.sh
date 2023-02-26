@@ -13,6 +13,11 @@ signal=$(echo "^s$this^" | sed 's/_//')
 TMP=""
 net_speed_text=""
 
+save() {
+  sed -i '/^export '"$1"'=.*$/d' "$temp_file"
+  printf "export %s='%s'\n" "$1" "$2" >>"$temp_file"
+}
+
 calculate() {
   TMP=$(printf "%.1f" "$(echo "scale=1;$1/$2" | bc)")"$3"
 }
@@ -36,6 +41,11 @@ net_speed() {
   # shellcheck source=../temp
   source "$temp_file" # 从 temp 文件中读取模块的状态
 
+  if [ "" == "$RX_pre" ]; then
+    RX_pre=$(grep "$interface" /proc/net/dev | sed 's/:/ /g' | awk '{print $2}')
+    TX_pre=$(grep "$interface" /proc/net/dev | sed 's/:/ /g' | awk '{print $10}')
+  fi
+
   RX_next=$(grep "$interface" /proc/net/dev | sed 's/:/ /g' | awk '{print $2}')
   TX_next=$(grep "$interface" /proc/net/dev | sed 's/:/ /g' | awk '{print $10}')
 
@@ -55,10 +65,8 @@ net_speed() {
   RX_pre=$RX_next
   TX_pre=$TX_next
 
-  sed -i '/^export RX_pre=.*$/d' "$temp_file"
-  sed -i '/^export TX_pre=.*$/d' "$temp_file"
-  printf "export %s=%s\n" RX_pre "$RX_next" >>"$temp_file"
-  printf "export %s=%s\n" TX_pre "$TX_next" >>"$temp_file"
+  save RX_pre "$RX_next"
+  save TX_pre "$TX_next"
 }
 
 update() {

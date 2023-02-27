@@ -10,6 +10,7 @@ this=_net_speed
 text_color="^c#000080^^b#3870560x88^"
 signal=$(echo "^s$this^" | sed 's/_//')
 
+default_interface="wlp2s0"
 TMP=""
 net_speed_text=""
 
@@ -35,7 +36,7 @@ human_read() {
 net_speed() {
   interface="$1"
   if [ "" == "$interface" ]; then
-    interface="ens33"
+    interface="$default_interface"
   fi
 
   # shellcheck source=../temp
@@ -70,7 +71,7 @@ net_speed() {
 }
 
 update() {
-  net_speed "ens33"
+  net_speed "$default_interface"
   sed -i '/^export '$this'=.*$/d' "$temp_file"
   printf "export %s='%s%s%s'\n" $this "$signal" "$text_color" " $net_speed_text " >>"$temp_file"
 }

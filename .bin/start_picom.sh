@@ -1,7 +1,7 @@
 #! /usr/bin/env bash
 
-source "$HOME"/.profile
-source "$HOME"/.dwm/.profile
+# source "$HOME"/.profile
+# source "$HOME"/.dwm/.profile
 
 while true; do
   log_file=$DWM/logs/picom-$(date -d "today" +"%Y%m%d%H%M").log

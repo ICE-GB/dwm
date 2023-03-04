@@ -10,7 +10,7 @@ this=_net_speed
 text_color="^c#000080^^b#3870560x88^"
 signal=$(echo "^s$this^" | sed 's/_//')
 
-default_interface="wlp2s0"
+default_interface="wlp4s0"
 TMP=""
 net_speed_text=""
 
@@ -24,12 +24,19 @@ calculate() {
 }
 
 human_read() {
-  if [[ $1 -lt 1024 ]]; then
-    calculate "$1" 1 "B/s"
-  elif [[ $1 -gt 1048576 ]]; then
-    calculate "$1" 1048576 "MB/s"
+  local size="$1"
+  local gb=$((1024 * 1024 * 1024))
+  local mb=$((1024 * 1024))
+  local kb=$((1024))
+
+  if (( size < kb )); then
+    calculate "$size" 1 "B/s"
+  elif (( size > gb )); then
+    calculate "$size" "$gb" "GB/s"
+  elif (( size > mb )); then
+    calculate "$size" "$mb" "MB/s"
   else
-    calculate "$1" 1024 "KB/s"
+    calculate "$size" "$kb" "KB/s"
   fi
 }
 
@@ -43,12 +50,12 @@ net_speed() {
   source "$temp_file" # 从 temp 文件中读取模块的状态
 
   if [ "" == "$RX_pre" ]; then
-    RX_pre=$(grep "$interface" /proc/net/dev | sed 's/:/ /g' | awk '{print $2}')
-    TX_pre=$(grep "$interface" /proc/net/dev | sed 's/:/ /g' | awk '{print $10}')
+    RX_pre=$(awk "/$interface:/ {gsub(/:/,\" \",\$0); print \$2}" /proc/net/dev)
+    TX_pre=$(awk "/$interface:/ {gsub(/:/,\" \",\$0); print \$10}" /proc/net/dev)
   fi
 
-  RX_next=$(grep "$interface" /proc/net/dev | sed 's/:/ /g' | awk '{print $2}')
-  TX_next=$(grep "$interface" /proc/net/dev | sed 's/:/ /g' | awk '{print $10}')
+  RX_next=$(awk "/$interface:/ {gsub(/:/,\" \",\$0); print \$2}" /proc/net/dev)
+  TX_next=$(awk "/$interface:/ {gsub(/:/,\" \",\$0); print \$10}" /proc/net/dev)
 
   RX=$((RX_next - RX_pre))
   TX=$((TX_next - TX_pre))

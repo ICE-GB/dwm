@@ -3,7 +3,7 @@
 # 搭配 https://github.com/yaocccc/scripts 仓库使用 目录位置 ~/scripts
 # 部分配置文件在 ~/scripts/config 目录下
 
-source "$HOME"/.profile
+# source "$HOME"/.profile
 source "$HOME"/.dwm/.profile
 
 _thisdir=$(

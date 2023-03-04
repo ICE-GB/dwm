@@ -58,7 +58,9 @@ update() {
 
     song=${song:$music_title_show_i:$bar_length}
 
-    music_title_show_i=$((music_title_show_i + 1))
+    if [ $(mpc status | grep -c playing) -gt 0 ]; then
+      music_title_show_i=$((music_title_show_i + 1))
+    fi
 
     if [[ $music_title_show_i -gt $music_title_show_length ]]; then
       music_title_show_i=0
@@ -66,9 +68,9 @@ update() {
 
     save "music_title_show_i" $music_title_show_i
 
-    printf "export %s='%s%s%s%s%s'\n" $this "$signal" "$icon_color" " $icon " "$text_color" " $song " >>"$temp_file"
+    printf "export %s=\"%s%s%s%s%s\"\n" $this "$signal" "$icon_color" " $icon " "$text_color" " $song " >>"$temp_file"
   else
-    printf "export %s='%s%s%s'\n" $this "$signal" "$icon_color" " $icon  " >>"$temp_file"
+    printf "export %s=\"%s%s%s\"\n" $this "$signal" "$icon_color" " $icon  " >>"$temp_file"
   fi
 }
 

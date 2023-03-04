@@ -22,22 +22,22 @@ static const unsigned int snap           = 10;        /* 边缘依附宽度 */
 static const unsigned int baralpha       = 0xc0;      /* 状态栏透明度 */
 static const unsigned int borderalpha    = 0xdd;      /* 边框透明度 */
 static const char *fonts[]               = { "JetBrainsMono Nerd Font:style=medium:size=13", "monospace:size=13" };
-static const char *colors[][3]           = {          /* 颜色设置 ColFg, ColBg, ColBorder */
+static const char *colors[][3]           = {          /* 颜色设置 ColFg, ColBg, ColBorder */ 
     [SchemeNorm] = { "#bbbbbb", "#333333", "#444444" },
     [SchemeSel] = { "#ffffff", "#37474F", "#42A5F5" },
     [SchemeSelGlobal] = { "#ffffff", "#37474F", "#FFC0CB" },
     [SchemeHid] = { "#dddddd", NULL, NULL },
     [SchemeSystray] = { NULL, "#7799AA", NULL },
-    [SchemeUnderline] = { "#7799AA", NULL, NULL },
+    [SchemeUnderline] = { "#7799AA", NULL, NULL }, 
     [SchemeNormTag] = { "#bbbbbb", "#333333", NULL },
     [SchemeSelTag] = { "#eeeeee", "#333333", NULL },
     [SchemeBarEmpty] = { NULL, "#111111", NULL },
 };
-static const unsigned int alphas[][3]    = {          /* 透明度设置 ColFg, ColBg, ColBorder */
-    [SchemeNorm] = { OPAQUE, baralpha, borderalpha },
+static const unsigned int alphas[][3]    = {          /* 透明度设置 ColFg, ColBg, ColBorder */ 
+    [SchemeNorm] = { OPAQUE, baralpha, borderalpha }, 
     [SchemeSel] = { OPAQUE, baralpha, borderalpha },
     [SchemeSelGlobal] = { OPAQUE, baralpha, borderalpha },
-    [SchemeNormTag] = { OPAQUE, baralpha, borderalpha },
+    [SchemeNormTag] = { OPAQUE, baralpha, borderalpha }, 
     [SchemeSelTag] = { OPAQUE, baralpha, borderalpha },
     [SchemeBarEmpty] = {((const unsigned int) 0), 0xa0a, ((const unsigned int) 0) },
     [SchemeStatusText] = { OPAQUE, 0x88, ((const unsigned int) 0) },
@@ -53,7 +53,7 @@ static const char scratchpadname[] = "scratchpad";
 /* 自定义tag名称 */
 /* 自定义特定实例的显示状态 */
 //            ﮸  ﭮ 切
-static const char *tags[] = {
+static const char *tags[] = { 
     "", // tag:0  key:1  desc:terminal1
     "", // tag:1  key:2  desc:terminal2
     "", // tag:2  key:3  desc:terminal3
@@ -141,8 +141,8 @@ static Key keys[] = {
     { MODKEY,              XK_comma,        setmfact,         {.f = -0.05f} },          /* super ,            |  缩小主工作区 */
     { MODKEY,              XK_period,       setmfact,         {.f = +0.05f} },          /* super .            |  放大主工作区 */
 
-    { MODKEY,              XK_h,            hidewin,          {0} },                     /* super h            |  隐藏 窗口 */
-    { MODKEY|ShiftMask,    XK_h,            restorewin,       {0} },                     /* super shift h      |  取消隐藏 窗口 */
+    { MODKEY,              XK_i,            hidewin,          {0} },                     /* super i            |  隐藏 窗口 */
+    { MODKEY|ShiftMask,    XK_i,            restorewin,       {0} },                     /* super shift i      |  取消隐藏 窗口 */
 
     { MODKEY|ShiftMask,    XK_Return,       zoom,             {0} },                     /* super shift enter  |  将当前聚焦窗口置为主窗口 */
 
@@ -178,18 +178,25 @@ static Key keys[] = {
     { MODKEY|Mod1Mask,     XK_Left,         resizewin,        {.ui = H_REDUCE} },        /* super alt left     |  调整窗口 */
     { MODKEY|Mod1Mask,     XK_Right,        resizewin,        {.ui = H_EXPAND} },        /* super alt right    |  调整窗口 */
 
+  	{ MODKEY,              XK_k,            focusdir,         {.i = UP } },              /* super k            | 二维聚焦窗口 */
+  	{ MODKEY,              XK_j,            focusdir,         {.i = DOWN } },            /* super j            | 二维聚焦窗口 */
+  	{ MODKEY,              XK_h,            focusdir,         {.i = LEFT } },            /* super h            | 二维聚焦窗口 */
+  	{ MODKEY,              XK_l,            focusdir,         {.i = RIGHT } },           /* super l            | 二维聚焦窗口 */
+    { MODKEY|ShiftMask,    XK_k,            exchange_client,  {.i = UP } },              /* super shift k      | 二维交换窗口 (仅平铺) */
+    { MODKEY|ShiftMask,    XK_j,            exchange_client,  {.i = DOWN } },            /* super shift j      | 二维交换窗口 (仅平铺) */
+    { MODKEY|ShiftMask,    XK_h,            exchange_client,  {.i = LEFT} },             /* super shift h      | 二维交换窗口 (仅平铺) */
+    { MODKEY|ShiftMask,    XK_l,            exchange_client,  {.i = RIGHT } },           /* super shift l      | 二维交换窗口 (仅平铺) */
+
     /* spawn + SHCMD 执行对应命令(已下部分建议完全自己重新定义) */
     { MODKEY,              XK_s,      togglescratch, SHCMD("st -t scratchpad -c float") },                      /* super s          | 打开scratch终端        */
-    { MODKEY,              XK_k,      spawn, SHCMD("konsole") },                                                /* super k          | 打开konsole终端        */
-    { MODKEY,              XK_Return, spawn, SHCMD("st -e fish") },                                                     /* super enter      | 打开st终端             */
-    { MODKEY,              XK_minus,  spawn, SHCMD("st -c FG -e fish") },                                               /* super -          | 打开全局st终端         */
-    { MODKEY,              XK_space,  spawn, SHCMD("st -c float -e fish") },                                            /* super space      | 打开浮动st终端         */
+    { MODKEY,              XK_Return, spawn, SHCMD("st -e fish") },                                             /* super enter      | 打开st终端             */
+    { MODKEY,              XK_minus,  spawn, SHCMD("st -c FG -e fish") },                                       /* super -          | 打开全局st终端         */
+    { MODKEY,              XK_space,  spawn, SHCMD("st -c float -e fish") },                                    /* super space      | 打开浮动st终端         */
     { MODKEY,              XK_d,      spawn, SHCMD("~/scripts/call_rofi.sh run") },                             /* super d          | rofi: 执行run          */
     { MODKEY|ShiftMask,    XK_d,      spawn, SHCMD("~/scripts/call_rofi.sh drun") },                            /* super shift d    | rofi: 执行drun         */
     { Mod1Mask,            XK_space,  spawn, SHCMD("~/.config/rofi/launchers/type-3/launcher.sh") },            /* alt space        | rofi: 执行drun         */
     { MODKEY,              XK_p,      spawn, SHCMD("~/scripts/call_rofi.sh custom") },                          /* super p          | rofi: 执行自定义脚本   */
     { MODKEY|ShiftMask,    XK_p,      spawn, SHCMD("~/scripts/call_rofi.sh window") },                          /* super shift p    | rofi: 执行window       */
-    { MODKEY,              XK_l,      spawn, SHCMD("~/scripts/blurlock.sh") },                                  /* super l          | 锁定屏幕               */
     { MODKEY,              XK_v,      spawn, SHCMD("$DWM/.bin/clip_history.sh") },                              /* super v          | 剪切板历史             */
     { MODKEY|ShiftMask,    XK_Up,     spawn, SHCMD("~/scripts/set_vol.sh up") },                                /* super shift up   | 音量加                 */
     { MODKEY|ShiftMask,    XK_Down,   spawn, SHCMD("~/scripts/set_vol.sh down") },                              /* super shift down | 音量减                 */
@@ -199,6 +206,12 @@ static Key keys[] = {
     { ShiftMask|ControlMask, XK_c,    spawn, SHCMD("xclip -o | xclip -selection c") },                          /* super shift c    | 进阶复制               */
     { MODKEY,              XK_c,      spawn, SHCMD("google-chrome-stable --force-device-scale-factor=1.25") },  /* super c    | chrome               */
     { MODKEY,              XK_i,      spawn, SHCMD("/home/gb/opt/idea-IU-213.5744.223/bin/idea.sh") },          /* super i    | idea               */
+    { MODKEY,              XK_F1,     spawn, SHCMD("killall pcmanfm || pcmanfm") },                             /* super F1         | 打开/关闭pcmanfm       */
+    { MODKEY,              XK_p,      spawn, SHCMD("$DWM/.bin/rofi.sh") },                                       /* super p          | rofi: 执行自定义脚本   */
+    { MODKEY,              XK_n,      spawn, SHCMD("i3lock") },                                   /* super n          | 锁定屏幕               */
+    { MODKEY|ShiftMask,    XK_Up,     spawn, SHCMD("$DWM/.bin/set_vol.sh up") },                                 /* super shift up   | 音量加                 */
+    { MODKEY|ShiftMask,    XK_Down,   spawn, SHCMD("$DWM/.bin/set_vol.sh down") },                               /* super shift down | 音量减                 */
+
 
     /* super key : 跳转到对应tag (可附加一条命令 若目标目录无窗口，则执行该命令) */
     /* super shift key : 将聚焦窗口移动到对应tag */
@@ -211,8 +224,9 @@ static Key keys[] = {
     TAGKEYS(XK_m, 5, "st ncmpcpp")
     TAGKEYS(XK_0, 6, "linuxqq")
     TAGKEYS(XK_w, 7, "/opt/apps/com.qq.weixin.deepin/files/run.sh")
-    TAGKEYS(XK_l, 8, "/opt/apps/com.qq.weixin.work.deepin/files/run.sh")
+    TAGKEYS(XK_y, 8, "/opt/apps/com.qq.weixin.work.deepin/files/run.sh")
 };
+
 static Button buttons[] = {
     /* click               event mask       button            function       argument  */
     /* 点击窗口标题栏操作 */

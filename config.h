@@ -5,10 +5,10 @@
 //=============================================================================
 static const int newclientathead          = 0;         /* 定义新窗口在栈顶还是栈底 */
 static int showsystray                    = 1;         /* 是否显示托盘栏 */
-static const unsigned int systraypinning  = 1;         /* 托盘跟随的显示器 0代表不指定显示器 */
+static const unsigned int systraypinning  = 0;         /* 托盘跟随的显示器 0代表不指定显示器 */
 static const unsigned int systrayspacing  = 1;         /* 托盘间距 */
 static const unsigned int systrayspadding = 5;         /* 托盘和状态栏的间隙 */
-static const unsigned int borderpx        = 5;         /* 窗口边框大小 */
+static const unsigned int borderpx        = 2;         /* 窗口边框大小 */
 static int gappi                          = 6;         /* 窗口与窗口 缝隙大小 */
 static int gappo                          = 6;         /* 窗口与边缘 缝隙大小 */
 static const int _gappo                   = 6;         /* 窗口与窗口 缝隙大小 不可变 用于恢复时的默认值 */
@@ -28,8 +28,8 @@ static const unsigned int snap            = 10;        /* 边缘依附宽度 */
 //=============================================================================
 //                 快速切换历史tag 
 //=============================================================================
-#define RESTORE_TAG_MAXNUM 5 // 用于恢复时存储的最多记录tag数，一般不需要更改，必须大于等于1
-#define SWITCH_TAG_LOOP 0    // 是否支持循环（穿越）,1为支持
+#define RESTORE_TAG_MAXNUM 15 // 用于恢复时存储的最多记录tag数，一般不需要更改，必须大于等于1
+#define SWITCH_TAG_LOOP 1    // 是否支持循环（穿越）,1为支持
 // 如果习惯是单按键切换最近的两个窗口，则设置 RESTORE_TAG_MAXNUM 为2 , SWITCH_TAG_LOOP 为1
 
 
@@ -66,7 +66,7 @@ static const char *colors[][3] = {
     [SchemeOverView] = { red2, black, black },
 };
 //-----------------------------------------------------------------------------
-static int statusbar_h_bias=15;
+static int statusbar_h_bias=13;
 static int tag_line_h=7;
 //-----------------------------------------------------------------------------
 /* 透明度设置 ColFg, ColBg, ColBorder */ 
@@ -158,36 +158,47 @@ static const char* avoid_repeat_auto_start = "/tmp/dwm_avoid_repeat_auto_start.l
 
 //=============================================================================
 // 规则设置
+// 自定义窗口显示规则 
+// class instance title 主要用于定位窗口适合哪个规则 
+// tags mask 定义符合该规则的窗口的tag 0 表示当前tag 
+// isfloating 定义符合该规则的窗口是否浮动 
+// isglobal 定义符合该规则的窗口是否全局浮动 
+// isnoborder 定义符合该规则的窗口是否无边框 
+// monitor 定义符合该规则的窗口显示在哪个显示器上 -1 为当前屏幕 
+// floatposition 定义符合该规则的窗口显示的位置 0 中间，1到9分别为9宫格位置，例如1左上，9右下，3右上 
 //=============================================================================
 static const Rule rules[] = {
-//-----------------------------------------------------------------------------
-  // class         instance    title      tags_mask  isfloating isglobal isnoborder monitor
-    {"wemeetapp",   NULL,       NULL,      TAGMASK,     1,         1,        0,        -1}, // 腾讯会议有bug,需要使用global类型
-    {"copyq",       NULL,       NULL,      TAGMASK,     1,         1,        0,        -1},
-    {"Nitrogen",    NULL,       NULL,      TAGMASK,     1,         0,        0,        -1},
-    {NULL,          NULL,     "图片查看",  TAGMASK,     1,         0,        0,        -1},  // qq image preview title
-    {NULL,          NULL, "Image Preview", TAGMASK,     1,         0,        0,        -1},  // wechat image preview title
-    {NULL,          NULL,"Bluetooth Devices",TAGMASK,   1,         0,        0,        -1},  // bluetooth manager
-    {NULL,          NULL,"Clash for Windows",TAGMASK,   1,         0,        0,        -1},  // 
-    {NULL,          NULL,       "QQ",      TAGMASK,     1,         0,        0,        -1},  // 
-    {NULL,          NULL,       "钉钉",    TAGMASK,     1,         0,        0,        -1},  // 
-    {NULL,          NULL,       "WeChat",  TAGMASK,     1,         0,        0,        -1},  // 
-    // {"钉钉",      NULL,       NULL,      TAGMASK, 1, 1,          0,        -1 },
-    // {"dingtalk",   NULL,    NULL,      TAGMASK, 1,          1,          0, -1 }, 
-    // {"com.alibabainc.dingtalk",    NULL,  NULL, TAGMASK, 1,  1,  0,  -1 }, 
-    // {"tblive",  NULL,     NULL,  TAGMASK, 1, 1,0,        -1 }, 
-    // { NULL, NULL, "broken", TAGMASK,   1, 0, 0,    -1 }, // qq upload file's win is broken 
-    // { NULL, NULL, "图片预览",  0,  1,   0,   0,  -1 },
+    /* class                 instance              title             tags mask     isfloating  isglobal    isnoborder monitor floatposition */
+    /** 优先级高 越在上面优先度越高 */
+    { NULL,                  NULL,                "图片查看器",      0,            1,          0,          0,        -1,      0}, // qq图片查看器        浮动
+    { NULL,                  NULL,                "图片查看",        0,            1,          0,          0,        -1,      0}, // 微信图片查看器      浮动
 
-//-----------------------------------------------------------------------------
-    // 以下适用于无边框，浮动窗口，全局显示，请勿更改
-    {"FG", NULL, NULL, TAGMASK, 1, 1, 1, -1},      // 浮动 + 全局
-    {"FN", NULL, NULL, 0, 1, 0, 1, -1},            // 浮动 + 无边框
-    {"GN", NULL, NULL, TAGMASK, 0, 1, 1, -1},      // 全局 + 无边框
-    {"FGN", NULL, NULL, TAGMASK, 1, 1, 1, -1},     // 浮动 + 全局 + 无边框
-    {"float", NULL, NULL, 0, 1, 0, 0, -1},         // 浮动
-    {"noborder", NULL, NULL, 0, 0, 0, 1, -1},      // 无边框
-    {"global", NULL, NULL, TAGMASK, 1, 1, 0, -1},  // 全局
+    /** 普通优先度 */
+    {"obs",                  NULL,                 NULL,             1 << 3,       0,          0,          0,        -1,      0}, // obs        tag -> 󰕧
+    {"chrome",               NULL,                 NULL,             1 << 4,       0,          0,          0,        -1,      0}, // chrome     tag -> 
+    {"Chromium",             NULL,                 NULL,             1 << 4,       0,          0,          0,        -1,      0}, // Chromium   tag -> 
+    {"music",                NULL,                 NULL,             1 << 5,       1,          0,          1,        -1,      0}, // music      tag ->  浮动、无边框
+    { NULL,                 "qq",                  NULL,             1 << 6,       0,          0,          1,        -1,      0}, // qq         tag -> ﬄ 无边框
+    { NULL,                 "wechat.exe",          NULL,             1 << 7,       0,          0,          1,        -1,      0}, // wechat     tag -> ﬐ 无边框
+    { NULL,                 "wxwork.exe",          NULL,             1 << 8,       0,          0,          1,        -1,      0}, // workwechat tag ->  无边框
+    {"Vncviewer",            NULL,                 NULL,             0,            1,          0,          1,        -1,      2}, // Vncviewer           浮动、无边框 屏幕顶部
+    {"flameshot",            NULL,                 NULL,             0,            1,          0,          0,        -1,      0}, // 火焰截图            浮动
+    {"scratchpad",          "scratchpad",         "scratchpad",      TAGMASK,      1,          1,          1,        -1,      2}, // scratchpad          浮动、全局、无边框 屏幕顶部
+    {"Pcmanfm",              NULL,                 NULL,             0,            1,          0,          1,        -1,      3}, // pcmanfm             浮动、无边框 右上角
+    {"wemeetapp",            NULL,                 NULL,             TAGMASK,      1,          1,          0,        -1,      0}, // !!!腾讯会议在切换tag时有诡异bug导致退出 变成global来规避该问题
+
+    /** 部分特殊class的规则 */
+    {"float",                NULL,                 NULL,             0,            1,          0,          0,        -1,      0}, // class = float       浮动
+    {"global",               NULL,                 NULL,             TAGMASK,      0,          1,          0,        -1,      0}, // class = gloabl      全局
+    {"noborder",             NULL,                 NULL,             0,            0,          0,          1,        -1,      0}, // class = noborder    无边框
+    {"FGN",                  NULL,                 NULL,             TAGMASK,      1,          1,          1,        -1,      0}, // class = FGN         浮动、全局、无边框
+    {"FG",                   NULL,                 NULL,             TAGMASK,      1,          1,          0,        -1,      0}, // class = FG          浮动、全局
+    {"FN",                   NULL,                 NULL,             0,            1,          0,          1,        -1,      0}, // class = FN          浮动、无边框
+    {"GN",                   NULL,                 NULL,             TAGMASK,      0,          1,          1,        -1,      0}, // CLASS = GN          全局、无边框
+
+    /** 优先度低 越在上面优先度越低 */
+    { NULL,                  NULL,                "crx_",            0,            1,          0,          0,        -1,      0}, // 错误载入时 会有crx_ 浮动
+    { NULL,                  NULL,                "broken",          0,            1,          0,          0,        -1,      0}, // 错误载入时 会有broken 浮动
 };
 
 
@@ -284,7 +295,8 @@ static Key keys[] = {
     { MODKEY,              XK_comma,   setmfact,          {.f = -0.05} }, // 缩小主工作区
     { MODKEY,              XK_period,  setmfact,          {.f = +0.05} }, // 放大主工作区
 //-----------------------------------------------------------------------------
-    { MODKEY|ShiftMask,    XK_q,       killclient,        {0} },        // 关闭当前窗口
+    { MODKEY,              XK_q,       killclient,        {0} },        // 关闭当前窗口
+    { MODKEY|ShiftMask,    XK_q,       forcekillclient,   {0} },        // 强制关闭当前窗口
     { MODKEY|ControlMask,  XK_q,       forcekillclient,   {0} },        // 强制关闭当前窗口
     { MODKEY|ShiftMask,    XK_Escape,  quit,              {0} },        // 退出dwm
     { MODKEY|ControlMask|ShiftMask,XK_Escape, quit,       {1} },        // 重启dwm 
@@ -310,14 +322,20 @@ static Key keys[] = {
     { MODKEY|ControlMask,  XK_minus,   setgap,            {.i = -5} },    // gap减小
     { MODKEY|ControlMask,  XK_BackSpace,setgap,           {.i = 0} },     // gap重置
 //-----------------------------------------------------------------------------
-    { MODKEY,              XK_Up,      movewin,           {.ui = UP} },   // 移动窗口
-    { MODKEY,              XK_Down,    movewin,           {.ui = DOWN} }, // 移动窗口
-    { MODKEY,              XK_Left,    movewin,           {.ui = LEFT} }, // 移动窗口
-    { MODKEY,              XK_Right,   movewin,           {.ui = RIGHT} },// 移动窗口  
-    { MODKEY|ControlMask,  XK_Up,      resizewin,         {.ui = V_REDUCE} },// 调整窗口 
-    { MODKEY|ControlMask,  XK_Down,    resizewin,         {.ui = V_EXPAND} },// 调整窗口      
-    { MODKEY|ControlMask,  XK_Left,    resizewin,         {.ui = H_REDUCE} },// 调整窗口     
-    { MODKEY|ControlMask,  XK_Right,   resizewin,         {.ui = H_EXPAND} },// 调整窗口    
+    { MODKEY,              XK_Up,           focusstack,       {.i = -1} },               /* super up           |  本tag内切换聚焦窗口 */
+    { MODKEY,              XK_Down,         focusstack,       {.i = +1} },               /* super down         |  本tag内切换聚焦窗口 */
+    { MODKEY,              XK_Left,         viewtoleft,       {0} },                     /* super left         |  聚焦到左边的tag */
+    { MODKEY,              XK_Right,        viewtoright,      {0} },                     /* super right        |  聚焦到右边的tag */ 
+    { MODKEY|ControlMask,  XK_Left,         tagtoleft,        {0} },                     /* super shift left   |  将本窗口移动到左边tag */
+    { MODKEY|ControlMask,  XK_Right,        tagtoright,       {0} },                     /* super shift right  |  将本窗口移动到右边tag */
+    // { MODKEY,              XK_Up,      movewin,           {.ui = UP} },   // 移动窗口
+    // { MODKEY,              XK_Down,    movewin,           {.ui = DOWN} }, // 移动窗口
+    // { MODKEY,              XK_Left,    movewin,           {.ui = LEFT} }, // 移动窗口
+    // { MODKEY,              XK_Right,   movewin,           {.ui = RIGHT} },// 移动窗口  
+    // { MODKEY|ControlMask,  XK_Up,      resizewin,         {.ui = V_REDUCE} },// 调整窗口 
+    // { MODKEY|ControlMask,  XK_Down,    resizewin,         {.ui = V_EXPAND} },// 调整窗口      
+    // { MODKEY|ControlMask,  XK_Left,    resizewin,         {.ui = H_REDUCE} },// 调整窗口     
+    // { MODKEY|ControlMask,  XK_Right,   resizewin,         {.ui = H_EXPAND} },// 调整窗口    
 //-----------------------------------------------------------------------------
     { MODKEY|ShiftMask,    XK_Return,  zoom,              {0} },          // 将当前聚焦窗口置为主窗口
 //-----------------------------------------------------------------------------
@@ -358,22 +376,39 @@ static Key keys[] = {
 //=============================================================================
 //                              其它命令
 //=============================================================================
-    { MODKEY,              XK_s,        spawn,   SHCMD("rofi -show drun -show-icons") },// rofi
-    { MODKEY|ControlMask,  XK_s,        spawn,   SHCMD("rofi -show run -show-icons") }, // rofi 
     // Notice that if you first use copyq , Remeber config 1.disable tray show 2.Enable hidden mainwindow. Then you can use this better.
-    { MODKEY,              XK_v,        spawn,   SHCMD("copyq toggle") },  // copyq
+    // { MODKEY,              XK_v,        spawn,   SHCMD("copyq toggle") },  // copyq
     { MODKEY|ShiftMask,    XK_s,        spawn,   SHCMD("flameshot gui") }, // flameshot
     { MODKEY|ControlMask,  XK_l,        spawn,   SHCMD("~/.dwm/i3lock/lock.sh") },   
-    { MODKEY,           XK_grave, togglescratch, SHCMD("kitty -T scratchpad --class floatingTerminal")  }, // 打开/隐藏scrtachpad
-    { MODKEY,              XK_Return,   spawn,   SHCMD("kitty") }, // 新打开一个终端
-    { MODKEY|ShiftMask,    XK_n,        spawn,   SHCMD("kitty -T term-global --class globalingTerminal") }, // 新打开一个浮动终端
-    { MODKEY,              XK_n,        spawn,   SHCMD("kitty -T term-float --class floatingTerminal") }, // 新打开一个全局浮动终端
     { MODKEY,              XK_e,        spawn,   SHCMD("kitty -e ranger") }, // 打开资源管理器
     { MODKEY,              XK_BackSpace,spawn,   SHCMD("playerctl play-pause") },// audio play/pause
+
+/* spawn + SHCMD 执行对应命令(已下部分建议完全自己重新定义) */
+    { MODKEY,              XK_s,      togglescratch, SHCMD("st -t scratchpad -c float") },                      /* super s          | 打开scratch终端        */
+    { MODKEY,              XK_Return, spawn, SHCMD("st -e fish") },                                             /* super enter      | 打开st终端             */
+    { MODKEY,              XK_minus,  spawn, SHCMD("st -c FG -e fish") },                                       /* super -          | 打开全局st终端         */
+    { MODKEY,              XK_space,  spawn, SHCMD("st -c float -e fish") },                                    /* super space      | 打开浮动st终端         */
+    // { MODKEY,              XK_d,      spawn, SHCMD("~/scripts/call_rofi.sh run") },                             /* super d          | rofi: 执行run          */
+    // { MODKEY|ShiftMask,    XK_d,      spawn, SHCMD("~/scripts/call_rofi.sh drun") },                            /* super shift d    | rofi: 执行drun         */
+    { Mod1Mask,            XK_space,  spawn, SHCMD("~/.config/rofi/launchers/type-3/launcher.sh") },            /* alt space        | rofi: 执行drun         */
+    // { MODKEY,              XK_p,      spawn, SHCMD("~/scripts/call_rofi.sh custom") },                          /* super p          | rofi: 执行自定义脚本   */
+    // { MODKEY|ShiftMask,    XK_p,      spawn, SHCMD("~/scripts/call_rofi.sh window") },                          /* super shift p    | rofi: 执行window       */
+    { MODKEY,              XK_v,      spawn, SHCMD("$DWM/.bin/clip_history.sh") },                              /* super v          | 剪切板历史             */
+    { MODKEY|ShiftMask,    XK_a,      spawn, SHCMD("flameshot gui -c -p ~/Pictures/screenshots") },             /* super shift a    | 截图                   */
+    // { MODKEY|ShiftMask,    XK_k,      spawn, SHCMD("~/scripts/screenkey.sh") },                                 /* super shift k    | 打开键盘输入显示       */
+    // { MODKEY|ShiftMask,    XK_q,      spawn, SHCMD("kill -9 $(xprop | grep _NET_WM_PID | awk '{print $3}')") }, /* super shift q    | 选中某个窗口并强制kill */
+    { ShiftMask|ControlMask, XK_c,    spawn, SHCMD("xclip -o | xclip -selection c") },                          /* super shift c    | 进阶复制               */
+    { MODKEY,              XK_c,      spawn, SHCMD("google-chrome-stable --force-device-scale-factor=1.25") },  /* super c    | chrome               */
+    // { MODKEY,              XK_i,      spawn, SHCMD("/home/gb/opt/idea-IU-213.5744.223/bin/idea.sh") },          /* super i    | idea               */
+    { MODKEY,              XK_F1,     spawn, SHCMD("killall pcmanfm || pcmanfm") },                             /* super F1         | 打开/关闭pcmanfm       */
+    { MODKEY,              XK_p,      spawn, SHCMD("$DWM/.bin/rofi.sh") },                                       /* super p          | rofi: 执行自定义脚本   */
+    { MODKEY,              XK_n,      spawn, SHCMD("i3lock") },                                   /* super n          | 锁定屏幕               */
+    { MODKEY|ShiftMask,    XK_Up,     spawn, SHCMD("$DWM/.bin/set_vol.sh up") },                                 /* super shift up   | 音量加                 */
+    { MODKEY|ShiftMask,    XK_Down,   spawn, SHCMD("$DWM/.bin/set_vol.sh down") },                               /* super shift down | 音量减                 */
 //-----------------------------------------------------------------------------
-    { MODKEY,              XK_q,  ToggleShowHideWindows,    {.v="QQ"} },          
-    { MODKEY,              XK_w,  ToggleShowHideWindows,    {.v="WeChat"} },     
-    { MODKEY,              XK_x,  ToggleShowHideWindows,    {.v="钉钉"} },      
+    // { MODKEY,              XK_q,  ToggleShowHideWindows,    {.v="QQ"} },          
+    // { MODKEY,              XK_w,  ToggleShowHideWindows,    {.v="WeChat"} },     
+    // { MODKEY,              XK_x,  ToggleShowHideWindows,    {.v="钉钉"} },      
 //-----------------------------------------------------------------------------
     // { MODKEY|ShiftMask,      XK_q,    spawn, SHCMD("kill -9 $(xprop | grep _NET_WM_PID | awk '{print $3}')") },//选中某个窗口并强制kill
     // { ShiftMask|ControlMask, XK_c,    spawn, SHCMD("xclip -o | xclip -selection c") }, // 进阶复制
@@ -413,7 +448,7 @@ static Key keys[] = {
     TAGKEYS(XK_9, 8,  0)
     TAGKEYS(XK_r, 5,  "obs")
     TAGKEYS(XK_c, 6,  "google-chrome-stable") 
-    TAGKEYS(XK_m, 7,  "/opt/YesPlayMusic/yesplaymusic")
+    TAGKEYS(XK_m, 7,  "st ncmpcpp")
 //-----------------------------------------------------------------------------
     //TAGKEYS(XK_0, 8,  "linuxqq")
     //TAGKEYS(XK_w, 9,  "/opt/apps/com.qq.weixin.deepin/files/run.sh")
@@ -447,8 +482,8 @@ static Button buttons[] = {
 //=============================================================================
     /* 点击窗口标题栏操作 */
 //=============================================================================
-    { ClkWinTitle,         0,          Button3,     hideotherwins, {0} },                                   // 右键         |  点击标题     |  隐藏其他窗口仅保留该窗口
-    { ClkWinTitle,         0,          Button1,     togglewin,     {0} },                                   // 左键         |  点击标题     |  切换窗口显示状态
+    { ClkWinTitle,         0,          Button1,     hideotherwins, {0} },                                   // 右键         |  点击标题     |  隐藏其他窗口仅保留该窗口
+    { ClkWinTitle,         0,          Button3,     togglewin,     {0} },                                   // 左键         |  点击标题     |  切换窗口显示状态
 //=============================================================================
     /* 点击窗口操作 */
 //=============================================================================

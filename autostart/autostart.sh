@@ -8,6 +8,7 @@ sleep 1 # need to wait dwm start complete and fcitx5 start complete
 
 settings() {
   [ "$1" ] && sleep "$1"
+  feh --randomize --bg-fill ~/Pictures/wallpaper/*.* # 设置壁纸
   xset -b                            # 关闭蜂鸣器
   syndaemon -i 1 -t -K -R -d         # 设置使用键盘时触控板短暂失效
   xrdb -merge ~/.dwm/xresources      # 为st进行设置

@@ -38,7 +38,7 @@ def get_speed(val:int)->str:
 
 def getnet()->Tuple[str,str]:
     rx_bytes_cur=0
-    cmd="cat /sys/class/net/[ew]*/statistics/rx_bytes"
+    cmd="cat /sys/class/net/wlp4s0/statistics/rx_bytes"
     result = subprocess.run(cmd, shell=True, timeout=3, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
     rx_bytes_string=result.stdout.decode('utf-8')
     for rx in rx_bytes_string.splitlines():
@@ -49,13 +49,15 @@ def getnet()->Tuple[str,str]:
     cmd="cat "+TX_POSITON
     result = subprocess.run(cmd, shell=True, timeout=3, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
     rx_bytes_pre=result.stdout.decode('utf-8').replace("\n","")
+    if rx_bytes_pre=="":
+      rx_bytes_pre=0
     rx_bytes=abs(int(rx_bytes_cur)-int(rx_bytes_pre))
     # write new rx_bytes_cur
     cmd="echo "+str(rx_bytes_cur)+" > "+TX_POSITON
     os.system(cmd)
 
     tx_bytes_cur=0
-    cmd="cat /sys/class/net/[ew]*/statistics/tx_bytes"
+    cmd="cat /sys/class/net/wlp4s0/statistics/tx_bytes"
     result = subprocess.run(cmd, shell=True, timeout=3, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
     tx_bytes_string=result.stdout.decode('utf-8')
     for tx in tx_bytes_string.splitlines():
@@ -66,6 +68,8 @@ def getnet()->Tuple[str,str]:
     cmd="cat "+TX_POSITON
     result = subprocess.run(cmd, shell=True, timeout=3, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
     tx_bytes_pre=result.stdout.decode('utf-8').replace("\n","")
+    if tx_bytes_pre=="":
+      tx_bytes_pre=0
     tx_bytes=abs(int(tx_bytes_cur)-int(tx_bytes_pre))
     # write new tx_bytes_cur
     cmd="echo "+str(tx_bytes_cur)+" > "+TX_POSITON

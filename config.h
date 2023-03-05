@@ -488,6 +488,7 @@ static Button buttons[] = {
     /* 点击窗口操作 */
 //=============================================================================
     { ClkClientWin,        MODKEY,     Button1,     movemouse,     {0} },                                   // super+左键  |  拖拽窗口     |  拖拽窗口
+    { ClkClientWin,        MODKEY,     Button2,     killclient,    {0} },                                   // super+中键  |  点击窗口     |  关闭窗口
     { ClkClientWin,        MODKEY,     Button3,     resizemouse,   {0} },                                   // super+右键  |  拖拽窗口     |  改变窗口大小
 //=============================================================================
     /* 点击tag操作 */
@@ -501,8 +502,8 @@ static Button buttons[] = {
 //=============================================================================
     /* 点击bar空白处 有需要自行启动 */
 //=============================================================================
-    // { ClkBarEmpty,         0,          Button1,     spawn,       SHCMD("~/scripts/call_rofi.sh window") },        // 左键        |  bar空白处    |  rofi 执行 window
-    // { ClkBarEmpty,         0,          Button3,     spawn,       SHCMD("~/scripts/call_rofi.sh drun") },          // 右键        |  bar空白处    |  rofi 执行 drun
+    { ClkBarEmpty,         0,          Button1,     spawn,       SHCMD("~/.config/rofi/launchers/type-3/launcher.sh") },        // 左键        |  bar空白处    |  rofi 执行 window
+    { ClkBarEmpty,         0,          Button3,     spawn,       SHCMD("~/.config/rofi/launchers/type-3/launcher.sh") },          // 右键        |  bar空白处    |  rofi 执行 drun
 
 //=============================================================================
     /* 点击状态栏操作 */

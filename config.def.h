@@ -422,9 +422,9 @@ static Key keys[] = {
 //=============================================================================
 //    根据相关信号执行指令，除python脚本位置外一般不需要更改，但需要注意相关指令包存在
 //=============================================================================
-{ 0, XF86XK_AudioMute,         spawn, SHCMD("pamixer -t;  python3 /home/gxt_kt/my_desktop/dwm/statusbar/vol.py notify ") },
-{ 0, XF86XK_AudioRaiseVolume,  spawn, SHCMD("pamixer -i 5;python3 /home/gxt_kt/my_desktop/dwm/statusbar/vol.py notify ") },
-{ 0, XF86XK_AudioLowerVolume,  spawn, SHCMD("pamixer -d 5;python3 /home/gxt_kt/my_desktop/dwm/statusbar/vol.py notify ") },
+{ 0, XF86XK_AudioMute,         spawn, SHCMD("pamixer -t;  python3 /home/gb/.dwm/statusbar/vol.py notify ") },
+{ 0, XF86XK_AudioRaiseVolume,  spawn, SHCMD("pamixer -i 5;python3 /home/gb/.dwm/statusbar/vol.py notify ") },
+{ 0, XF86XK_AudioLowerVolume,  spawn, SHCMD("pamixer -d 5;python3 /home/gb/.dwm/statusbar/vol.py notify ") },
 { 0, XF86XK_AudioPause,        spawn, SHCMD("playerctl stop") },
 { 0, XF86XK_AudioPrev,         spawn, SHCMD("playerctl previous") },
 { 0, XF86XK_AudioNext,         spawn, SHCMD("playerctl next") },

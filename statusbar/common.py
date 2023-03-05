@@ -27,9 +27,9 @@ PACKAGES_LISTS={
 
 
 
-DWM_PATH="/home/gxt_kt/my_desktop/dwm/"
+DWM_PATH="/home/gb/.dwm/"
 PACKAGES_PATH=DWM_PATH+"statusbar/"
-TEMP_FILE="/home/gxt_kt/python_tmp"
+TEMP_FILE="/home/gb/python_tmp"
 
 MUSIC_PROGRAM="yesplaymusic"
 

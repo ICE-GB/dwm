@@ -14,18 +14,23 @@ cron() {
 cron&
 
 
-cfw & # clash for windows
+# cfw & # clash for windows
 crow & # translate
 blueman-manager & # bluetooth manager
 copyq & # copy software
 
-picom --experimental-backends& 
+picom_need_experimental=$(picom --help | grep -c experimental-backends) # 开启picom
+if [ "$picom_need_experimental" -ge 1 ]; then
+picom --experimental-backends --config  ~/.dwm/.config/picom.conf &
+else
+picom --config  ~/.dwm/.config/picom.conf &
+fi
 
 
 pkill -f statusbar.py
 python3 ~/.dwm/statusbar/statusbar.py cron &>/dev/null
 
 
-libinput-gestures-setup start # touchpad open gesture
-xinput --set-prop 15 'libinput Accel Speed' 0.5 # set touchpad sensitivity
+# libinput-gestures-setup start # touchpad open gesture
+# xinput --set-prop 15 'libinput Accel Speed' 0.5 # set touchpad sensitivity
 

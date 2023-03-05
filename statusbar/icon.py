@@ -26,7 +26,7 @@ name=re.sub("\..*",'',filename)
 
 def update(loop=False,exec=True):
   while True :
-    icon=""
+    icon=""
     text=""
     txt="^s{}^{} {} {}{} ".format(name, icon_color, icon, text_color, text)
     common.write_to_file(txt+"\n",str(name))
@@ -74,13 +74,13 @@ def system_rofi_set() :
 def click(string='') :
   match string:
     case 'L':
-      system_rofi_set()
+      os.system("~/.config/rofi/scripts/powermenu_t2")
       pass
     case 'M':
       pass
     case 'R':
       pass
-      os.system("nitrogen&")
+      os.system("feh --randomize --bg-fill ~/Pictures/wallpaper/*.*")
     case 'U':
       pass
     case 'D':

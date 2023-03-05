@@ -57,7 +57,7 @@ def click(string='') :
     case 'M':
       pass
     case 'R':
-      os.system("kitty -T statusutil --class floatingTerminal -e btop")
+      os.system("st -t statusutil -c floatingTerminal -g 84x26 -e btop")
       pass
     case 'U':
       pass

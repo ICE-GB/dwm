@@ -33,7 +33,7 @@ daemons() {
     ~/.dwm/.bin/start_picom.sh & # 开启picom
   fi
 
-  python3 ~/.dwm/statusbar/statusbar.py cron &>/dev/null
+  python3 ~/.dwm/statusbar/statusbar.py cron >/dev/null &
 
   fcitx5 &                                                 # 开启输入法
   flameshot &                                              # 截图要跑一个程序在后台 不然无法将截图保存到剪贴板
@@ -72,7 +72,7 @@ cron() {
   let i=10
   while true; do
       [ $((i % 10)) -eq 0 ] && ~/.dwm/autostart/autoscreen.sh # check screen and autoset
-      [ $((i % 300)) -eq 0 ] && feh --randomize --bg-fill ~/Pictures/wallpaper/*.*
+      # [ $((i % 300)) -eq 0 ] && feh --randomize --bg-fill ~/Pictures/wallpaper/*.*
       sleep 5; let i+=5
   done
 }

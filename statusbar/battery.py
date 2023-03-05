@@ -96,7 +96,7 @@ def notify(str='') :
 def click(str='') :
   match str:
     case 'L':
-      os.system("gnome-power-statistics&")
+      os.system("kcmshell5 kcm_powerdevilprofilesconfig")
       pass
     case 'M':
       pass

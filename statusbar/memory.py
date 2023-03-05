@@ -28,7 +28,7 @@ name=re.sub("\..*",'',filename)
 
 def update(loop=False,exec=True):
   while True :
-    icon="﬘"
+    icon="󰍛"
     text=str(int(psutil.virtual_memory()[2]))+"% "
     txt="^s{}^{} {} {} {}".format(name, icon_color, icon, text_color, text)
     common.write_to_file(txt+"\n",str(name))
@@ -49,7 +49,7 @@ def click(string='') :
       pass
     case 'R':
       pass
-      os.system("kitty -T statusutil --class floatingTerminal -e btop")
+      os.system("st -t statusutil -c floatingTerminal -g 84x26 -e btop")
     case 'U':
       pass
     case 'D':

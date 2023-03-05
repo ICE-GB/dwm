@@ -6,3 +6,15 @@ compile_commands.json
 statusbar/temp
 result/
 *__pycache__*
+
+# idea
+.idea
+
+# log
+*log
+
+# 测试文件
+test*.*
+
+# vscode
+.vscode

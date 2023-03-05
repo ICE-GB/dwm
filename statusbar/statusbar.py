@@ -48,8 +48,13 @@ def MainRefresh():
         break
   os.system("xsetroot -name '"+str(tmp)+"'")
 
+def update_all():
+  for key,value in packages_list.items():
+    exec(str(key)+".update()")
+
 
 def Run() :
+  update_all()
   # add new thread
   # for name in packages_list:
   #   exec("_thread.start_new_thread("+str(name)+".update,(True,))")

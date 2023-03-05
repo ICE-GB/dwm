@@ -9,10 +9,10 @@ import common
 import _thread
 
 
-icon_fg=common.green
+icon_fg=common.pink
 icon_bg=common.black
 icon_tr="0xff"
-text_fg=common.green
+text_fg=common.pink
 text_bg=common.black
 text_tr="0xff"
 

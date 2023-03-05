@@ -29,12 +29,11 @@ def get_music_title():
     result = subprocess.run(cmd, shell=True, timeout=3, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
     title=result.stdout.decode('utf-8').replace('\n','')
     title=title.replace("'","") # 解决一些歌曲带'的问题
-    title=" "+title+" "
     return (title)
 
 def update(loop=False,exec=True):
   while True :
-    icon="🎵" # 󰎆
+    icon="󰎆" # 🎵
     text=get_music_title()
     txt="^s{}^{} {} {} {} ".format(name, icon_color, icon, text_color, text)
     common.write_to_file(txt+"\n",str(name))

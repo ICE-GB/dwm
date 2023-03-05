@@ -9,11 +9,11 @@ import _thread
 import common
 
 
-icon_fg=common.black
-icon_bg=common.green
+icon_fg=common.pink
+icon_bg=common.black
 icon_tr="0xff"
-text_fg=common.black
-text_bg=common.green
+text_fg=common.pink
+text_bg=common.black
 text_tr="0xff"
 
 icon_color="^c"+str(icon_fg)+"^^b"+str(icon_bg)+str(icon_tr)+"^"

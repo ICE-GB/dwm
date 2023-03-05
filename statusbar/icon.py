@@ -28,7 +28,7 @@ def update(loop=False,exec=True):
   while True :
     icon=""
     text=""
-    txt="^s{}^{} {} {}{}".format(name, icon_color, icon, text_color, text)
+    txt="^s{}^{} {} {}{} ".format(name, icon_color, icon, text_color, text)
     common.write_to_file(txt+"\n",str(name))
     if loop == False : 
       if exec==True :

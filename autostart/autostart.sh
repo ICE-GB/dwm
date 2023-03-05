@@ -7,7 +7,7 @@ sleep 1 # need to wait dwm start complete and fcitx5 start complete
 cron() {
     let i=1
     while true; do
-        [ $((i % 3)) -eq 0 ] && ~/my_desktop/dwm/autostart/autoscreen.sh # check screen and autoset
+        [ $((i % 3)) -eq 0 ] && ~/.dwm/autostart/autoscreen.sh # check screen and autoset
         sleep 1; let i+=1
     done
 }
@@ -23,7 +23,7 @@ picom --experimental-backends&
 
 
 pkill -f statusbar.py
-python3 ~/my_desktop/dwm/statusbar/statusbar.py cron &>/dev/null
+python3 ~/.dwm/statusbar/statusbar.py cron &>/dev/null
 
 
 libinput-gestures-setup start # touchpad open gesture

@@ -119,10 +119,10 @@ static const char *showhidewindows[] = {
 //=============================================================================
 //                      自启动脚本
 //=============================================================================
-static const char *autostartscript = "~/my_desktop/dwm/autostart/autostart.sh";
+static const char *autostartscript = "~/.dwm/autostart/autostart.sh";
 //-----------------------------------------------------------------------------
 //                     状态栏启动脚本
-static const char *statusbarscript = "~/my_desktop/dwm/statusbar/statusbar.py";//gxt_kt
+static const char *statusbarscript = "~/.dwm/statusbar/statusbar.py";//gxt_kt
 
 
 
@@ -362,7 +362,7 @@ static Key keys[] = {
     // Notice that if you first use copyq , Remeber config 1.disable tray show 2.Enable hidden mainwindow. Then you can use this better.
     { MODKEY,              XK_v,        spawn,   SHCMD("copyq toggle") },  // copyq
     { MODKEY|ShiftMask,    XK_s,        spawn,   SHCMD("flameshot gui") }, // flameshot
-    { MODKEY|ControlMask,  XK_l,        spawn,   SHCMD("~/my_desktop/dwm/i3lock/lock.sh") },   
+    { MODKEY|ControlMask,  XK_l,        spawn,   SHCMD("~/.dwm/i3lock/lock.sh") },   
     { MODKEY,           XK_grave, togglescratch, SHCMD("kitty -T scratchpad --class floatingTerminal")  }, // 打开/隐藏scrtachpad
     { MODKEY,              XK_Return,   spawn,   SHCMD("kitty") }, // 新打开一个终端
     { MODKEY|ShiftMask,    XK_n,        spawn,   SHCMD("kitty -T term-global --class globalingTerminal") }, // 新打开一个浮动终端

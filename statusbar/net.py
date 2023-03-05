@@ -79,7 +79,7 @@ def getnet()->Tuple[str,str]:
     recv_string=str(get_speed(rx_bytes))
     # print(send_string)
     # print(recv_string)
-    return (" "+send_string,""+recv_string)
+    return ("  "+send_string," "+recv_string)
 
 def update(loop=False,exec=True):
   while True :

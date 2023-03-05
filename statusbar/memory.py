@@ -28,9 +28,9 @@ name=re.sub("\..*",'',filename)
 
 def update(loop=False,exec=True):
   while True :
-    icon=" ﬘"
+    icon="﬘"
     text=str(int(psutil.virtual_memory()[2]))+"% "
-    txt="^s"+str(name)+"^"+str(icon_color)+str(icon)+str(text_color)+str(text)
+    txt="^s{}^{} {} {} {}".format(name, icon_color, icon, text_color, text)
     common.write_to_file(txt+"\n",str(name))
     if loop == False : 
       if exec==True :

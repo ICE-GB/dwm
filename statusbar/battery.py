@@ -77,7 +77,7 @@ def update(loop=False,exec=True):
     icon=" "+icon
     text=""+text
     text+=" "
-    txt="^s"+str(name)+"^"+str(icon_color)+str(icon)+str(text_color)+str(text)
+    txt="^s{}^{}{}{} {}".format(name, icon_color, icon, text_color, text)
     common.write_to_file(txt+"\n",str(name))
     if loop == False : 
       if exec==True :

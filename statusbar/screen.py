@@ -26,7 +26,7 @@ name=re.sub("\..*",'',filename)
 
 def update(loop=False,exec=True):
   while True :
-    icon=" 󰹑"
+    icon="󰹑"
 
     # TODO:
     # 暂时有个问题是执行和xrandr相关的命令会卡顿，暂时没找到解决方法
@@ -62,7 +62,7 @@ def update(loop=False,exec=True):
     # TODO:
     # text=" "+str(connected_monitors)+"/"+str(connected_ports)+" "
     text=" "+str(connected_monitors)+" "
-    txt="^s"+str(name)+"^"+str(icon_color)+str(icon)+str(text_color)+str(text)
+    txt="^s{}^{} {} {}{} ".format(name, icon_color, icon, text_color, text)
     common.write_to_file(txt+"\n",str(name))
     if loop == False : 
       if exec==True :

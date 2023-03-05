@@ -13,8 +13,7 @@ PACKAGES_LISTS={
                'music_pre':10,
                'music_play':1,
                'music_next':10,
-               'icon':100,
-               'screen':3,
+              #  'screen':3,
                # 'pacman':36000,
                'net':1,
                'cpu':2,
@@ -23,6 +22,7 @@ PACKAGES_LISTS={
                'vol':1,
                'battery':3,
                'date':1,
+               'icon':100,
                }
 
 

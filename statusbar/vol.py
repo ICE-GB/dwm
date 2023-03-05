@@ -119,7 +119,9 @@ def get_vol_content():
     # elif vol<10 : vol_icon="奔" 
     # elif vol<50 : vol_icon="奔"
     else : vol_icon="墳"
-  return str(vol_icon)+str(vol_text)+"%"+" "+GetBluetoothBatteryByPactl()
+  vol_full="{} {}% {}".format(vol_icon, vol_text, GetBluetoothBatteryByPactl())
+  return vol_full
+  # return str(vol_icon)+str(vol_text)+"%"+" "+GetBluetoothBatteryByPactl()
   # return str(vol_icon)+str(vol_text)+"%"+" "+GetBluetoothBattery()
   # return str(vol_icon)+str(vol_text)+"%"
 

@@ -80,7 +80,7 @@ b站简单演示链接：[https://www.bilibili.com/video/BV1hY4y127ef](https://w
 
 **其他一些次要修改内容为:**
 
-> 1. 终端使用全部使用Alacritty,原版为st
+> 1. 终端使用全部使用kitty,原版为st
 > 2. 按键由于hjkl优化，改动较大，建议熟悉vim使用
 
 

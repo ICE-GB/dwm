@@ -104,7 +104,7 @@ def click(string='') :
       os.system("nm-connection-editor")
       pass
     case 'R':
-      os.system("alacritty -t nmtui --class floatingTerminal -e nmtui ")
+      os.system("kitty -T nmtui --class floatingTerminal -e nmtui ")
     case 'U':
       pass
     case 'D':

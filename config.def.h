@@ -363,11 +363,11 @@ static Key keys[] = {
     { MODKEY,              XK_v,        spawn,   SHCMD("copyq toggle") },  // copyq
     { MODKEY|ShiftMask,    XK_s,        spawn,   SHCMD("flameshot gui") }, // flameshot
     { MODKEY|ControlMask,  XK_l,        spawn,   SHCMD("~/my_desktop/dwm/i3lock/lock.sh") },   
-    { MODKEY,           XK_grave, togglescratch, SHCMD("alacritty -t scratchpad --class floatingTerminal")  }, // 打开/隐藏scrtachpad
-    { MODKEY,              XK_Return,   spawn,   SHCMD("alacritty") }, // 新打开一个终端
-    { MODKEY|ShiftMask,    XK_n,        spawn,   SHCMD("alacritty -t term-global --class globalingTerminal") }, // 新打开一个浮动终端
-    { MODKEY,              XK_n,        spawn,   SHCMD("alacritty -t term-float --class floatingTerminal") }, // 新打开一个全局浮动终端
-    { MODKEY,              XK_e,        spawn,   SHCMD("alacritty -e ranger") }, // 打开资源管理器
+    { MODKEY,           XK_grave, togglescratch, SHCMD("kitty -T scratchpad --class floatingTerminal")  }, // 打开/隐藏scrtachpad
+    { MODKEY,              XK_Return,   spawn,   SHCMD("kitty") }, // 新打开一个终端
+    { MODKEY|ShiftMask,    XK_n,        spawn,   SHCMD("kitty -T term-global --class globalingTerminal") }, // 新打开一个浮动终端
+    { MODKEY,              XK_n,        spawn,   SHCMD("kitty -T term-float --class floatingTerminal") }, // 新打开一个全局浮动终端
+    { MODKEY,              XK_e,        spawn,   SHCMD("kitty -e ranger") }, // 打开资源管理器
     { MODKEY,              XK_BackSpace,spawn,   SHCMD("playerctl play-pause") },// audio play/pause
 //-----------------------------------------------------------------------------
     { MODKEY,              XK_q,  ToggleShowHideWindows,    {.v="QQ"} },          

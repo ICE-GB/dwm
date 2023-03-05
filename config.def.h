@@ -9,16 +9,16 @@ static const unsigned int systraypinning  = 1;         /* 托盘跟随的显示�
 static const unsigned int systrayspacing  = 1;         /* 托盘间距 */
 static const unsigned int systrayspadding = 5;         /* 托盘和状态栏的间隙 */
 static const unsigned int borderpx        = 5;         /* 窗口边框大小 */
-static int gappi                          = 15;        /* 窗口与窗口 缝隙大小 */
-static int gappo                          = 15;        /* 窗口与边缘 缝隙大小 */
-static const int _gappo                   = 15;        /* 窗口与窗口 缝隙大小 不可变 用于恢复时的默认值 */
-static const int _gappi                   = 15;        /* 窗口与边缘 缝隙大小 不可变 用于恢复时的默认值 */
+static int gappi                          = 6;         /* 窗口与窗口 缝隙大小 */
+static int gappo                          = 6;         /* 窗口与边缘 缝隙大小 */
+static const int _gappo                   = 6;         /* 窗口与窗口 缝隙大小 不可变 用于恢复时的默认值 */
+static const int _gappi                   = 6;         /* 窗口与边缘 缝隙大小 不可变 用于恢复时的默认值 */
 static const int vertpad                  = 3;         /* vertical padding of bar */
 static const int sidepad                  = 3;         /* horizontal padding of bar */
 static const int overviewgappi            = 20;        /* overview时 窗口与窗口 缝隙大小 */
 static const int overviewgappo            = 30;        /* overview时 窗口与边缘 缝隙大小 */
 static const int showbar                  = 1;         /* 是否显示状态栏 */
-static const int topbar                   = 0;         /* 指定状态栏位置 0底部 1顶部 */
+static const int topbar                   = 1;         /* 指定状态栏位置 0底部 1顶部 */
 static const float mfact                  = 0.5;       /* 主工作区 大小比例 */
 static const int   nmaster                = 1;         /* 主工作区 窗口数量 */
 static const int nstack                   = 0;         /* number of clients in primary stack area */
@@ -37,11 +37,12 @@ static const unsigned int snap            = 10;        /* 边缘依附宽度 */
 // 字体配置
 //=============================================================================
 static const char *fonts[]               = {
-      //"monospace:size=15",
-			"Monaco:style=Regular:size=11",
-			"Symbols Nerd Font:style=2048-em:size=17",
-		  "Microsoft YaHei:size=11:style=Regular:antialias=true:autohint:true",
-			"JoyPixels:size=13:antialias=true:autohint=true"
+    "JetBrainsMono Nerd Font:style=medium:size=13", 
+    "monospace:size=13",
+	"Monaco:style=Regular:size=11",
+	"Symbols Nerd Font:style=2048-em:size=17",
+	"Microsoft YaHei:size=11:style=Regular:antialias=true:autohint:true",
+	"JoyPixels:size=13:antialias=true:autohint=true"
 };  
 
 

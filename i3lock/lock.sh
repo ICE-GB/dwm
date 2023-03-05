@@ -1,4 +1,4 @@
-#!/bin/bash
+#! /usr/bin/env bash
 
 BLANK='#00000000'
 CLEAR='#ffffff22'

@@ -62,7 +62,7 @@ def get_cache(var):
 
 def update(loop=False,exec=True):
   while True :
-    icon="󰎆" # 🎵
+    icon="" # 🎵
     text=get_music_title()
     if ""==text:
       txt="^s{}^{} {} ".format(name, icon_color, icon)

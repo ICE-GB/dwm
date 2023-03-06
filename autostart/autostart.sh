@@ -44,9 +44,9 @@ daemons() {
 
 
   # cfw & # clash for windows
-  crow & # translate
-  blueman-manager & # bluetooth manager
-  copyq & # copy software
+  # crow & # translate
+  # blueman-manager & # bluetooth manager
+  # copyq & # copy software
 
   # libinput-gestures-setup start # touchpad open gesture
   # xinput --set-prop 15 'libinput Accel Speed' 0.5 # set touchpad sensitivity
@@ -79,6 +79,6 @@ cron() {
 }
 
 settings 1 & # 初始化设置项
-cron 5 &     # 定时任务项
+# cron 5 &     # 定时任务项
 daemons 1 &  # 后台程序项
 

@@ -37,7 +37,7 @@ static const unsigned int snap            = 10;        /* 边缘依附宽度 */
 // 字体配置
 //=============================================================================
 static const char *fonts[]               = {
-    "JetBrainsMono Nerd Font:style=medium:size=13", 
+    "JetBrainsMono Nerd Font:style=Regular:size=13", 
     "monospace:size=13",
 	"Monaco:style=Regular:size=11",
 	"Symbols Nerd Font:style=2048-em:size=17",
@@ -66,8 +66,8 @@ static const char *colors[][3] = {
     [SchemeOverView] = { red2, black, black },
 };
 //-----------------------------------------------------------------------------
-static int statusbar_h_bias=13;
-static int tag_line_h=7;
+static int statusbar_h_bias=4;
+static int tag_line_h=4;
 //-----------------------------------------------------------------------------
 /* 透明度设置 ColFg, ColBg, ColBorder */ 
 static const unsigned int baralpha        = 0xc0;      /* 状态栏透明度 */

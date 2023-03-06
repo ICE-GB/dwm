@@ -33,9 +33,14 @@ def update(loop=False,exec=True):
     cpu_usage="{:<3}".format(str(cpu_usage)+"%")
     cmd = "cat /sys/class/thermal/thermal_zone0/temp"
     result = subprocess.run(cmd, shell=True, timeout=3, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
-    temperature=int(float(result.stdout.decode('utf-8').replace('\n',''))/1000)
-    text=cpu_usage+" "+str(temperature)+" "
-    txt="^s{}^{} {}{} {}".format(name, icon_color, icon, text_color, text)
+    try:
+      temperature=int(float(result.stdout.decode('utf-8').replace('\n',''))/1000)
+      text=cpu_usage+""+str(temperature)+""
+    except ValueError:
+      text=cpu_usage
+      pass
+    
+    txt="^s{}^{} {}{} {} ".format(name, icon_color, icon, text_color, text)
     common.write_to_file(txt+"\n",str(name))
     if loop == False : 
       if exec==True :

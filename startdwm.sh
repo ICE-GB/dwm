@@ -3,6 +3,10 @@
 source "$HOME"/.profile
 source "$HOME"/.dwm/.profile
 
+xrandr --dpi 120
+xrandr --output Virtual1 --mode 2560x1440
+
+
 # "$HOME"/scripts/set_screen.sh two # 设置显示器
 
 # 在不登出和退出程序程序的情况下重启dwm

@@ -60,7 +60,7 @@ static const char *colors[][3]{
 /*SchemeUnderline 下划线    */   { red2, black, black },
 /*SchemeMode      模式      */   { green,   black,  black },
 /*SchemeHid       隐藏      */   { "#dddddd", NULL, NULL },
-/*SchemeSystray   托盘      */   { NULL, blue, NULL },
+/*SchemeSystray   托盘      */   { "#B48EAD", "#1e222a", "#1e222a" },
 /*SchemeNormTag   普通标签  */   { "#aaaaaa", "#333333", NULL },
 /*SchemeSelTag    选中标签  */   { "#eeeeee", "#333333", NULL },
 /*SchemeBarEmpty  空白状态栏*/   { "#1e222a", "#1e222a", NULL },

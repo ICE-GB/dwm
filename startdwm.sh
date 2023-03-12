@@ -16,7 +16,9 @@ elif [ "$(uname -n)" == "gb-HP-ProBook-455R-G6" ]; then
     xrandr --output "$INNER_PORT" --off --output "$OUT_PORT_CONNECTED" --mode 1920x1080 --pos 0x0 --scale 1x1 --primary
   fi
 elif [ "$(uname -n)" == "nixos-awnlzw" ]; then
-  echo "由lightdm处理"
+  xrandr --dpi 120
+  xrandr --output DP-4 --mode 2560x1600 --pos 0x0 --primary
+  xrandr --output HDMI-0 --mode 2560x1440 --pos 2560x0 --primary
 fi
 
 

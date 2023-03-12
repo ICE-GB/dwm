@@ -82,4 +82,4 @@ settings 1 & # 初始化设置项
 # cron 5 &     # 定时任务项
 daemons 1 &  # 后台程序项
 
-xhost + # add support for docker gui app
+# xhost + # add support for docker gui app

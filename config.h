@@ -234,6 +234,7 @@ static Button buttons[] = {
     { ClkWinTitle,         0,               Button3,          togglewin,     {0} },                                   // 右键        |  点击标题     |  切换窗口显示状态
     /* 点击窗口操作 */
     { ClkClientWin,        MODKEY,          Button1,          movemouse,     {0} },                                   // super+左键  |  拖拽窗口     |  拖拽窗口
+    { ClkClientWin,        MODKEY,          Button2,          killclient,    {0} },                                   // super+中键  |  关闭窗口     |  关闭窗口
     { ClkClientWin,        MODKEY,          Button3,          resizemouse,   {0} },                                   // super+右键  |  拖拽窗口     |  改变窗口大小
     /* 点击tag操作 */
     { ClkTagBar,           0,               Button1,          view,          {0} },                                   // 左键        |  点击tag      |  切换tag

@@ -1,124 +1,106 @@
 #!/usr/bin/env python
 
-import os
-import sys
-import subprocess
-import re
-import time
-import common
 import _thread
+import os
+import re
+import subprocess
+import sys
+import time
+
+import common
+
+icon_fg = common.pink
+icon_bg = common.black
+icon_tr = "0xff"
+text_fg = common.pink
+text_bg = common.black
+text_tr = "0xff"
+
+icon_color = "^c" + str(icon_fg) + "^^b" + str(icon_bg) + str(icon_tr) + "^"
+text_color = "^c" + str(text_fg) + "^^b" + str(text_bg) + str(text_tr) + "^"
+DELAY_TIME = 2
+
+filename = os.path.basename(__file__)
+name = re.sub("\\..*", '', filename)
+icon_map = {
+    "wifi": "",
+    "ethernet": "",
+    "offline": ""
+}
+
+cmd_map = {
+    "wifi": "iwconfig 2>/dev/null | awk '/ESSID:/ {print $4}' | sed 's/ESSID:\"//g;s/\"$//g'",
+    "ethernet": "ip route get 1.1.1.1 | awk '{print $5}'",
+    "offline": "echo 'Unknown'"
+}
 
 
-icon_fg=common.pink
-icon_bg=common.black
-icon_tr="0xff"
-text_fg=common.pink
-text_bg=common.black
-text_tr="0xff"
+def get_network_status():
+    try:
+        # 使用 subprocess.run() 启动 nmcli 命令获取网络状态
+        cmd = "nmcli -t -f TYPE,STATE -e no connection show --active"
+        result = subprocess.run(cmd, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        out = result.stdout.decode().strip()
 
-icon_color="^c"+str(icon_fg)+"^^b"+str(icon_bg)+str(icon_tr)+"^"
-text_color="^c"+str(text_fg)+"^^b"+str(text_bg)+str(text_tr)+"^"
-DELAY_TIME=2
-
-filename= os.path.basename(__file__)
-name=re.sub("\..*",'',filename)
-
-def connect_status():
-  ret=-1
-  cmd ="cat /sys/class/net/w*/operstate"
-  result = subprocess.run(cmd, shell=True, timeout=3, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
-  connect=str(result.stdout.decode('utf-8').replace('\n',''))
-  match connect:
-    case "up": ret=1;
-    case "down": ret=0;
-    case _: ret=-1;
-  return ret
-
-
-def get_wifi_icon():
-    icon="󱛏"
-    connect_status_=connect_status()
-    match connect_status_:
-      case 0:
-        cmd ="cat /sys/class/net/w*/flags"
-        result = subprocess.run(cmd, shell=True, timeout=3, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
-        flags=str(result.stdout.decode('utf-8').replace('\n',''))
-        if(str(flags)=="0x1003") : icon="睊"
-        else : icon = "󰤬"
+        # 解析 nmcli 命令得到的结果，判断是否为已连接状态
+        if out:
+            if "wifi" in out and ("connected" in out or "activated" in out):
+                return "wifi"
+            elif "ethernet" in out and ("connected" in out or "activated" in out):
+                return "ethernet"
+    except subprocess.CalledProcessError:
+        # 处理 nmcli 命令无法执行的情况
         pass
-      case 1:
-        cmd = "echo $(awk '/^\s*w/ { print int($3 * 100 / 70)}' /proc/net/wireless)"
-        result = subprocess.run(cmd, shell=True, timeout=3, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
-        wifi_signal=int(result.stdout.decode('utf-8').replace('\n',''))
-        if(wifi_signal>=80) : icon="󰤨"
-        elif(wifi_signal>=60) : icon="󰤥"
-        elif(wifi_signal>=40) : icon="󰤢"
-        elif(wifi_signal>=20) : icon="󰤟"
-        else : icon="󰤯"
-      case _: icon="󱛏"
-    return icon
+
+    return "offline"
 
 
-def update(loop=False,exec=True):
-  while True :
-    icon="󱛏"
-    icon=""+get_wifi_icon()+" "
-    text=""
-    txt="^s{}^{} {} {}{}".format(name, icon_color, icon, text_color, text)
-    common.write_to_file(txt+"\n",str(name))
-    if loop == False : 
-      if exec==True :
-        os.system("xsetroot -name '"+str(txt)+"'")
-      break
-    time.sleep(DELAY_TIME)
+def update(loop=False, set_root=True):
+    while True:
+        icon = icon_map[get_network_status()]
+        txt = "^s{}^{} {} ".format(name, icon_color, icon)
+        common.write_to_file(txt + "\n", str(name))
+        if not loop:
+            if set_root:
+                os.system("xsetroot -name '" + str(txt) + "'")
+            break
+        time.sleep(DELAY_TIME)
+
 
 def update_thread():
-  _thread.start_new_thread(update,(False,False))
-
-def notify(string='') :
-  connect_status_=connect_status()
-  match int(connect_status_):
-    case 1:
-      cmd="echo $(awk '/^\s*w/ { print int($3 * 100 / 70)}' /proc/net/wireless)"
-      result = subprocess.run(cmd, shell=True, timeout=3, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
-      wifi_signal=int(result.stdout.decode('utf-8').replace('\n',''))
-      cmd="echo $(nmcli -t -f name,device connection show --active | grep wlan0 | cut -d\: -f1)"
-      result = subprocess.run(cmd, shell=True, timeout=3, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
-      wifi_name=result.stdout.decode('utf-8').replace('\n','')
-      cmd="notify-send 'Wifi connected' "+"'Wifi name : "+str(wifi_name)+"\nSignal strength : "+str(wifi_signal)+"'"+" -r 1025"
-      os.system(cmd)
-    case -1:
-      os.system("notify-send 'Wifi no connected' 'Press right buttom to open wifi connect tool.(nmtui)' -r 1024")
-      pass
-    case _:
-      os.system("notify-send 'The wifi device is disable, please cheack your wifi device' 'Press right buttom to open wifi connect tool.(nmtui)' -r 1024")
-      pass
+    _thread.start_new_thread(update, (False, False))
 
 
+def notify():
+    connect_status = get_network_status()
+    net_name = subprocess.check_output(cmd_map[connect_status], shell=True).decode("utf-8").strip()
+    cmd = "notify-send '{} 已连接到 {}'".format(icon_map[connect_status], net_name)
+    os.system(cmd)
 
-def click(string='') :
-  match string:
-    case 'L':
-      notify()
-    case 'M':
-      os.system("nm-connection-editor")
-      pass
-    case 'R':
-      os.system("kitty -T nmtui --class floatingTerminal -e nmtui ")
-    case 'U':
-      pass
-    case 'D':
-      pass
-    case  _: pass
+
+def click(string=''):
+    match string:
+        case 'L':
+            notify()
+        case 'M':
+            os.system("nm-connection-editor")
+            pass
+        case 'R':
+            os.system("kitty -T nmtui --class floatingTerminal -e nmtui ")
+        case 'U':
+            pass
+        case 'D':
+            pass
+        case _:
+            pass
 
 
 if __name__ == "__main__":
-  if len(sys.argv) > 1:
-    if(sys.argv[1]=="update") :
-      pass
-    else :
-      click(sys.argv[1])
-      update(exec=False)
-  else :
-    update()
-   
+    if len(sys.argv) > 1:
+        if sys.argv[1] == "update":
+            pass
+        else:
+            click(sys.argv[1])
+            update(set_root=False)
+    else:
+        update()

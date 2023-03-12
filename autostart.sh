@@ -22,6 +22,7 @@ daemons() {
   [ "$1" ] && sleep "$1"
 
   pkill -f statusbar.sh
+  pkill -f statusbar.py
   pkill fcitx5
   pkill flameshot
   pkill dunst

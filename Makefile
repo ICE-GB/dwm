@@ -19,16 +19,13 @@ options:
 .cpp.o:
 	${CXX} -c ${CXXFLAGS} $<
 
-${OBJ}: config.h config.mk
-
-config.h:
-	cp config.def.h $@
+${OBJ}: config.mk
 
 dwm: ${OBJ}
 	${CC} -o $@ ${OBJ} ${LDFLAGS}
 
 clean:
-	rm -f  ${OBJ} dwm-${VERSION}.tar.gz config.h dwm drw.o dwm.o util.o *.orig *.rej
+	rm -f  ${OBJ} dwm-${VERSION}.tar.gz dwm drw.o dwm.o util.o *.orig *.rej
 
 dist: clean
 	mkdir -p dwm-${VERSION}

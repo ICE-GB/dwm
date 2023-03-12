@@ -44,7 +44,7 @@ def get_network_status():
 
         # 解析 nmcli 命令得到的结果，判断是否为已连接状态
         if out:
-            if "wifi" in out and ("connected" in out or "activated" in out):
+            if ("wifi" in out or "wireless" in out) and ("connected" in out or "activated" in out):
                 return "wifi"
             elif "ethernet" in out and ("connected" in out or "activated" in out):
                 return "ethernet"

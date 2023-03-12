@@ -3,19 +3,21 @@
 
 include config.mk
 
-SRC = drw.c dwm.c util.c
-OBJ = ${SRC:.c=.o}
+SRC = drw.cpp dwm.cpp util.cpp
+OBJ = ${SRC:.cpp=.o}
 
 all: options dwm
 
 options:
 	@echo dwm build options:
 	@echo "CFLAGS   = ${CFLAGS}"
+	@echo "CXXFLAGS = ${CXXFLAGS}"
 	@echo "LDFLAGS  = ${LDFLAGS}"
 	@echo "CC       = ${CC}"
+	@echo "CXX      = ${CXX}"
 
-.c.o:
-	${CC} -c ${CFLAGS} $<
+.cpp.o:
+	${CXX} -c ${CXXFLAGS} $<
 
 ${OBJ}: config.h config.mk
 

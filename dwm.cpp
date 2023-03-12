@@ -38,6 +38,7 @@
 #include <X11/Xlib.h>
 #include <X11/Xproto.h>
 #include <X11/Xutil.h>
+#include <limits>
 #ifdef XINERAMA
 #include <X11/extensions/Xinerama.h>
 #endif /* XINERAMA */
@@ -82,18 +83,18 @@ enum { CurNormal, CurResize, CurMove, CurLast }; /* cursor */
 enum {
     SchemeNorm,       // 普通
     SchemeSel,        // 选中的
+    SchemeSelGlobal,  // 全局并选中的
     SchemeTabSel,     // 选中tag
     SchemeTabNorm,    // 普通tag
+    SchemeUnderline,  // 下划线
     SchemeMode,       // 模式
-    SchemeSelGlobal,  // 全局并选中的
     SchemeHid,        // 隐藏的
     SchemeSystray,    // 托盘
     SchemeNormTag,    // 普通标签
     SchemeSelTag,     // 选中的标签
-    SchemeUnderline,  // 下划线
     SchemeBarEmpty,   // 状态栏空白部分
-    SchemeStatusText, // 状态栏文本
-    SchemeOverView,
+    SchemeOverView,   // overview
+    SchemeStatusText, // 状态栏文本    
 }; /* color schemes */
 enum { NetSupported, NetWMName, NetWMState, NetWMCheck,
        NetSystemTray, NetSystemTrayOP, NetSystemTrayOrientation, NetSystemTrayOrientationHorz,
@@ -133,6 +134,7 @@ struct Client {
     int taskw;
 	unsigned int tags;
 	int isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen, isglobal, isnoborder, isscratchpad;
+  bool is_showhidewindows=false;
 	Client *next;
 	Client *snext;
 	Monitor *mon;
@@ -165,7 +167,7 @@ typedef struct {
 
 
 typedef struct {
-	const char *class;
+	const char *class_;
 	const char *instance;
 	const char *title;
 	unsigned int tags;
@@ -248,7 +250,7 @@ static void hide(Client *c);
 static void show(Client *c);
 static void showtag(Client *c);
 static void hidewin(const Arg *arg);
-static void hidewin_c(Client* c);
+static void hidewin(Client* c);
 
 static void hideotherwins(const Arg *arg);
 static void showonlyorall(const Arg *arg);
@@ -317,7 +319,7 @@ static void tagtoleft(const Arg *arg);
 static void tagtoright(const Arg *arg);
 
 static void togglebar(const Arg *arg);
-static void togglesystray();
+static void togglesystray(const Arg *arg);
 static void togglefloating(const Arg *arg);
 static void toggleallfloating(const Arg *arg);
 
@@ -351,8 +353,8 @@ static void toggleoverview(const Arg *arg);
 
 void PushTag(void);
 void InspectTagRestore(void);
-void GoBackToPreTag(void);
-void GoBackToNextTag(void);
+void GoBackToPreTag(const Arg *arg);
+void GoBackToNextTag(const Arg *arg);
 
 static Client *wintoclient(Window w);
 static Monitor *wintomon(Window w);
@@ -377,23 +379,7 @@ static int vp;               /* vertical padding for bar */
 static int sp;               /* side padding for bar */
 static int (*xerrorxlib)(Display *, XErrorEvent *);
 static unsigned int numlockmask = 0;
-static void (*handler[LASTEvent]) (XEvent *) = {
-	[ButtonPress] = buttonpress,
-	[ClientMessage] = clientmessage,
-	[ConfigureRequest] = configurerequest,
-	[ConfigureNotify] = configurenotify,
-	[DestroyNotify] = destroynotify,
-	[EnterNotify] = enternotify,
-	[Expose] = expose,
-	[FocusIn] = focusin,
-	[KeyPress] = keypress,
-	[MappingNotify] = mappingnotify,
-	[MapRequest] = maprequest,
-	[MotionNotify] = motionnotify,
-	[PropertyNotify] = propertynotify,
-	[ResizeRequest] = resizerequest,
-	[UnmapNotify] = unmapnotify
-};
+static void (*handler[LASTEvent]) (XEvent *);
 static Atom wmatom[WMLast], netatom[NetLast], xatom[XLast];
 static int restart = 0;
 static int running = 1;
@@ -493,7 +479,7 @@ void gDebug(const char *fmt, ...) {
 void
 applyrules(Client *c)
 {
-    const char *class, *instance;
+    const char *class_, *instance;
     unsigned int i;
     const Rule *r;
     Monitor *m;
@@ -506,14 +492,14 @@ applyrules(Client *c)
     c->isscratchpad = 0;
     c->tags = 0;
     XGetClassHint(dpy, c->win, &ch);
-    class    = ch.res_class ? ch.res_class : broken;
+    class_    = ch.res_class ? ch.res_class : broken;
     instance = ch.res_name  ? ch.res_name  : broken;
 
 
     for (i = 0; i < LENGTH(rules); i++) {
         r = &rules[i];
         if ((!r->title || strstr(c->name, r->title))
-                && (!r->class || strstr(class, r->class))
+                && (!r->class_ || strstr(class_, r->class_))
                 && (!r->instance || strstr(instance, r->instance)))
         {
             c->isfloating = r->isfloating;
@@ -532,6 +518,7 @@ applyrules(Client *c)
     if (!strcmp(c->name, scratchpadname)) {
         c->isscratchpad = 1;
         c->isglobal = 1; // scratchpad is default global
+        c->is_showhidewindows=true;
     } 
     if (ch.res_class)
         XFree(ch.res_class);
@@ -748,7 +735,8 @@ checkotherwm(void)
 void
 cleanup(void)
 {
-    Arg a = {.ui = ~0};
+    Arg a = {.ui = UINT_MAX};
+
     Layout foo = { "", NULL };
     Monitor *m;
     size_t i;
@@ -857,11 +845,17 @@ clientmessage(XEvent *e)
         if (c == selmon->sel) return;
         // 若不是当前显示器 则跳转到对应显示器
         if (c->mon != selmon) {
-            focusmon(&(Arg) { .i = +1 });
+            // focusmon(&(Arg) { .i = +1 });
+            Arg arg;
+            arg.i=+1;
+            focusmon(&arg);
         }
         // 若不是当前tag 则跳转到对应tag
         if (!ISVISIBLE(c)) {
-            view(&(Arg) { .ui = c->tags });
+            // view(&(Arg) { .ui = c->tags });
+            Arg arg;
+            arg.ui = c->tags;
+            focusmon(&arg);
         }
     }
 }
@@ -971,7 +965,7 @@ createmon(void)
     Monitor *m;
     unsigned int i;
 
-    m = ecalloc(1, sizeof(Monitor));
+    m = (Monitor*)ecalloc(1, sizeof(Monitor));
     m->tagset[0] = m->tagset[1] = 1;
     m->mfact = mfact;
     m->nmaster = nmaster;
@@ -987,7 +981,7 @@ createmon(void)
   	m->ltaxis[STACK]  = m->lt[0]->preset.stack1axis;
   	m->ltaxis[STACK2] = m->lt[0]->preset.stack2axis;
 
-    m->pertag = ecalloc(1, sizeof(Pertag));
+    m->pertag =(Pertag *)ecalloc(1, sizeof(Pertag));
     m->pertag->curtag = m->pertag->prevtag = 1;
     m->isoverview = 0;
 
@@ -1231,7 +1225,7 @@ drawstatusbar(Monitor *m, int bh, char* stext) {
         isCode = 0;
     text = p;
 
-    // w += 2; /* 1px padding on both sides */
+   // w += 2; /* 1px padding on both sides */
     x = m->ww - w - system_w - 2 * sp - (system_w ? systrayspadding : 0); // 托盘存在时 额外多-一个systrayspadding
 
     drw_setscheme(drw, scheme[LENGTH(colors)]);
@@ -1507,7 +1501,7 @@ Client *DirectionSelect(const Arg *arg) {
         return NULL;
 
     for (c = selmon->clients; c; c = c->next) {
-        if (ISVISIBLE(c) && (issingle || !HIDDEN(c))) {
+        if (ISVISIBLE(c) && !HIDDEN(c) && c->tags==tc->tags) {
             last ++;
             tempClients[last] = c;
             if (c == tc) cur = last;
@@ -1668,8 +1662,12 @@ focusdir(const Arg *arg)
     c=DirectionSelect(arg);
 
     if (issingle) {
-        if (c)
-            hideotherwins(&(Arg) { .v = c });
+        if (c) {
+            // hideotherwins(&(Arg) { .v = c });
+            Arg arg_;
+            (arg_.v)=c;
+            hideotherwins(&arg_);
+        }
     } else {
         if (c) {
             pointerfocuswin(c);
@@ -1712,8 +1710,12 @@ focusstack(const Arg *arg)
     }
 
     if (issingle) {
-        if (c)
-            hideotherwins(&(Arg) { .v = c });
+        if (c) {
+            // hideotherwins(&(Arg) { .v = c });
+          Arg arg_;
+          arg_.v=c;
+          hideotherwins(&arg_);
+        }
     } else {
         if (c) {
             pointerfocuswin(c);
@@ -1857,7 +1859,8 @@ grabkeys(void)
     }
 }
 
-void
+
+void 
 hide(Client *c) {
     if (!c || HIDDEN(c))
         return;
@@ -1879,7 +1882,7 @@ hide(Client *c) {
     XUngrabServer(dpy);
 
     //gxt_kt resolve bug
-    if (strcmp(c->name, scratchpadname)!=0) { 
+    if (c->is_showhidewindows==false ) { 
       hiddenWinStack[++hiddenWinStackTop] = c;
     } 
 
@@ -1904,8 +1907,12 @@ showonlyorall(const Arg *arg) {
         for (c = selmon->clients; c; c = c->next)
             if (ISVISIBLE(c))
                 show(c);
-    } else
-        hideotherwins(&(Arg) { .v = selmon->sel });
+    } else {
+        // hideotherwins(&(Arg) { .v = selmon->sel });
+      Arg arg_;
+      arg_.v=selmon->sel;
+      hideotherwins(&arg_);
+    }
 }
 
 
@@ -1983,7 +1990,7 @@ killclient(const Arg *arg)
                 return;
             }
         }
-        gDebug("kellclient sel->name=%s", selmon->sel->name);
+        // gDebug("kellclient sel->name=%s", selmon->sel->name);
     }
     if_forcekill2kill = 0;
 
@@ -2020,7 +2027,8 @@ int ShowHideWindows(const Arg *arg) {
     int nums = LENGTH(showhidewindows);
     for (int i = 0; i < nums; i++) {
         if (!strcmp(selmon->sel->name, showhidewindows[i])) {
-            hidewin(arg);
+            // hidewin(arg);
+            hidewin(selmon->sel);
             return 1;
         }
     }
@@ -2042,7 +2050,14 @@ void ToggleShowHideWindows(const Arg *arg) {
 
     if(found) {
         if (find_c->mon == selmon) {// 在同屏幕则toggle win状态
-          if(HIDDEN(find_c) || find_c->tags != selmon->tagset[find_c->mon->seltags]) {
+      
+          if(HIDDEN(find_c) || (find_c->tags != selmon->tagset[find_c->mon->seltags])) {
+          // if(HIDDEN(find_c) ||
+          //    (find_c->tags != selmon->tagset[find_c->mon->seltags]&&
+          //       find_c->tags!=(2<<(LENGTH(tags)-1))-1) ) { // 这里有一个bug是，
+          // // 在第一次使用浮动界面时，tag会不等于当前tag,导致出现第一次无法隐藏
+          // // 已经在managefloating函数处修复，这里就不需要了
+          
                 find_c->tags=selmon->tagset[selmon->seltags];
                 sendmon(find_c, selmon);
                 show(find_c);
@@ -2050,7 +2065,7 @@ void ToggleShowHideWindows(const Arg *arg) {
                 restack(selmon);
                 arrange(find_c->mon); // 需要再次arrange以防止显示失败
           }else {
-            hidewin_c(find_c);
+            hidewin(find_c); //为了防止有时候隐藏不成功，再次隐藏
           }
         } 
         else {                // 不在同屏幕则将win移到当前屏幕 并显示
@@ -2090,6 +2105,8 @@ managefloating(Client *c)
             while (d2 == 0) d2 = rand()%7 - 3;
         }
     }
+  //gxt_kt 浮动窗口也要指定好tag
+  c->tags=selmon->tagset[c->mon->seltags];
 }
 
 void
@@ -2099,7 +2116,7 @@ manage(Window w, XWindowAttributes *wa)
     Window trans = None;
     XWindowChanges wc;
 
-    c = ecalloc(1, sizeof(Client));
+    c = (Client*)ecalloc(1, sizeof(Client));
     c->win = w;
     /* geometry */
     c->x = c->oldx = wa->x;
@@ -2507,7 +2524,7 @@ restoreSession(void)
 	if (!fr)
 		return;
 
-	char *str = malloc(23 * sizeof(char)); // allocate enough space for excepted input from text file
+	char *str = (char*)malloc(23 * sizeof(char)); // allocate enough space for excepted input from text file
 	while (fscanf(fr, "%[^\n] ", str) != EOF) { // read file till the end
 		long unsigned int winId;
 		unsigned int tagsForWin;
@@ -2554,7 +2571,10 @@ void restoreTagSession() {
 	if (fscanf(fr, "%[^\n] ", str) != EOF) { // read file
     int tag=0;
 		int check = sscanf(str, "%d",&tag); // get data
-    view(&(Arg) { .ui = tag }); //切换到对应tag
+    // view(&(Arg) { .ui = tag }); //切换到对应tag
+    Arg arg_;
+    arg_.ui=tag;
+    view(&arg_);
   }
 
   for (Monitor *m = selmon; m; m = m->next) // rearrange all monitors
@@ -2885,7 +2905,10 @@ tagtoleft(const Arg *arg) {
     if(selmon->sel != NULL
             && __builtin_popcount(selmon->tagset[selmon->seltags] & TAGMASK) == 1
             && selmon->tagset[selmon->seltags] > 1) {
-        tag(&(Arg) { .ui = selmon->tagset[selmon->seltags] >> 1 });
+        // tag(&(Arg) { .ui = selmon->tagset[selmon->seltags] >> 1 });
+        Arg arg_;
+        arg_.ui=selmon->tagset[selmon->seltags] >> 1;
+        tag(&arg_);
     }
 }
 
@@ -2894,7 +2917,11 @@ tagtoright(const Arg *arg) {
     if(selmon->sel != NULL
             && __builtin_popcount(selmon->tagset[selmon->seltags] & TAGMASK) == 1
             && selmon->tagset[selmon->seltags] & (TAGMASK >> 1)) {
-        tag(&(Arg) { .ui = selmon->tagset[selmon->seltags] << 1 });
+        // tag(&(Arg) { .ui = selmon->tagset[selmon->seltags] << 1 });
+          Arg arg_;
+          arg_.ui= selmon->tagset[selmon->seltags] << 1;
+          tag(&arg_);
+        
     }
 }
 
@@ -2989,8 +3016,13 @@ void
 selectlayout(const Arg *arg)
 {
     const Layout *cur = selmon->lt[selmon->sellt];
-    const Layout *target = cur == arg->v ? &layouts[0] : arg->v;
-    setlayout(&(Arg) { .v = target });
+    auto ret=cur == arg->v ? &layouts[0] : arg->v;
+    const Layout *target=(const Layout*)ret;
+    // const Layout *target = cur == arg->v ? &layouts[0] : arg->v;
+    // setlayout(&(Arg) { .v = target });
+    Arg arg_;
+    arg_.v=target;
+    setlayout(&arg_);
 }
 
 void
@@ -3027,15 +3059,31 @@ cyclelayout(const Arg *arg) {
 	Layout *l;
 	for(l = (Layout *)layouts; l != selmon->lt[selmon->sellt]; l++);
 	if(arg->i > 0) {
-		if(l->symbol && (l + 1)->symbol)
-			setlayout(&((Arg) { .v = (l + 1) }));
-		else
-			setlayout(&((Arg) { .v = layouts }));
+		if(l->symbol && (l + 1)->symbol) {
+			// setlayout(&((Arg) { .v = (l + 1) }));
+      Arg arg_;
+      arg_.v=l+1;
+      setlayout(&arg_);
+      }
+		else {
+			// setlayout(&((Arg) { .v = layouts }));
+      Arg arg_;
+      arg_.v=layouts;
+      setlayout(&arg_);
+    }
 	} else {
-		if(l != layouts && (l - 1)->symbol)
-			setlayout(&((Arg) { .v = (l - 1) }));
-		else
-			setlayout(&((Arg) { .v = &layouts[LENGTH(layouts) - 2] }));
+		if(l != layouts && (l - 1)->symbol) {
+			// setlayout(&((Arg) { .v = (l - 1) }));
+      Arg arg_;
+      arg_.v=l-1;
+      setlayout(&arg_);
+    }
+		else {
+			// setlayout(&((Arg) { .v = &layouts[LENGTH(layouts) - 2] }));
+      Arg arg_;
+      arg_.v = &layouts[LENGTH(layouts) - 2];
+      setlayout(&arg_);
+    }
 	}
 }
 
@@ -3107,7 +3155,7 @@ setup(void)
     cursor[CurResize] = drw_cur_create(drw, XC_sizing);
     cursor[CurMove] = drw_cur_create(drw, XC_fleur);
     /* init appearance */
-    scheme = ecalloc(LENGTH(colors) + 1, sizeof(Clr *));
+    scheme =(Clr **) ecalloc(LENGTH(colors) + 1, sizeof(Clr *));
 	scheme[LENGTH(colors)] = drw_scm_create(drw, colors[0], alphas[0], 3);
     for (i = 0; i < LENGTH(colors); i++)
         scheme[i] = drw_scm_create(drw, colors[i], alphas[i], 3);
@@ -3163,7 +3211,7 @@ show(Client *c)
     setclientstate(c, NormalState);
 
     // gxt_kt resolve bug
-    if (strcmp(c->name, scratchpadname)!=0) {
+    if (c->is_showhidewindows==false) {
       hiddenWinStackTop--;
     }
 
@@ -3237,7 +3285,11 @@ tag(const Arg *arg)
         selmon->sel->tags = arg->ui & TAGMASK;
         focus(NULL);
         arrange(selmon);
-        view(&(Arg) { .ui = arg->ui });
+        // view(&(Arg) { .ui = arg->ui });
+      Arg arg_;
+      arg_.ui=arg->ui;
+      view(&arg_);
+
     } else
         view(arg);
 }
@@ -3248,7 +3300,10 @@ tagmon(const Arg *arg)
     if (!selmon->sel || !mons->next)
         return;
     sendmon(selmon->sel, dirtomon(arg->i));
-    focusmon(&(Arg) { .i = +1 });
+    // focusmon(&(Arg) { .i = +1 });
+      Arg arg_;
+      arg_.i=+1;
+      focusmon(&arg_);
     if (selmon->sel && selmon->sel->isfloating) {
         resize(selmon->sel, selmon->mx + (selmon->mw - selmon->sel->w) / 2, selmon->my + (selmon->mh - selmon->sel->h) / 2, selmon->sel->w, selmon->sel->h, 0);
     }
@@ -3256,7 +3311,7 @@ tagmon(const Arg *arg)
 }
 
 void
-togglesystray()
+togglesystray(const Arg *arg)
 {
     if (showsystray) {
         showsystray = 0;
@@ -3353,8 +3408,12 @@ togglescratch(const Arg *arg)
     for (m = mons; m && !found; m = m->next)
         for (c = m->clients; c && !(found = c->isscratchpad); c = c->next);
     if (found) {
-        if (c->mon == selmon) // 在同屏幕则toggle win状态
-            togglewin(&(Arg){.v = c});
+        if (c->mon == selmon) {// 在同屏幕则toggle win状态
+            // togglewin(&(Arg){.v = c});
+            Arg arg_;
+            arg_.v=c;
+            togglewin(&arg_);
+        } 
         else {                // 不在同屏幕则将win移到当前屏幕 并显示
             sendmon(c, selmon);
             show(c);
@@ -3399,7 +3458,7 @@ hidewin(const Arg *arg) {
 }
 
 void
-hidewin_c(Client* c) {
+hidewin(Client* c) {
     if (!c)
         return;
     hide(c);
@@ -3520,13 +3579,20 @@ updatebars(void)
 {
     unsigned int w;
     Monitor *m;
-    XSetWindowAttributes wa = {
-        .override_redirect = True,
-        .background_pixel = 0,
-        .border_pixel = 0,
-        .colormap = cmap,
-        .event_mask = ButtonPressMask|ExposureMask
-    };
+    // XSetWindowAttributes wa = {
+    //     .override_redirect = True,
+    //     .background_pixel = 0,
+    //     .border_pixel = 0,
+    //     .colormap = cmap,
+    //     .event_mask = ButtonPressMask|ExposureMask
+    // };
+    XSetWindowAttributes wa;
+    wa.override_redirect=True;
+    wa.background_pixel=0;
+    wa.border_pixel=0;
+    wa.colormap=cmap;
+    wa.event_mask=ButtonPressMask|ExposureMask;
+
     XClassHint ch = {"dwm", "dwm"};
     for (m = mons; m; m = m->next) {
         if (m->barwin)
@@ -3838,6 +3904,19 @@ updatetitle(Client *c)
         gettextprop(c->win, XA_WM_NAME, c->name, sizeof c->name);
     if (c->name[0] == '\0') /* hack to mark broken clients */
         strcpy(c->name, broken);
+
+  // gxt_kt  解决打断隐藏窗口bug
+  c->is_showhidewindows=false;
+  int nums = LENGTH(showhidewindows);
+  for (int i = 0; i < nums; i++) {
+    if (!strcmp(c->name, showhidewindows[i])) {
+      c->is_showhidewindows=true;
+      break;
+    }
+  }
+  if (!strcmp(c->name, scratchpadname)) {
+      c->is_showhidewindows=true;
+  } 
 }
 
 void
@@ -3928,7 +4007,12 @@ view(const Arg *arg)
             if (c->tags & arg->ui && !HIDDEN(c) && !c->isglobal)
                 n++;
         if (n == 0) {
-            spawn(&(Arg){ .v = (const char*[]){ "/bin/sh", "-c", arg->v, NULL } });
+            // spawn(&(Arg){ .v = (const char*[]){ "/bin/sh", "-c", arg->v, NULL } });
+            Arg arg_;
+            const char* tmp[]={ "/bin/sh", "-c", (char*)arg->v, NULL };
+            arg_.v=(tmp);
+            // arg_.v= (const char*[]){ "/bin/sh", "-c", (char*)arg->v, NULL };
+            spawn(&arg_);
         }
     }
 
@@ -3947,7 +4031,10 @@ toggleoverview(const Arg *arg)
 
     uint target = selmon->sel && selmon->sel->tags != TAGMASK ? selmon->sel->tags : selmon->seltags;
     selmon->isoverview ^= 1;
-    view(&(Arg){ .ui = target });
+    // view(&(Arg){ .ui = target });
+    Arg arg_;
+    arg_.ui=target;
+    view(&arg_);
     pointerfocuswin(selmon->sel);
 }
 
@@ -3964,7 +4051,10 @@ viewtoleft(const Arg *arg) {
             if (c->isglobal && c->tags == TAGMASK) continue;
             if (c->tags & target && __builtin_popcount(selmon->tagset[selmon->seltags] & TAGMASK) == 1
                     && selmon->tagset[selmon->seltags] > 1) {
-                view(&(Arg) { .ui = target });
+                // view(&(Arg) { .ui = target });
+                Arg arg_;
+                arg_.ui=target;
+                view(&arg_);
                 return;
             }
         }
@@ -3983,14 +4073,17 @@ viewtoright(const Arg *arg) {
             if (c->isglobal && c->tags == TAGMASK) continue;
             if (c->tags & target && __builtin_popcount(selmon->tagset[selmon->seltags] & TAGMASK) == 1
                     && selmon->tagset[selmon->seltags] & (TAGMASK >> 1)) {
-                view(&(Arg) { .ui = target });
+                // view(&(Arg) { .ui = target });
+                Arg arg_;
+                arg_.ui=target;
+                view(&arg_);
                 return;
             }
         }
     }
 }
 
-void GoBackToNextTag(void) {
+void GoBackToNextTag(const Arg *arg) {
   if(SWITCH_TAG_LOOP) {
     do {
       --selmon->tag_res.p;
@@ -4005,13 +4098,13 @@ void GoBackToNextTag(void) {
       return;
     };
   }
-  Arg arg = {0};
-  arg.ui=selmon->tag_res.tag_restore[selmon->tag_res.p];
-  arg.i=1;
-  view(&arg);
+  Arg arg_ = {0};
+  arg_.ui=selmon->tag_res.tag_restore[selmon->tag_res.p];
+  arg_.i=1;
+  view(&arg_);
 }
 
-void GoBackToPreTag(void) {
+void GoBackToPreTag(const Arg *arg) {
   if(SWITCH_TAG_LOOP) {
     do {
       ++selmon->tag_res.p;
@@ -4026,10 +4119,10 @@ void GoBackToPreTag(void) {
       return;
     };
   }
-  Arg arg = {0};
-  arg.ui=selmon->tag_res.tag_restore[selmon->tag_res.p];
-  arg.i=1;
-  view(&arg);
+  Arg arg_ = {0};
+  arg_.ui=selmon->tag_res.tag_restore[selmon->tag_res.p];
+  arg_.i=1;
+  view(&arg_);
 }
 
 void InspectTagRestore(void) {
@@ -4326,19 +4419,24 @@ systraytomon(Monitor *m) {
 void
 xinitvisual()
 {
-    XVisualInfo *infos;
     XRenderPictFormat *fmt;
     int nitems;
     int i;
 
-    XVisualInfo tpl = {
-        .screen = screen,
-        .depth = 32,
-        .class = TrueColor
-    };
+    // XVisualInfo tpl = {
+    //     .screen = screen,
+    //     .depth = 32,
+    //     .class = TrueColor
+    // };
+    XVisualInfo tpl;
+    tpl.screen=screen;
+    tpl.depth=32;
+    tpl.c_class=TrueColor;
+
     long masks = VisualScreenMask | VisualDepthMask | VisualClassMask;
 
-    infos = XGetVisualInfo(dpy, masks, &tpl, &nitems);
+    XVisualInfo *infos;
+    infos = (XVisualInfo*)XGetVisualInfo(dpy, masks, &tpl, &nitems);
     visual = NULL;
     for(i = 0; i < nitems; i ++) {
         fmt = XRenderFindVisualFormat(dpy, infos[i].visual);
@@ -4446,9 +4544,34 @@ zoom(const Arg *arg)
     pop(c);
 }
 
+void
+init_global_values()
+{
+    memset(&handler, 0, sizeof(handler));
+	handler[ButtonPress] = buttonpress;
+	handler[ClientMessage] = clientmessage;
+	handler[ConfigureRequest] = configurerequest;
+	handler[ConfigureNotify] = configurenotify;
+	handler[DestroyNotify] = destroynotify;
+	handler[EnterNotify] = enternotify;
+	handler[Expose] = expose;
+	handler[FocusIn] = focusin;
+	handler[KeyPress] = keypress;
+	handler[MappingNotify] = mappingnotify;
+	handler[MapRequest] = maprequest;
+	handler[MotionNotify] = motionnotify;
+	handler[PropertyNotify] = propertynotify;
+	handler[ResizeRequest] = resizerequest,
+	handler[UnmapNotify] = unmapnotify;
+
+    /* memset(rules, 0, sizeof(rules)); */
+}
+
 int
 main(int argc, char *argv[])
 {
+    init_global_values(); /* for c++ implementation */
+
     if (argc == 2 && !strcmp("-v", argv[1]))
         die("dwm-6.3");
     else if (argc != 1)

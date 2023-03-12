@@ -37,7 +37,7 @@ static const unsigned int snap            = 10;        /* 边缘依附宽度 */
 // 字体配置
 //=============================================================================
 static const char *fonts[]               = {
-    "JetBrainsMono Nerd Font:style=Regular:size=13", 
+    "JetBrainsMono Nerd Font:style=Regular:size=13",
     "monospace:size=13",
 	"Monaco:style=Regular:size=11",
 	"Symbols Nerd Font:style=2048-em:size=17",
@@ -50,50 +50,46 @@ static const char *fonts[]               = {
 /* 颜色设置 ColFg, ColBg, ColBorder */ 
 //=============================================================================
 #include "themes/nord.h"
-static const char *colors[][3] = {        
-    [SchemeNorm] = { "#ffffff", "#333333", "#444444" },
-    [SchemeSel] = { red2, "#47575F", "#f09a7f" }, // #abd687
-    [SchemeSelGlobal] = { "#ffffff", "#47575F", "#fcf86f" },
-    [SchemeTabSel] = { red2,    black,  black },
-    [SchemeTabNorm]= { white,   black,  black },
-    [SchemeUnderline] = { red2, black, black }, 
-    [SchemeMode]= { green,   black,  black },
-    [SchemeHid] = { "#dddddd", NULL, NULL },
-    [SchemeSystray] = { "#B48EAD", "#1e222a", "#1e222a" },
-    [SchemeNormTag] = { "#aaaaaa", "#333333", NULL },
-    [SchemeSelTag] = { "#eeeeee", "#333333", NULL },
-    [SchemeBarEmpty] = { "#1e222a", "#1e222a", NULL },
-    [SchemeOverView] = { red2, black, black },
+// 千万不可以修改顺序，只可以在当前位置改颜色，修改顺序就乱了
+static const char *colors[][3]{
+/*SchemeNorm      普通      */   { "#ffffff", "#333333", "#444444" }, //
+/*SchemeSel       选中      */   { red2, "#47575F", "#f09a7f" },      //SchemeSel,    选中的
+/*SchemeSelGlobal 全局选中  */   { "#ffffff", "#47575F", "#fcf86f" },
+/*SchemeTabSel    选中tag   */   { red2,    black,  black },
+/*SchemeTabNorm   普通tag   */   { white,   black,  black },
+/*SchemeUnderline 下划线    */   { red2, black, black },
+/*SchemeMode      模式      */   { green,   black,  black },
+/*SchemeHid       隐藏      */   { "#dddddd", NULL, NULL },
+/*SchemeSystray   托盘      */   { NULL, blue, NULL },
+/*SchemeNormTag   普通标签  */   { "#aaaaaa", "#333333", NULL },
+/*SchemeSelTag    选中标签  */   { "#eeeeee", "#333333", NULL },
+/*SchemeBarEmpty  空白状态栏*/   { "#1e222a", "#1e222a", NULL },
+/*SchemeOverView  overview  */   { red2, black, black },
 };
 //-----------------------------------------------------------------------------
 static int statusbar_h_bias=4;
 static int tag_line_h=4;
 //-----------------------------------------------------------------------------
-/* 透明度设置 ColFg, ColBg, ColBorder */ 
-static const unsigned int baralpha        = 0xc0;      /* 状态栏透明度 */
-static const unsigned int borderalpha     = 0xdd;      /* 边框透明度 */
+static const unsigned char borderalpha = 0xdd;      /* 边框透明度 */
+// 透明度设置
 static const unsigned int alphas[][3] = {         
-    // [SchemeNorm] = { OPAQUE, baralpha, borderalpha }, 
-    // [SchemeSel] = { OPAQUE, baralpha, borderalpha },
-    // [SchemeSelGlobal] = { OPAQUE, baralpha, borderalpha },
-    // [SchemeNormTag] = { OPAQUE, baralpha, borderalpha }, 
-    // [SchemeSelTag] = { OPAQUE, baralpha, borderalpha },
-    // [SchemeBarEmpty] = { NULL, 0xa0a, NULL },
-    // [SchemeStatusText] = { OPAQUE, 0x88, NULL },
-    [SchemeNorm] = { NULL, 0xff, borderalpha }, 
-    [SchemeSel] = { NULL, 0xff, borderalpha },
-    [SchemeSelGlobal] = { NULL, 0xff, borderalpha },
-    [SchemeTabSel] = { NULL, 0xff, borderalpha },
-    [SchemeTabNorm]= { NULL, 0xff, borderalpha },
-    [SchemeOverView] = { 0xff, 0xff, borderalpha },
-    [SchemeUnderline] = { 0xff, 0xff, borderalpha }, 
-    [SchemeMode]= { NULL, 0xff, borderalpha },
-
-    [SchemeNormTag] = { NULL, 0xff, NULL }, 
-    [SchemeSelTag] = { NULL, 0xff, NULL },
-    [SchemeBarEmpty] = { 0xff, 0xff, NULL },
-    [SchemeStatusText] = { NULL, 0xff, NULL },
-    // [SchemeSystray] = { NULL, 0xff, NULL },
+// 不同的可选项：NULL 0xab QPAQUE borderalpha
+// 千万不可以修改顺序，只可以在当前位置改颜色，修改顺序就乱了
+                              /*  ColFg, ColBg, ColBorder */
+/*SchemeNorm      普通      */   { NULL, 0xff, borderalpha },
+/*SchemeSel       选中      */   { NULL, 0xff, borderalpha },
+/*SchemeSelGlobal 全局选中  */   { NULL, 0xff, borderalpha },
+/*SchemeTabSel    选中tag   */   { NULL, 0xff, borderalpha },
+/*SchemeTabNorm   普通tag   */   { NULL, 0xff, borderalpha },
+/*SchemeUnderline 下划线    */   { 0xff, 0xff, borderalpha },
+/*SchemeMode      模式      */   { NULL, 0xff, borderalpha },
+/*SchemeHid       隐藏      */   { NULL, 0xff, borderalpha },
+/*SchemeSystray   托盘      */   { NULL, 0xff, borderalpha },
+/*SchemeNormTag   普通标签  */   { NULL, 0xff, NULL },
+/*SchemeSelTag    选中标签  */   { NULL, 0xff, NULL },
+/*SchemeBarEmpty  空白状态栏*/   { 0xff, 0xff, NULL },
+/*SchemeOverView  overview  */   { 0xff, 0xff, borderalpha },
+/*SchemeStatusText状态栏文本*/   { NULL, 0xff, NULL },
 };
 
 
@@ -158,14 +154,14 @@ static const char* avoid_repeat_auto_start = "/tmp/dwm_avoid_repeat_auto_start.l
 
 //=============================================================================
 // 规则设置
-// 自定义窗口显示规则 
-// class instance title 主要用于定位窗口适合哪个规则 
-// tags mask 定义符合该规则的窗口的tag 0 表示当前tag 
-// isfloating 定义符合该规则的窗口是否浮动 
-// isglobal 定义符合该规则的窗口是否全局浮动 
-// isnoborder 定义符合该规则的窗口是否无边框 
-// monitor 定义符合该规则的窗口显示在哪个显示器上 -1 为当前屏幕 
-// floatposition 定义符合该规则的窗口显示的位置 0 中间，1到9分别为9宫格位置，例如1左上，9右下，3右上 
+// 自定义窗口显示规则
+// class instance title 主要用于定位窗口适合哪个规则
+// tags mask 定义符合该规则的窗口的tag 0 表示当前tag
+// isfloating 定义符合该规则的窗口是否浮动
+// isglobal 定义符合该规则的窗口是否全局浮动
+// isnoborder 定义符合该规则的窗口是否无边框
+// monitor 定义符合该规则的窗口显示在哪个显示器上 -1 为当前屏幕
+// floatposition 定义符合该规则的窗口显示的位置 0 中间，1到9分别为9宫格位置，例如1左上，9右下，3右上
 //=============================================================================
 static const Rule rules[] = {
     /* class                 instance              title             tags mask     isfloating  isglobal    isnoborder monitor floatposition */
@@ -295,8 +291,7 @@ static Key keys[] = {
     { MODKEY,              XK_comma,   setmfact,          {.f = -0.05} }, // 缩小主工作区
     { MODKEY,              XK_period,  setmfact,          {.f = +0.05} }, // 放大主工作区
 //-----------------------------------------------------------------------------
-    { MODKEY,              XK_q,       killclient,        {0} },        // 关闭当前窗口
-    { MODKEY|ShiftMask,    XK_q,       forcekillclient,   {0} },        // 强制关闭当前窗口
+    { MODKEY|ShiftMask,    XK_q,       killclient,        {0} },        // 关闭当前窗口
     { MODKEY|ControlMask,  XK_q,       forcekillclient,   {0} },        // 强制关闭当前窗口
     { MODKEY|ShiftMask,    XK_Escape,  quit,              {0} },        // 退出dwm
     { MODKEY|ControlMask|ShiftMask,XK_Escape, quit,       {1} },        // 重启dwm 
@@ -325,17 +320,17 @@ static Key keys[] = {
     { MODKEY,              XK_Up,           focusstack,       {.i = -1} },               /* super up           |  本tag内切换聚焦窗口 */
     { MODKEY,              XK_Down,         focusstack,       {.i = +1} },               /* super down         |  本tag内切换聚焦窗口 */
     { MODKEY,              XK_Left,         viewtoleft,       {0} },                     /* super left         |  聚焦到左边的tag */
-    { MODKEY,              XK_Right,        viewtoright,      {0} },                     /* super right        |  聚焦到右边的tag */ 
+    { MODKEY,              XK_Right,        viewtoright,      {0} },                     /* super right        |  聚焦到右边的tag */
     { MODKEY|ControlMask,  XK_Left,         tagtoleft,        {0} },                     /* super shift left   |  将本窗口移动到左边tag */
     { MODKEY|ControlMask,  XK_Right,        tagtoright,       {0} },                     /* super shift right  |  将本窗口移动到右边tag */
     // { MODKEY,              XK_Up,      movewin,           {.ui = UP} },   // 移动窗口
     // { MODKEY,              XK_Down,    movewin,           {.ui = DOWN} }, // 移动窗口
     // { MODKEY,              XK_Left,    movewin,           {.ui = LEFT} }, // 移动窗口
-    // { MODKEY,              XK_Right,   movewin,           {.ui = RIGHT} },// 移动窗口  
-    // { MODKEY|ControlMask,  XK_Up,      resizewin,         {.ui = V_REDUCE} },// 调整窗口 
-    // { MODKEY|ControlMask,  XK_Down,    resizewin,         {.ui = V_EXPAND} },// 调整窗口      
-    // { MODKEY|ControlMask,  XK_Left,    resizewin,         {.ui = H_REDUCE} },// 调整窗口     
-    // { MODKEY|ControlMask,  XK_Right,   resizewin,         {.ui = H_EXPAND} },// 调整窗口    
+    // { MODKEY,              XK_Right,   movewin,           {.ui = RIGHT} },// 移动窗口
+    // { MODKEY|ControlMask,  XK_Up,      resizewin,         {.ui = V_REDUCE} },// 调整窗口
+    // { MODKEY|ControlMask,  XK_Down,    resizewin,         {.ui = V_EXPAND} },// 调整窗口
+    // { MODKEY|ControlMask,  XK_Left,    resizewin,         {.ui = H_REDUCE} },// 调整窗口
+    // { MODKEY|ControlMask,  XK_Right,   resizewin,         {.ui = H_EXPAND} },// 调整窗口
 //-----------------------------------------------------------------------------
     { MODKEY|ShiftMask,    XK_Return,  zoom,              {0} },          // 将当前聚焦窗口置为主窗口
 //-----------------------------------------------------------------------------
@@ -379,7 +374,7 @@ static Key keys[] = {
     // Notice that if you first use copyq , Remeber config 1.disable tray show 2.Enable hidden mainwindow. Then you can use this better.
     // { MODKEY,              XK_v,        spawn,   SHCMD("copyq toggle") },  // copyq
     { MODKEY|ShiftMask,    XK_s,        spawn,   SHCMD("flameshot gui") }, // flameshot
-    { MODKEY|ControlMask,  XK_l,        spawn,   SHCMD("~/.dwm/i3lock/lock.sh") },   
+    { MODKEY|ControlMask,  XK_l,        spawn,   SHCMD("~/.dwm/i3lock/lock.sh") },
     { MODKEY,              XK_e,        spawn,   SHCMD("kitty -e ranger") }, // 打开资源管理器
     { MODKEY,              XK_BackSpace,spawn,   SHCMD("playerctl play-pause") },// audio play/pause
 
@@ -406,9 +401,9 @@ static Key keys[] = {
     { MODKEY|ShiftMask,    XK_Up,     spawn, SHCMD("$DWM/.bin/set_vol.sh up") },                                 /* super shift up   | 音量加                 */
     { MODKEY|ShiftMask,    XK_Down,   spawn, SHCMD("$DWM/.bin/set_vol.sh down") },                               /* super shift down | 音量减                 */
 //-----------------------------------------------------------------------------
-    // { MODKEY,              XK_q,  ToggleShowHideWindows,    {.v="QQ"} },          
-    // { MODKEY,              XK_w,  ToggleShowHideWindows,    {.v="WeChat"} },     
-    // { MODKEY,              XK_x,  ToggleShowHideWindows,    {.v="钉钉"} },      
+    // { MODKEY,              XK_q,  ToggleShowHideWindows,    {.v="QQ"} },
+    // { MODKEY,              XK_w,  ToggleShowHideWindows,    {.v="WeChat"} },
+    // { MODKEY,              XK_x,  ToggleShowHideWindows,    {.v="钉钉"} },
 //-----------------------------------------------------------------------------
     // { MODKEY|ShiftMask,      XK_q,    spawn, SHCMD("kill -9 $(xprop | grep _NET_WM_PID | awk '{print $3}')") },//选中某个窗口并强制kill
     // { ShiftMask|ControlMask, XK_c,    spawn, SHCMD("xclip -o | xclip -selection c") }, // 进阶复制

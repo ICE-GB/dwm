@@ -28,7 +28,7 @@ i3lock \
 --bshl-color=$WRONG          \
 \
 --screen 1                   \
---blur 10                     \
+--blur 3                     \
 --clock                      \
 --force-clock                      \
 --indicator                  \

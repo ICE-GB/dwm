@@ -38,7 +38,7 @@ def update(loop=False, set_root=True):
         result = subprocess.run(cmd, shell=True, timeout=3, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         try:
             temperature = int(float(result.stdout.decode('utf-8').replace('\n', '')) / 1000)
-            text = cpu_usage + "" + str(temperature) + ""
+            text = cpu_usage + " " + str(temperature) + ""
         except ValueError:
             text = cpu_usage
             pass

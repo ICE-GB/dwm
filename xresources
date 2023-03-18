@@ -4,10 +4,6 @@ Xft.autohint:	0
 Xft.hintstyle:	hintslight
 Xft.rgba:	rgb
 Xft.lcdfilter:	lcddefault
-Xcursor.theme: Breeze
-
-st.font:         JetBrainsMono Nerd Font:style:medium:pixelsize=20
-
 
 ! window padding
 st.borderpx: 20
@@ -15,37 +11,37 @@ st.borderpx: 20
 !- 0.1 to 0.9 = transparency
 st.alpha: 0.9
 
-*background: #181f21
-*foreground: #dadada
+*background: #282a36
+*foreground: #f8f8f2
 
 ! Black + DarkGrey
-*color0:  #22292b
-*color8:  #575e60
+*color0:  #21222c
+*color8:  #6272a4
 
 ! DarkRed + Red
-*color1:  #e06e6e
-*color9:  #ef7d7d
+*color1:  #ff5555
+*color9:  #ff6e6e
 
 ! DarkGreen + Green
-*color2:  #8ccf7e
-*color10: #9bdead
+*color2:  #50fa7b
+*color10: #69ff94
 
 ! DarkYellow + Yellow
-*color3:  #e5c76b
-*color11: #f4d67a
+*color3:  #f1fa8c
+*color11: #ffffa5
 
 ! DarkBlue + Blue
-*color4:  #67b0e8
-*color12: #6cb5ed
+*color4:  #bd93f9
+*color12: #d6acff
 
 ! DarkMagenta + Magenta
-*color5:  #c47fd5
-*color13: #ce89df
+*color5:  #ff79c6
+*color13: #ff92df
 
 ! DarkCyan + Cyan
-*color6:  #6da4cd
-*color14: #67cbe7
+*color6:  #8be9fd
+*color14: #a4ffff
 
 ! LightGrey + White
-*color7:  #b3b9b8
-*color15: #bdc3c2
+*color7:  #f8f8f2 
+*color15: #ffffff 

@@ -33,15 +33,15 @@ def get_vol_content():
     global vol_icon
     global volumuted
 
-    cmd = "echo $(pactl info | grep 'Default Sink' | awk '{print $3}')"
+    cmd = "echo $(LANG=en.US.UTF-8 pactl info | grep 'Default Sink' | awk '{print $3}')"
     result = subprocess.run(cmd, shell=True, timeout=3, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
     sink = str(result.stdout.decode('utf-8').replace('\n', ''))
 
-    cmd = "echo $(pactl list sinks | grep " + str(sink) + " -A 6 | sed -n '7p' | grep 'Mute: no')"
+    cmd = "echo $(LANG=en.US.UTF-8 pactl list sinks | grep " + str(sink) + " -A 6 | sed -n '7p' | grep 'Mute: no')"
     result = subprocess.run(cmd, shell=True, timeout=3, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
     volumuted = str(result.stdout.decode('utf-8').replace('\n', ''))
 
-    cmd = "echo $(pactl list sinks | grep " + str(sink) + " -A 7 | sed -n '8p' | awk '{printf int($5)}' )"
+    cmd = "echo $(LANG=en.US.UTF-8 pactl list sinks | grep " + str(sink) + " -A 7 | sed -n '8p' | awk '{printf int($5)}' )"
     result = subprocess.run(cmd, shell=True, timeout=3, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
     vol_text = str(result.stdout.decode('utf-8').replace('\n', ''))
 

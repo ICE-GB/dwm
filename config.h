@@ -408,11 +408,11 @@ static Key keys[] = {
         {MODKEY, XK_s, togglescratch,
          SHCMD("st -t scratchpad -c float")},                      /* super s          | 打开scratch终端        */
         {MODKEY, XK_Return, spawn,
-         SHCMD("st -e fish")},                                             /* super enter      | 打开st终端             */
+         SHCMD("kitty -e fish")},                                             /* super enter      | 打开kitty 终端            */
         {MODKEY, XK_minus, spawn,
-         SHCMD("st -c FG -e fish")},                                       /* super -          | 打开全局st终端         */
+         SHCMD("kitty --class FG -e fish")},                                       /* super -          | 打开全局kitty终端         */
         {MODKEY, XK_space, spawn,
-         SHCMD("st -c float -e fish")},                                    /* super space      | 打开浮动st终端         */
+         SHCMD("kitty --class float -e fish")},                                    /* super space      | 打开浮动kitty终端         */
         // { MODKEY,              XK_d,      spawn, SHCMD("~/scripts/call_rofi.sh run") },                             /* super d          | rofi: 执行run          */
         // { MODKEY|ShiftMask,    XK_d,      spawn, SHCMD("~/scripts/call_rofi.sh drun") },                            /* super shift d    | rofi: 执行drun         */
         {Mod1Mask, XK_space, spawn,

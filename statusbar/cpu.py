@@ -43,7 +43,7 @@ def update(loop=False, set_root=True):
             text = cpu_usage
             pass
 
-        txt = "^s{}^{} {}{} {} ".format(name, icon_color, icon, text_color, text)
+        txt = "^s{}^{} {} {}{} ".format(name, icon_color, icon, text_color, text)
         common.write_to_file(txt + "\n", str(name))
         if not loop:
             if set_root:

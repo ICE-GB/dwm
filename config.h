@@ -49,35 +49,36 @@ static const char *fonts[] = {
 //=============================================================================
 /* 颜色设置 ColFg, ColBg, ColBorder */
 //=============================================================================
-#include "themes/nord.h"
+#include "themes/dracula.h"
 
 // 千万不可以修改顺序，只可以在当前位置改颜色，修改顺序就乱了
 static const char *colors[][3]{
-/*SchemeNorm      普通      */   {"#ffffff", "#333333", "#444444"}, //
-/*SchemeSel       选中      */
-                                 {red2,      "#47575F", "#f09a7f"},      //SchemeSel,    选中的
-/*SchemeSelGlobal 全局选中  */
-                                 {"#ffffff", "#47575F", "#fcf86f"},
-/*SchemeTabSel    选中tag   */
-                                 {red2,      black,     black},
-/*SchemeTabNorm   普通tag   */
-                                 {white,     black,     black},
-/*SchemeUnderline 下划线    */
-                                 {red2,      black,     black},
-/*SchemeMode      模式      */
-                                 {green,     black,     black},
-/*SchemeHid       隐藏      */
-                                 {"#dddddd", black,     black},
-/*SchemeSystray   托盘      */
-                                 {"#B48EAD", "#1e222a", "#1e222a"},
-/*SchemeNormTag   普通标签  */
-                                 {"#aaaaaa", "#333333", nullptr},
-/*SchemeSelTag    选中标签  */
-                                 {"#eeeeee", "#333333", nullptr},
-/*SchemeBarEmpty  空白状态栏*/
-                                 {"#1e222a", "#1e222a", nullptr},
-/*SchemeOverView  overview  */
-                                 {red2,      black,     black},
+  // SchemeNorm      普通
+  {white , black , gray2   },
+  // SchemeSel       选中
+  {red2  , gray2 , pink    },
+  // SchemeSelGlobal 全局选中
+  {white , gray2 , orange  },
+  // SchemeTabSel    选中tag
+  {red2  , black , black   },
+  // SchemeTabNorm   普通tag
+  {white , black , black   },
+  // SchemeUnderline 下划线
+  {red2  , black , black   },
+  // SchemeMode      模式
+  {green , black , black   },
+  // SchemeHid       隐藏
+  {white , black , black   },
+  // SchemeSystray   托盘
+  {pink  , black , black   },
+  // SchemeNormTag   普通标签
+  {white , black , nullptr },
+  // SchemeSelTag    选中标签
+  {white , black , nullptr },
+  // SchemeBarEmpty 空白状态栏
+  {black , black , nullptr },
+  //SchemeOverView overview
+  {red2  , black , black   }
 };
 //-----------------------------------------------------------------------------
 static int statusbar_h_bias = 4;

@@ -872,7 +872,9 @@ clientmessage(XEvent *e)
             // view(&(Arg) { .ui = c->tags });
             Arg arg;
             arg.ui = c->tags;
-            focusmon(&arg);
+            view(&arg);
+            focus(c);
+            restack(selmon);
         }
     }
 }

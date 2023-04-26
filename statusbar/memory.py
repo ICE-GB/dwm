@@ -29,7 +29,9 @@ def update(loop=False, set_root=True):
     while True:
         icon = ""
         mem = int(psutil.virtual_memory()[2])
-        if mem > 90 :
+        if mem > 80:
+            kill_some_thing()
+        if mem > 90:
             notify()
         text = str(mem) + "%"
         txt = "^s{}^{} {} {}{} ".format(name, icon_color, icon, text_color, text)
@@ -39,6 +41,11 @@ def update(loop=False, set_root=True):
                 os.system("xsetroot -name '" + str(txt) + "'")
             break
         time.sleep(DELAY_TIME)
+
+
+def kill_some_thing():
+    cmd = 'pkill -f barrier && barrier &'
+    os.system(cmd)
 
 
 def update_thread():

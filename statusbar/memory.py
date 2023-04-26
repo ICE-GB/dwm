@@ -28,7 +28,10 @@ name = re.sub("\\..*", '', filename)
 def update(loop=False, set_root=True):
     while True:
         icon = ""
-        text = str(int(psutil.virtual_memory()[2])) + "%"
+        mem = int(psutil.virtual_memory()[2])
+        if mem > 90 :
+            notify()
+        text = str(mem) + "%"
         txt = "^s{}^{} {} {}{} ".format(name, icon_color, icon, text_color, text)
         common.write_to_file(txt + "\n", str(name))
         if not loop:

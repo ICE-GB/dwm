@@ -37,6 +37,7 @@ static const unsigned int snap = 10;        /* 边缘依附宽度 */
 // 字体配置
 //=============================================================================
 static const char *fonts[] = {
+        "JetBrainsMono NFM:style=Regular:size=13",
         "JetBrainsMono Nerd Font:style=Regular:size=13",
         "monospace:size=13",
         "Monaco:style=Regular:size=11",

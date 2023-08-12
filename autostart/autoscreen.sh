@@ -17,5 +17,5 @@ elif [ "$(uname -n)" == "gb-HP-ProBook-455R-G6" ]; then
 elif [ "$(uname -n)" == "nixos-awnlzw" ]; then
   xrandr --dpi 120
   xrandr --output DP-4 --mode 2560x1600 --pos 0x0 --primary
-  xrandr --output HDMI-0 --mode 2560x1440 --pos 2560x0 --primary
+  # xrandr --output HDMI-0 --mode 2560x1440 --pos 2560x0 --primary
 fi

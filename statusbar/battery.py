@@ -37,17 +37,17 @@ def get_battery_status():
     battery_text, charge_sta = get_battery_status_from_acpi()
 
     if charge_sta:
-        bat_icon = ""
+        bat_icon = "󰂄"
     elif battery_text < 10:
-        bat_icon = ""
+        bat_icon = "󰁺"
     elif battery_text < 30:
-        bat_icon = ""
+        bat_icon = "󰁻"
     elif battery_text < 50:
-        bat_icon = ""
+        bat_icon = "󰁽"
     elif battery_text < 80:
-        bat_icon = ""
+        bat_icon = "󰁿"
     else:
-        bat_icon = ""
+        bat_icon = "󰂂"
     return bat_icon, battery_text
 
 

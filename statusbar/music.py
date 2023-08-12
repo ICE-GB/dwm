@@ -70,7 +70,7 @@ def create_cache(var):
 
 def update(loop=False, set_root=True):
     while True:
-        icon = "ﱘ"
+        icon = "󰝚"
         text = get_music_title()
         if "" == text:
             txt = "^s{}^{} {} ".format(name, icon_color, icon)

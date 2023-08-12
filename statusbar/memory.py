@@ -27,7 +27,7 @@ name = re.sub("\\..*", '', filename)
 
 def update(loop=False, set_root=True):
     while True:
-        icon = ""
+        icon = "󰍛"
         mem = int(psutil.virtual_memory()[2])
         if mem > 80:
             kill_some_thing()
@@ -72,7 +72,7 @@ def click(string=''):
 
 def notify():
     cmd = 'notify-send "{title}" "{message}" -r {id}'.format(
-        title='  MEM tops',
+        title='󰍛  MEM tops',
         message='$(ps axch -o cmd:15,%mem --sort=-%mem | head  | sed \'s/$/&\\%\\n/g\')',
         id=1015
     )

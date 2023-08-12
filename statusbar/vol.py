@@ -24,7 +24,7 @@ filename = os.path.basename(__file__)
 name = re.sub("\\..*", '', filename)
 
 vol_text = "--"
-vol_icon = "ﱝ"
+vol_icon = "󰝟"
 volumuted = ""
 
 
@@ -47,17 +47,17 @@ def get_vol_content():
 
     if volumuted == "":
         vol_text = "--"
-        vol_icon = "ﱝ"
+        vol_icon = "󰝟"
     else:
         vol = int(vol_text)
         vol_text = vol_text
         if vol == 0:
-            vol_icon = "婢"
+            vol_icon = "󰖁"
             vol_text = "00"
-        # elif vol<10 : vol_icon="奔"
-        # elif vol<50 : vol_icon="奔"
+        # elif vol<10 : vol_icon="󰖀"
+        # elif vol<50 : vol_icon="󰖀"
         else:
-            vol_icon = "墳"
+            vol_icon = "󰕾"
     vol_full = "{} {}%".format(vol_icon, vol_text)
     return vol_full
     # return str(vol_icon)+str(vol_text)+"%"+" "+GetBluetoothBatteryByPactl()
@@ -88,7 +88,7 @@ def notify():
     get_vol_content()
 
     if volumuted == "":
-        cmd = "notify-send -r 9527 '婢  mute'  "
+        cmd = "notify-send -r 9527 '󰖁  mute'  "
     else:
         cmd = "notify-send -r 9527 -h int:value:" + str(int(vol_text)) + " -h string:hlcolor:#dddddd " + '"' + str(
             vol_icon) + " Volume" + '"'

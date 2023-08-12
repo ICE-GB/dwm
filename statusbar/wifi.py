@@ -24,7 +24,7 @@ filename = os.path.basename(__file__)
 name = re.sub("\\..*", '', filename)
 icon_map = {
     "wifi": "",
-    "ethernet": "",
+    "ethernet": "󰈀",
     "offline": ""
 }
 

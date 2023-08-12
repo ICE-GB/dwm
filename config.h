@@ -159,10 +159,10 @@ static const char scratchpadname[] = "scratchpad";
 
 //=============================================================================
 //                   tag icon 
-//            ﮸  ﭮ 切  ﬐ // 增补图标
-//            
+// 󰎡 󰎤 󰎧 󰎪 󰎭 󰎱 󰎳 󰎶 󰎹 󰎼 󰀽 󰚺 󰎃 󰙯   󰘑 // 增补图标
+// 󰎣 󰎦 󰎩 󰎬 󰎮 󰎰 󰎵 󰎸 󰎻 󰎾  󰎠
 //=============================================================================
-static const char *tags[] = {"", "", "", "", "", "", "", "", "", ""};
+static const char *tags[] = {"󰎤", "󰎧", "󰎪", "󰎭", "󰎱", "", "", "󰎄", "󰎼", "󰊠"};
 
 
 //=============================================================================
@@ -201,10 +201,10 @@ static const Rule rules[] = {
         {"obs",       NULL,          NULL,         1 << 3,  0, 0, 0, -1, 0}, // obs        tag -> 󰕧
         {"chrome",    NULL,          NULL,         1 << 4,  0, 0, 0, -1, 0}, // chrome     tag -> 
         {"Chromium",  NULL,          NULL,         1 << 4,  0, 0, 0, -1, 0}, // Chromium   tag -> 
-        {"music",     NULL,          NULL,         1 << 5,  1, 0, 1, -1, 0}, // music      tag ->  浮动、无边框
-        {NULL,         "qq",         NULL,         1 << 6,  0, 0, 1, -1, 0}, // qq         tag -> ﬄ 无边框
-        {NULL,         "wechat.exe", NULL,         1 << 7,  0, 0, 1, -1, 0}, // wechat     tag -> ﬐ 无边框
-        {NULL,         "wxwork.exe", NULL,         1 << 8,  0, 0, 1, -1, 0}, // workwechat tag ->  无边框
+        {"music",     NULL,          NULL,         1 << 5,  1, 0, 1, -1, 0}, // music      tag -> 󰎄 浮动、无边框
+        {NULL,         "qq",         NULL,         1 << 6,  0, 0, 1, -1, 0}, // qq         tag -> 󰘅 无边框
+        {NULL,         "wechat.exe", NULL,         1 << 7,  0, 0, 1, -1, 0}, // wechat     tag -> 󰘑 无边框
+        {NULL,         "wxwork.exe", NULL,         1 << 8,  0, 0, 1, -1, 0}, // workwechat tag -> 󰊠 无边框
         {"Vncviewer", NULL,          NULL,         0,       1, 0, 1, -1, 2}, // Vncviewer           浮动、无边框 屏幕顶部
         {"flameshot", NULL,          NULL,         0,       1, 0, 0, -1, 0}, // 火焰截图            浮动
         {"scratchpad", "scratchpad", "scratchpad", TAGMASK, 1, 1, 1, -1, 2}, // scratchpad          浮动、全局、无边框 屏幕顶部
@@ -249,8 +249,8 @@ static const Layout overviewlayout = {"", overview};
 //-----------------------------------------------------------------------------
 static const Layout layouts[] = {
   //symbol     arrange function   
-    {"﬿",        tile},      /* 主次栈 */
-    {"﩯",     magicgrid},   /* 网格 */
+    {"󰙀",        tile},      /* 主次栈 */
+    {"󰕰",     magicgrid},   /* 网格 */
     {"TR",    tile_right},   /* 主次栈 主侧放在右侧*/
     {NULL,       NULL} //最后一个需要是NULL,NULL,cyclelayout,请勿更改
 };
@@ -259,8 +259,8 @@ static const Layout layouts[] = {
 //-----------------------------------------------------------------------------
 static const Layout layouts[] = {
         /* symbol     arrange function, { nmaster, nstack, layout, master axis, stack axis, secondary stack axis } */
-        {"﬿",       flextile,  {-1, -1, SPLIT_VERTICAL,   TOP_TO_BOTTOM, TOP_TO_BOTTOM, 0, NULL}}, // default tile layout
-        {"﩯",      magicgrid, {0}},    /* 网格 */
+        {"󰙀",       flextile,  {-1, -1, SPLIT_VERTICAL,   TOP_TO_BOTTOM, TOP_TO_BOTTOM, 0, NULL}}, // default tile layout
+        {"󰕰",      magicgrid, {0}},    /* 网格 */
         // { "><>",      NULL,             {0} },    /* no layout function means floating behavior */ // 已经被win+shift+f 替代，不用这个
         // { "[M]",      flextile,         { -1, -1, NO_SPLIT, MONOCLE, MONOCLE, 0, NULL } }, // monocle
         // { "|||",      flextile,         { -1, -1, SPLIT_VERTICAL, LEFT_TO_RIGHT, TOP_TO_BOTTOM, 0, NULL } }, // columns (col) layout //其实就是tile

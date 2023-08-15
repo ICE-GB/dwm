@@ -1,7 +1,7 @@
 #! /usr/bin/env bash
 
 # source "$HOME"/.profile
-source "$HOME"/.dwm/.profile
+# source "$HOME"/.dwm/.profile
 
 # If you find fcitx5 icon is located at the most left of the straybar, please increase the delay value
 sleep 1 # need to wait dwm start complete and fcitx5 start complete

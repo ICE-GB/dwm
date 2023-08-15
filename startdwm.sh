@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-source "$HOME"/.profile
+# source "$HOME"/.profile
 source "$HOME"/.dwm/.profile
 
 "$HOME"/.dwm/autostart/autoscreen.sh

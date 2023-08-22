@@ -29,9 +29,9 @@ def update(loop=False, set_root=True):
     while True:
         icon = "󰍛"
         mem = int(psutil.virtual_memory()[2])
-        if mem > 80:
-            kill_some_thing()
         if mem > 90:
+            kill_some_thing()
+        if mem > 95:
             notify()
         text = str(mem) + "%"
         txt = "^s{}^{} {} {}{} ".format(name, icon_color, icon, text_color, text)

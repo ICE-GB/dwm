@@ -38,6 +38,7 @@
 #include <X11/Xlib.h>
 #include <X11/Xproto.h>
 #include <X11/Xutil.h>
+#include <X11/Xcursor/Xcursor.h>
 #include <limits>
 #ifdef XINERAMA
 #include <X11/extensions/Xinerama.h>
@@ -2855,6 +2856,10 @@ run(void)
     XEvent ev;
     /* main event loop */
     XSync(dpy, False);
+    // 根据光标主题设置光标
+    Cursor cursor = XcursorLibraryLoadCursor(dpy, cursor_theme[0]);
+    XDefineCursor(dpy, root, cursor);
+    // XFreeCursor(dpy, cursor);
     while (running && !XNextEvent(dpy, &ev))
         if (handler[ev.type])
             handler[ev.type](&ev); /* call handler */

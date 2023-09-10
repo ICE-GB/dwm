@@ -14,6 +14,7 @@ pkgs.mkShell {
   nativeBuildInputs = with pkgs; [
     gnumake
     xorg.libX11.dev
+    xorg.libXcursor.dev
     xorg.libXft
     xorg.libXinerama
     (python3.withPackages my-python-packages)

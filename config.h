@@ -46,6 +46,7 @@ static const char *fonts[] = {
         "JoyPixels:size=13:antialias=true:autohint=true"
 };
 
+static const char *cursor_theme[] = { "Dracula-cursors" };
 
 //=============================================================================
 /* 颜色设置 ColFg, ColBg, ColBorder */

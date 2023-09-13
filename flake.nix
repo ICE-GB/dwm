@@ -22,6 +22,10 @@
           drv = packages.dwm;
           exePath = "/bin/dwm";
         };
+        devShells = {
+          #run by `nix devlop` or `nix-shell`(legacy)
+          default = import ./shell.nix {inherit pkgs;};
+        };
       }
     );
 }

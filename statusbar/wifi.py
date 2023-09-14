@@ -23,9 +23,9 @@ DELAY_TIME = 2
 filename = os.path.basename(__file__)
 name = re.sub("\\..*", '', filename)
 icon_map = {
-    "wifi": "",
+    "wifi": "󰤨",
     "ethernet": "󰈀",
-    "offline": ""
+    "offline": "󰤭"
 }
 
 cmd_map = {

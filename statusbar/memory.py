@@ -27,7 +27,7 @@ name = re.sub("\\..*", '', filename)
 
 def update(loop=False, set_root=True):
     while True:
-        icon = "󰍛"
+        icon = ""
         mem = int(psutil.virtual_memory()[2])
         if mem > 90:
             kill_some_thing()

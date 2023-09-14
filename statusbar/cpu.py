@@ -30,9 +30,9 @@ def update(loop=False, set_root=True):
     while True:
         cpu_usage = int(psutil.cpu_percent())
         if cpu_usage > 50:
-            icon = ""
+            icon = ""
         else:
-            icon = ""
+            icon = ""
         cpu_usage = "{:<3}".format(str(cpu_usage) + "%")
         cmd = "cat /sys/class/thermal/thermal_zone0/temp"
         result = subprocess.run(cmd, shell=True, timeout=3, stderr=subprocess.PIPE, stdout=subprocess.PIPE)

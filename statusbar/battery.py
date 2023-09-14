@@ -37,24 +37,23 @@ def get_battery_status():
     battery_text, charge_sta = get_battery_status_from_acpi()
 
     if charge_sta:
-        bat_icon = "󰂄"
-    elif battery_text < 10:
-        bat_icon = "󰁺"
-    elif battery_text < 30:
-        bat_icon = "󰁻"
+        bat_icon = ""
+    elif battery_text < 25:
+        bat_icon = ""
     elif battery_text < 50:
-        bat_icon = "󰁽"
-    elif battery_text < 80:
-        bat_icon = "󰁿"
+        bat_icon = ""
+    elif battery_text < 75:
+        bat_icon = ""
     else:
-        bat_icon = "󰂂"
+        bat_icon = ""
     return bat_icon, battery_text
 
 
 def update(loop=False, set_root=True):
     while True:
         icon, text = get_battery_status()
-        txt = "^s{}^{} {} {}{} ".format(name, icon_color, icon, text_color, text)
+#         txt = "^s{}^{} {} {}{} ".format(name, icon_color, icon, text_color, text)
+        txt = "^s{}^{} {} ".format(name, icon_color, icon)
         common.write_to_file(txt + "\n", str(name))
         if not loop:
             if set_root:

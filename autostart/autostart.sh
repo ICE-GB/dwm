@@ -23,7 +23,6 @@ daemons() {
   pkill flameshot
   pkill dunst
   pkill barrier
-  pkill -f start_picom.sh
   pkill picom
   pkill pcmanfm
   pkill greenclip
@@ -31,7 +30,13 @@ daemons() {
   [ "$1" ] && sleep "$1"
 
   if [ 0 == "$(pgrep -c picom)" ]; then
-    ~/.dwm/.bin/start_picom.sh & # 开启picom
+    log_file=$DWM/logs/picom-$(date -d "today" +"%Y%m%d%H%M").log
+    picom_need_experimental=$(picom --help | grep -c experimental-backends) # 开启picom
+    if [ "$picom_need_experimental" -ge 1 ]; then
+      picom --experimental-backends --config "$DWM"/.config/picom.conf >>"$log_file" 2>&1 --daemon
+    else
+      picom --config "$DWM"/.config/picom.conf >>"$log_file" 2>&1 --daemon
+    fi
   fi
 
   command -v nix-shell >/dev/null 2>&1

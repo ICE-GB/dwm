@@ -23,6 +23,7 @@ static const float mfact = 0.5;       /* 主工作区 大小比例 */
 static const int nmaster = 1;         /* 主工作区 窗口数量 */
 static const int nstack = 0;         /* number of clients in primary stack area */
 static const unsigned int snap = 10;        /* 边缘依附宽度 */
+static const int colorfultag = 0;        /* 0 表示对选定的非空tag使用默认的SchemeSel配色 */
 
 
 //=============================================================================
@@ -56,32 +57,34 @@ static const char *cursor_theme[] = {"Dracula-cursors"};
 
 // 千万不可以修改顺序，只可以在当前位置改颜色，修改顺序就乱了
 static const char *colors[][3]{
-        // SchemeNorm      普通
-        {white, black, gray2},
-        // SchemeSel       选中
-        {red2,  gray2, pink},
-        // SchemeSelGlobal 全局选中
-        {white, gray2, orange},
-        // SchemeTabSel    选中tag
-        {red2,  black, black},
-        // SchemeTabNorm   普通tag
-        {white, black, black},
-        // SchemeUnderline 下划线
-        {red2,  black, black},
-        // SchemeMode      模式
-        {green, black, black},
-        // SchemeHid       隐藏
-        {white, black, black},
-        // SchemeSystray   托盘
-        {pink,  black, black},
-        // SchemeNormTag   普通标签
-        {white, black, nullptr},
-        // SchemeSelTag    选中标签
-        {white, black, nullptr},
-        // SchemeBarEmpty 空白状态栏
-        {black, black, nullptr},
-        //SchemeOverView overview
-        {red2,  black, black}
+        [SchemeNorm]        = {white,             black,             gray2},          // SchemeNorm      普通
+        [SchemeSel]         = {red2,              gray2,             pink},           // SchemeSel       选中
+        [SchemeSelGlobal]   = {white,             gray2,             orange},         // SchemeSelGlobal 全局选中
+        [SchemeTabSel]      = {red2,              black,             black},          // SchemeTabSel    选中tag
+        [SchemeTabNorm]     = {white,             black,             black},          // SchemeTabNorm   普通tag
+        [SchemeUnderline]   = {red2,              black,             black},          // SchemeUnderline 下划线
+        [SchemeMode]        = {green,             black,             black},          // SchemeMode      模式
+        [SchemeHid]         = {white,             black,             black},          // SchemeHid       隐藏
+        [SchemeSystray]     = {pink,              black,             black},          // SchemeSystray   托盘
+        [SchemeNormTag]     = {white,             black,             nullptr},        // SchemeNormTag   普通标签
+        [SchemeSelTag]      = {white,             black,             nullptr},        // SchemeSelTag    选中标签
+        [SchemeBarEmpty]    = {black,             black,             nullptr},        // SchemeBarEmpty  空白状态栏
+        [SchemeOverView]    = {red2,              black,             black},          // SchemeOverView  overview
+        [SchemeStatusText]  = {pink,              black,             pink},           // SchemeStatusText状态栏文本
+        [SchemeTag]         = {pink,              black,             pink},           // SchemeTag
+        [SchemeTag1]        = {blue,              black,             black},          // 1-10
+        [SchemeTag2]        = {red2,              black,             black},
+        [SchemeTag3]        = {orange,            black,             black},
+        [SchemeTag4]        = {green,             black,             black},
+        [SchemeTag6]        = {pink,              black,             black},
+        [SchemeTag7]        = {green,             black,             black},
+        [SchemeTag8]        = {green,             black,             black},
+        [SchemeTag9]        = {green,             black,             black},
+        [SchemeTag10]       = {green,             black,             black}
+};
+static const int tagschemes[] = {
+        SchemeTag1, SchemeTag2, SchemeTag3, SchemeTag4, SchemeTag5, SchemeTag6, SchemeTag7, SchemeTag8, SchemeTag9,
+        SchemeTag10
 };
 //-----------------------------------------------------------------------------
 static int statusbar_h_bias = 4;

@@ -164,7 +164,7 @@ static const char scratchpadname[] = "scratchpad";
 // 󰎡 󰎤 󰎧 󰎪 󰎭 󰎱 󰎳 󰎶 󰎹 󰎼 󰀽 󰚺 󰎃 󰙯   󰘑 // 增补图标
 // 󰎣 󰎦 󰎩 󰎬 󰎮 󰎰 󰎵 󰎸 󰎻 󰎾  󰎠
 //=============================================================================
-static const char *tags[] = {"󰎤", "󰎧", "󰎪", "󰎭", "󰎱", "", "", "󰎄", "󰎼", "󰊠"};
+static const char *tags[] = {"󰅬", "󰆼", "󰎪", "󰍔", "󰎱", "", "", "󰎄", "󰎼", "󰘅"};
 
 
 //=============================================================================
@@ -186,7 +186,7 @@ static const char *avoid_repeat_auto_start = "/tmp/dwm_avoid_repeat_auto_start.l
 // 规则设置
 // 自定义窗口显示规则
 // class instance title 主要用于定位窗口适合哪个规则
-// tags mask 定义符合该规则的窗口的tag 0 表示当前tag
+// tags mask 定义符合该规则的窗口的tag 0 表示当前tag 1<<几就是第几个tag TAGMASK表示全局
 // isfloating 定义符合该规则的窗口是否浮动
 // isglobal 定义符合该规则的窗口是否全局浮动
 // isnoborder 定义符合该规则的窗口是否无边框
@@ -194,19 +194,19 @@ static const char *avoid_repeat_auto_start = "/tmp/dwm_avoid_repeat_auto_start.l
 // floatposition 定义符合该规则的窗口显示的位置 0 中间，1到9分别为9宫格位置，例如1左上，9右下，3右上
 //=============================================================================
 static const Rule rules[] = {
-        /* class                 instance              title             tags mask     isfloating  isglobal    isnoborder monitor floatposition */
+        /* class       instance      title         tags mask     isfloating  isglobal    isnoborder monitor floatposition */
         /** 优先级高 越在上面优先度越高 */
         {NULL,         NULL,         "图片查看器", 0,       1, 0, 0, -1, 0}, // qq图片查看器        浮动
         {NULL,         NULL,         "图片查看",   0,       1, 0, 0, -1, 0}, // 微信图片查看器      浮动
 
         /** 普通优先度 */
-        {"obs",        NULL,         NULL,         1 << 3,  0, 0, 0, -1, 0}, // obs        tag -> 󰕧
-        {"chrome",     NULL,         NULL,         1 << 4,  0, 0, 0, -1, 0}, // chrome     tag -> 
-        {"Chromium",   NULL,         NULL,         1 << 4,  0, 0, 0, -1, 0}, // Chromium   tag -> 
-        {"music",      NULL,         NULL,         1 << 5,  1, 0, 1, -1, 0}, // music      tag -> 󰎄 浮动、无边框
-        {NULL,         "qq",         NULL,         1 << 6,  0, 0, 1, -1, 0}, // qq         tag -> 󰘅 无边框
-        {NULL,         "wechat.exe", NULL,         1 << 7,  0, 0, 1, -1, 0}, // wechat     tag -> 󰘑 无边框
-        {NULL,         "wxwork.exe", NULL,         1 << 8,  0, 0, 1, -1, 0}, // workwechat tag -> 󰊠 无边框
+        {"obs",        NULL,         NULL,         1 << 5,  0, 0, 0, -1, 0}, // obs        tag -> 
+        {"chrome",     NULL,         NULL,         1 << 6,  0, 0, 0, -1, 0}, // chrome     tag -> 
+        {"Chromium",   NULL,         NULL,         1 << 6,  0, 0, 0, -1, 0}, // Chromium   tag -> 
+        {"music",      NULL,         NULL,         1 << 7,  1, 0, 1, -1, 0}, // music      tag -> 󰎄 浮动、无边框
+        {NULL,         "qq",         NULL,         1 << 9,  0, 0, 1, -1, 0}, // qq         tag -> 󰘅 无边框
+        {NULL,         "wechat.exe", NULL,         1 << 9,  0, 0, 1, -1, 0}, // wechat     tag -> 󰘑 无边框
+        {NULL,         "wxwork.exe", NULL,         1 << 9,  0, 0, 1, -1, 0}, // workwechat tag -> 󰊠 无边框
         {"Vncviewer",  NULL,         NULL,         0,       1, 0, 1, -1, 2}, // Vncviewer           浮动、无边框 屏幕顶部
         {"flameshot",  NULL,         NULL,         0,       1, 0, 0, -1, 0}, // 火焰截图            浮动
         {"scratchpad", "scratchpad", "scratchpad", TAGMASK, 1, 1, 1, -1, 2}, // scratchpad          浮动、全局、无边框 屏幕顶部
@@ -318,7 +318,7 @@ static Key keys[] = {
         {MODKEY | ShiftMask, XK_f, toggleallfloating, {0}},        // 开启/关闭 当前tag 的float模式
         {MODKEY, XK_g, toggleglobal, {0}},        // 开启/关闭 全局 当前窗口在所有tag中存在
 //-----------------------------------------------------------------------------
-        {MODKEY, XK_comma, , setmfact, { .f = -0.05 }}, // 缩小主工作区，即主窗口宽度变小
+        {MODKEY, XK_comma, setmfact, {.f = -0.05}}, // 缩小主工作区，即主窗口宽度变小
         {MODKEY, XK_period, setmfact, {.f = +0.05}}, // 放大主工作区，即主窗口宽度变大
 //-----------------------------------------------------------------------------
         {MODKEY | ShiftMask, XK_q, killclient, {0}},        // 关闭当前窗口

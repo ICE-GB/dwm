@@ -47,7 +47,7 @@ static const char *fonts[] = {
         "JoyPixels:size=13:antialias=true:autohint=true"
 };
 
-static const char *cursor_theme[] = { "Dracula-cursors" };
+static const char *cursor_theme[] = {"Dracula-cursors"};
 
 //=============================================================================
 /* 颜色设置 ColFg, ColBg, ColBorder */
@@ -56,32 +56,32 @@ static const char *cursor_theme[] = { "Dracula-cursors" };
 
 // 千万不可以修改顺序，只可以在当前位置改颜色，修改顺序就乱了
 static const char *colors[][3]{
-  // SchemeNorm      普通
-  {white , black , gray2   },
-  // SchemeSel       选中
-  {red2  , gray2 , pink    },
-  // SchemeSelGlobal 全局选中
-  {white , gray2 , orange  },
-  // SchemeTabSel    选中tag
-  {red2  , black , black   },
-  // SchemeTabNorm   普通tag
-  {white , black , black   },
-  // SchemeUnderline 下划线
-  {red2  , black , black   },
-  // SchemeMode      模式
-  {green , black , black   },
-  // SchemeHid       隐藏
-  {white , black , black   },
-  // SchemeSystray   托盘
-  {pink  , black , black   },
-  // SchemeNormTag   普通标签
-  {white , black , nullptr },
-  // SchemeSelTag    选中标签
-  {white , black , nullptr },
-  // SchemeBarEmpty 空白状态栏
-  {black , black , nullptr },
-  //SchemeOverView overview
-  {red2  , black , black   }
+        // SchemeNorm      普通
+        {white, black, gray2},
+        // SchemeSel       选中
+        {red2,  gray2, pink},
+        // SchemeSelGlobal 全局选中
+        {white, gray2, orange},
+        // SchemeTabSel    选中tag
+        {red2,  black, black},
+        // SchemeTabNorm   普通tag
+        {white, black, black},
+        // SchemeUnderline 下划线
+        {red2,  black, black},
+        // SchemeMode      模式
+        {green, black, black},
+        // SchemeHid       隐藏
+        {white, black, black},
+        // SchemeSystray   托盘
+        {pink,  black, black},
+        // SchemeNormTag   普通标签
+        {white, black, nullptr},
+        // SchemeSelTag    选中标签
+        {white, black, nullptr},
+        // SchemeBarEmpty 空白状态栏
+        {black, black, nullptr},
+        //SchemeOverView overview
+        {red2,  black, black}
 };
 //-----------------------------------------------------------------------------
 static int statusbar_h_bias = 4;
@@ -196,35 +196,35 @@ static const char *avoid_repeat_auto_start = "/tmp/dwm_avoid_repeat_auto_start.l
 static const Rule rules[] = {
         /* class                 instance              title             tags mask     isfloating  isglobal    isnoborder monitor floatposition */
         /** 优先级高 越在上面优先度越高 */
-        {NULL,        NULL,          "图片查看器", 0,       1, 0, 0, -1, 0}, // qq图片查看器        浮动
-        {NULL,        NULL,          "图片查看",   0,       1, 0, 0, -1, 0}, // 微信图片查看器      浮动
+        {NULL,         NULL,         "图片查看器", 0,       1, 0, 0, -1, 0}, // qq图片查看器        浮动
+        {NULL,         NULL,         "图片查看",   0,       1, 0, 0, -1, 0}, // 微信图片查看器      浮动
 
         /** 普通优先度 */
-        {"obs",       NULL,          NULL,         1 << 3,  0, 0, 0, -1, 0}, // obs        tag -> 󰕧
-        {"chrome",    NULL,          NULL,         1 << 4,  0, 0, 0, -1, 0}, // chrome     tag -> 
-        {"Chromium",  NULL,          NULL,         1 << 4,  0, 0, 0, -1, 0}, // Chromium   tag -> 
-        {"music",     NULL,          NULL,         1 << 5,  1, 0, 1, -1, 0}, // music      tag -> 󰎄 浮动、无边框
+        {"obs",        NULL,         NULL,         1 << 3,  0, 0, 0, -1, 0}, // obs        tag -> 󰕧
+        {"chrome",     NULL,         NULL,         1 << 4,  0, 0, 0, -1, 0}, // chrome     tag -> 
+        {"Chromium",   NULL,         NULL,         1 << 4,  0, 0, 0, -1, 0}, // Chromium   tag -> 
+        {"music",      NULL,         NULL,         1 << 5,  1, 0, 1, -1, 0}, // music      tag -> 󰎄 浮动、无边框
         {NULL,         "qq",         NULL,         1 << 6,  0, 0, 1, -1, 0}, // qq         tag -> 󰘅 无边框
         {NULL,         "wechat.exe", NULL,         1 << 7,  0, 0, 1, -1, 0}, // wechat     tag -> 󰘑 无边框
         {NULL,         "wxwork.exe", NULL,         1 << 8,  0, 0, 1, -1, 0}, // workwechat tag -> 󰊠 无边框
-        {"Vncviewer", NULL,          NULL,         0,       1, 0, 1, -1, 2}, // Vncviewer           浮动、无边框 屏幕顶部
-        {"flameshot", NULL,          NULL,         0,       1, 0, 0, -1, 0}, // 火焰截图            浮动
+        {"Vncviewer",  NULL,         NULL,         0,       1, 0, 1, -1, 2}, // Vncviewer           浮动、无边框 屏幕顶部
+        {"flameshot",  NULL,         NULL,         0,       1, 0, 0, -1, 0}, // 火焰截图            浮动
         {"scratchpad", "scratchpad", "scratchpad", TAGMASK, 1, 1, 1, -1, 2}, // scratchpad          浮动、全局、无边框 屏幕顶部
-        {"Pcmanfm",   NULL,          NULL,         0,       1, 0, 1, -1, 3}, // pcmanfm             浮动、无边框 右上角
-        {"wemeetapp", NULL,          NULL,         TAGMASK, 1, 1, 0, -1, 0}, // !!!腾讯会议在切换tag时有诡异bug导致退出 变成global来规避该问题
+        {"Pcmanfm",    NULL,         NULL,         0,       1, 0, 1, -1, 3}, // pcmanfm             浮动、无边框 右上角
+        {"wemeetapp",  NULL,         NULL,         TAGMASK, 1, 1, 0, -1, 0}, // !!!腾讯会议在切换tag时有诡异bug导致退出 变成global来规避该问题
 
         /** 部分特殊class的规则 */
-        {"float",     NULL,          NULL,         0,       1, 0, 0, -1, 0}, // class = float       浮动
-        {"global",    NULL,          NULL,         TAGMASK, 0, 1, 0, -1, 0}, // class = gloabl      全局
-        {"noborder",  NULL,          NULL,         0,       0, 0, 1, -1, 0}, // class = noborder    无边框
-        {"FGN",       NULL,          NULL,         TAGMASK, 1, 1, 1, -1, 0}, // class = FGN         浮动、全局、无边框
-        {"FG",        NULL,          NULL,         TAGMASK, 1, 1, 0, -1, 0}, // class = FG          浮动、全局
-        {"FN",        NULL,          NULL,         0,       1, 0, 1, -1, 0}, // class = FN          浮动、无边框
-        {"GN",        NULL,          NULL,         TAGMASK, 0, 1, 1, -1, 0}, // CLASS = GN          全局、无边框
+        {"float",      NULL,         NULL,         0,       1, 0, 0, -1, 0}, // class = float       浮动
+        {"global",     NULL,         NULL,         TAGMASK, 0, 1, 0, -1, 0}, // class = gloabl      全局
+        {"noborder",   NULL,         NULL,         0,       0, 0, 1, -1, 0}, // class = noborder    无边框
+        {"FGN",        NULL,         NULL,         TAGMASK, 1, 1, 1, -1, 0}, // class = FGN         浮动、全局、无边框
+        {"FG",         NULL,         NULL,         TAGMASK, 1, 1, 0, -1, 0}, // class = FG          浮动、全局
+        {"FN",         NULL,         NULL,         0,       1, 0, 1, -1, 0}, // class = FN          浮动、无边框
+        {"GN",         NULL,         NULL,         TAGMASK, 0, 1, 1, -1, 0}, // CLASS = GN          全局、无边框
 
         /** 优先度低 越在上面优先度越低 */
-        {NULL,        NULL,          "crx_",       0,       1, 0, 0, -1, 0}, // 错误载入时 会有crx_ 浮动
-        {NULL,        NULL,          "broken",     0,       1, 0, 0, -1, 0}, // 错误载入时 会有broken 浮动
+        {NULL,         NULL,         "crx_",       0,       1, 0, 0, -1, 0}, // 错误载入时 会有crx_ 浮动
+        {NULL,         NULL,         "broken",     0,       1, 0, 0, -1, 0}, // 错误载入时 会有broken 浮动
 };
 
 
@@ -262,7 +262,7 @@ static const Layout layouts[] = {
 static const Layout layouts[] = {
         /* symbol     arrange function, { nmaster, nstack, layout, master axis, stack axis, secondary stack axis } */
         {"󰙀",       flextile,  {-1, -1, SPLIT_VERTICAL,   TOP_TO_BOTTOM, TOP_TO_BOTTOM, 0, NULL}}, // default tile layout
-        {"󰕰",      magicgrid, {0}},    /* 网格 */
+        {"󰕰",       magicgrid, {0}},    /* 网格 */
         // { "><>",      NULL,             {0} },    /* no layout function means floating behavior */ // 已经被win+shift+f 替代，不用这个
         // { "[M]",      flextile,         { -1, -1, NO_SPLIT, MONOCLE, MONOCLE, 0, NULL } }, // monocle
         // { "|||",      flextile,         { -1, -1, SPLIT_VERTICAL, LEFT_TO_RIGHT, TOP_TO_BOTTOM, 0, NULL } }, // columns (col) layout //其实就是tile
@@ -275,7 +275,7 @@ static const Layout layouts[] = {
         {"[\\]",    flextile,  {-1, -1, NO_SPLIT,         DWINDLE,       DWINDLE,       0, NULL}}, // fibonacci dwindle
         {"(@)",     flextile,  {-1, -1, NO_SPLIT,         SPIRAL,        SPIRAL,        0, NULL}}, // fibonacci spiral
         {"[T]",     flextile,  {-1, -1, SPLIT_VERTICAL,   LEFT_TO_RIGHT, TATAMI,        0, NULL}}, // tatami mats
-        {NULL, NULL,           {0}},//最后一个需要是NULL,NULL,cyclelayout,请勿更改
+        {NULL,      NULL,      {0}},//最后一个需要是NULL,NULL,cyclelayout,请勿更改
 };
 #endif
 
@@ -311,15 +311,15 @@ static Key keys[] = {
         {MODKEY | ShiftMask, XK_l, ExchangeClient, {.i = 3}},   // 移动窗口
 //-----------------------------------------------------------------------------
         {MODKEY, XK_Tab, toggleoverview, {0}},        // 显示所有tag 或 跳转到聚焦窗口的tag */
-        {Mod1Mask, XK_Tab, focusstack, {.i = +1}},  // 本tag内切换聚焦窗口
+        {Mod1Mask, XK_Tab, focusstack, {.i = +1}},  // 本tag内切换聚焦窗口 Mod1Mask是alt
         {Mod1Mask | ShiftMask, XK_Tab, focusstack, {.i = -1}},  // 本tag内切换聚焦窗口
 //-----------------------------------------------------------------------------
         {MODKEY, XK_f, togglefloating, {0}},        // 开启/关闭 当前窗口的float模式
         {MODKEY | ShiftMask, XK_f, toggleallfloating, {0}},        // 开启/关闭 当前tag 的float模式
-        {MODKEY, XK_g, toggleglobal, {0}},        // 开启/关闭 全局
+        {MODKEY, XK_g, toggleglobal, {0}},        // 开启/关闭 全局 当前窗口在所有tag中存在
 //-----------------------------------------------------------------------------
-        {MODKEY, XK_comma, setmfact, {.f = -0.05}}, // 缩小主工作区
-        {MODKEY, XK_period, setmfact, {.f = +0.05}}, // 放大主工作区
+        {MODKEY, XK_comma, , setmfact, { .f = -0.05 }}, // 缩小主工作区，即主窗口宽度变小
+        {MODKEY, XK_period, setmfact, {.f = +0.05}}, // 放大主工作区，即主窗口宽度变大
 //-----------------------------------------------------------------------------
         {MODKEY | ShiftMask, XK_q, killclient, {0}},        // 关闭当前窗口
         {MODKEY | ControlMask, XK_q, forcekillclient, {0}},        // 强制关闭当前窗口
@@ -405,7 +405,7 @@ static Key keys[] = {
         // { MODKEY,              XK_v,        spawn,   SHCMD("copyq toggle") },  // copyq
         {MODKEY | ShiftMask, XK_s, spawn, SHCMD("flameshot gui")}, // flameshot
         {MODKEY | ControlMask, XK_l, spawn, SHCMD("~/.dwm/i3lock/lock.sh")},
-        {MODKEY, XK_e, spawn, SHCMD("kitty -e ranger")}, // 打开资源管理器
+        {MODKEY, XK_e, spawn, SHCMD("kitty -e yazi")}, // 打开资源管理器
         {MODKEY, XK_BackSpace, spawn, SHCMD("playerctl play-pause")},// audio play/pause
 
 /* spawn + SHCMD 执行对应命令(已下部分建议完全自己重新定义) */

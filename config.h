@@ -189,7 +189,7 @@ static const char *avoid_repeat_auto_start = "/tmp/dwm_avoid_repeat_auto_start.l
 // 规则设置
 // 自定义窗口显示规则
 // class instance title 主要用于定位窗口适合哪个规则
-// tags mask 定义符合该规则的窗口的tag 0 表示当前tag 1<<几就是第几个tag TAGMASK表示全局
+// tags mask 定义符合该规则的窗口的tag 0 表示当前tag 1<<几就是第几个tag,从0开始 TAGMASK表示全局
 // isfloating 定义符合该规则的窗口是否浮动
 // isglobal 定义符合该规则的窗口是否全局浮动
 // isnoborder 定义符合该规则的窗口是否无边框
@@ -203,10 +203,10 @@ static const Rule rules[] = {
         {NULL,                NULL,         "图片查看",   0,       1, 0, 0, -1, 0}, // 微信图片查看器      浮动
 
         /** 普通优先度 */
-        {"code",              NULL,         NULL,         1 << 1,  0, 0, 0, -1, 0}, // vscode     tag -> 󰅬
-        {"jetbrains-clion",   NULL,         NULL,         1 << 1,  0, 0, 0, -1, 0}, // vscode     tag -> 󰅬
-        {"jetbrains-idea",    NULL,         NULL,         1 << 1,  0, 0, 0, -1, 0}, // vscode     tag -> 󰅬
-        {"jetbrains-pycharm", NULL,         NULL,         1 << 1,  0, 0, 0, -1, 0}, // vscode     tag -> 󰅬
+        {"code",              NULL,         NULL,         1 << 0,  0, 0, 0, -1, 0}, // vscode     tag -> 󰅬
+        {"jetbrains-clion",   NULL,         NULL,         1 << 0,  0, 0, 0, -1, 0}, // vscode     tag -> 󰅬
+        {"jetbrains-idea",    NULL,         NULL,         1 << 0,  0, 0, 0, -1, 0}, // vscode     tag -> 󰅬
+        {"jetbrains-pycharm", NULL,         NULL,         1 << 0,  0, 0, 0, -1, 0}, // vscode     tag -> 󰅬
         {"obs",               NULL,         NULL,         1 << 5,  0, 0, 0, -1, 0}, // obs        tag -> 
         {"chrome",            NULL,         NULL,         1 << 6,  0, 0, 0, -1, 0}, // chrome     tag -> 
         {"Chromium",          NULL,         NULL,         1 << 6,  0, 0, 0, -1, 0}, // Chromium   tag -> 

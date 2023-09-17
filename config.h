@@ -57,30 +57,30 @@ static const char *cursor_theme[] = {"Dracula-cursors"};
 
 // 千万不可以修改顺序，只可以在当前位置改颜色，修改顺序就乱了
 static const char *colors[][3]{
-        [SchemeNorm]        = {white,             black,             gray2},          // SchemeNorm      普通
-        [SchemeSel]         = {red2,              gray2,             pink},           // SchemeSel       选中
-        [SchemeSelGlobal]   = {white,             gray2,             orange},         // SchemeSelGlobal 全局选中
-        [SchemeTabSel]      = {red2,              black,             black},          // SchemeTabSel    选中tag
-        [SchemeTabNorm]     = {white,             black,             black},          // SchemeTabNorm   普通tag
-        [SchemeUnderline]   = {red2,              black,             black},          // SchemeUnderline 下划线
-        [SchemeMode]        = {green,             black,             black},          // SchemeMode      模式
-        [SchemeHid]         = {white,             black,             black},          // SchemeHid       隐藏
-        [SchemeSystray]     = {pink,              black,             black},          // SchemeSystray   托盘
-        [SchemeNormTag]     = {white,             black,             nullptr},        // SchemeNormTag   普通标签
-        [SchemeSelTag]      = {white,             black,             nullptr},        // SchemeSelTag    选中标签
-        [SchemeBarEmpty]    = {black,             black,             nullptr},        // SchemeBarEmpty  空白状态栏
-        [SchemeOverView]    = {red2,              black,             black},          // SchemeOverView  overview
-        [SchemeStatusText]  = {pink,              black,             pink},           // SchemeStatusText状态栏文本
-        [SchemeTag]         = {pink,              black,             pink},           // SchemeTag
-        [SchemeTag1]        = {blue,              black,             black},          // 1-10
-        [SchemeTag2]        = {red2,              black,             black},
-        [SchemeTag3]        = {orange,            black,             black},
-        [SchemeTag4]        = {green,             black,             black},
-        [SchemeTag6]        = {pink,              black,             black},
-        [SchemeTag7]        = {green,             black,             black},
-        [SchemeTag8]        = {green,             black,             black},
-        [SchemeTag9]        = {green,             black,             black},
-        [SchemeTag10]       = {green,             black,             black}
+        {white,             black,             gray2},          // SchemeNorm      普通
+        {red2,              gray2,             pink},           // SchemeSel       选中
+        {white,             gray2,             orange},         // SchemeSelGlobal 全局选中
+        {red2,              black,             black},          // SchemeTabSel    选中tag
+        {white,             black,             black},          // SchemeTabNorm   普通tag
+        {red2,              black,             black},          // SchemeUnderline 下划线
+        {green,             black,             black},          // SchemeMode      模式
+        {white,             black,             black},          // SchemeHid       隐藏
+        {pink,              black,             black},          // SchemeSystray   托盘
+        {white,             black,             nullptr},        // SchemeNormTag   普通标签
+        {white,             black,             nullptr},        // SchemeSelTag    选中标签
+        {black,             black,             nullptr},        // SchemeBarEmpty  空白状态栏
+        {red2,              black,             black},          // SchemeOverView  overview
+        {pink,              black,             pink},           // SchemeStatusText状态栏文本
+        {pink,              black,             pink},           // SchemeTag
+        {blue,              black,             black},          // 1-10
+        {red2,              black,             black},
+        {orange,            black,             black},
+        {green,             black,             black},
+        {pink,              black,             black},
+        {green,             black,             black},
+        {green,             black,             black},
+        {green,             black,             black},
+        {green,             black,             black}
 };
 static const int tagschemes[] = {
         SchemeTag1, SchemeTag2, SchemeTag3, SchemeTag4, SchemeTag5, SchemeTag6, SchemeTag7, SchemeTag8, SchemeTag9,

@@ -2872,10 +2872,6 @@ run(void)
     XEvent ev;
     /* main event loop */
     XSync(dpy, False);
-    // 根据光标主题设置光标
-    Cursor cursor = XcursorLibraryLoadCursor(dpy, cursor_theme[0]);
-    XDefineCursor(dpy, root, cursor);
-    // XFreeCursor(dpy, cursor);
     while (running && !XNextEvent(dpy, &ev))
         if (handler[ev.type])
             handler[ev.type](&ev); /* call handler */
@@ -3192,8 +3188,8 @@ setup(void)
     xatom[XembedInfo] = XInternAtom(dpy, "_XEMBED_INFO", False);
     /* init cursors */
     cursor[CurNormal] = drw_cur_create(drw, XC_left_ptr);
-    cursor[CurResize] = drw_cur_create(drw, XC_sizing);
-    cursor[CurMove] = drw_cur_create(drw, XC_fleur);
+    cursor[CurResize] = drw_cur_create(drw, XC_fleur);
+    cursor[CurMove] = drw_cur_create(drw, XC_hand2);
     /* init appearance */
     scheme =(Clr **) ecalloc(LENGTH(colors) + 1, sizeof(Clr *));
 	scheme[LENGTH(colors)] = drw_scm_create(drw, colors[0], alphas[0], 3);

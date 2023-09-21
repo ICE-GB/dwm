@@ -167,7 +167,7 @@ static const char scratchpadname[] = "scratchpad";
 // 󰎡 󰎤 󰎧 󰎪 󰎭 󰎱 󰎳 󰎶 󰎹 󰎼 󰀽 󰚺 󰎃 󰙯   󰘑 // 增补图标
 // 󰎣 󰎦 󰎩 󰎬 󰎮 󰎰 󰎵 󰎸 󰎻 󰎾  󰎠
 //=============================================================================
-static const char *tags[] = {"󰅬", "󰆼", "󰎪", "󰍔", "󰎱", "", "", "󰎄", "󰎼", "󰘅"};
+static const char *tags[] = {"󰅬", "󰆼", "󰈔", "󰍔", "󰎱", "", "", "󰎄", "󰎼", "󰘅"};
 
 
 //=============================================================================
@@ -208,7 +208,8 @@ static const Rule rules[] = {
         {"jetbrains-idea",    NULL,         NULL,         1 << 0,  0, 0, 0, -1, 0}, // vscode     tag -> 󰅬
         {"jetbrains-pycharm", NULL,         NULL,         1 << 0,  0, 0, 0, -1, 0}, // vscode     tag -> 󰅬
         {NULL,                NULL,    "Navicat Premium", 1 << 1,  0, 0, 0, -1, 0}, // Navicat Premium     tag -> 󰆼
-        {"dolphin",           NULL,         NULL,         1 << 1,  0, 0, 0, -1, 0}, // dolphin    tag -> 󰆼
+        {"gwenview",          NULL,         NULL,         1 << 2,  0, 0, 0, -1, 0}, // gwenview   tag -> 󰈔
+        {"dolphin",           NULL,         NULL,         1 << 2,  0, 0, 0, -1, 0}, // dolphin    tag -> 󰈔
         {"obsidian",          NULL,         NULL,         1 << 3,  0, 0, 0, -1, 0}, // obsidian   tag -> 󰍔
         {"obs",               NULL,         NULL,         1 << 5,  0, 0, 0, -1, 0}, // obs        tag -> 
         {"chrome",            NULL,         NULL,         1 << 6,  0, 0, 0, -1, 0}, // chrome     tag -> 

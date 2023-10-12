@@ -1,3 +1,4 @@
+use std::process::Command;
 use std::sync::RwLock;
 
 use lazy_static::lazy_static;
@@ -39,13 +40,59 @@ pub fn get() -> PackageData {
     // First we update all information of our `System` struct.
     sys.refresh_networks_list();
 
+    let current_interface_name = get_current_interface_name();
+    let mut rc = 0;
+    let mut tr = 0;
+
     // Network interfaces name, data received and data transmitted:
-    println!("=> networks:");
     for (interface_name, data) in sys.networks() {
-        println!("{}: {}/{} B", interface_name, data.received(), data.transmitted());
+
+        if interface_name.eq(&current_interface_name) {
+            rc = data.received();
+            tr = data.transmitted();
+            break;
+        }
     }
-    let text = format!("^s{}^{} {} ", NAME, *ICON_COLOR, "");
+    let net = format!("{}  {}", format_bytes(tr), format_bytes(rc));
+    let text = format!("^s{}^{} {} ", NAME, *ICON_COLOR, net);
 
 
     PackageData::new(NAME, text)
+}
+
+fn get_current_interface_name() -> String {
+    let output = Command::new("sh")
+        .arg("-c")
+        .arg("ip route | grep default | cut -d' ' -f5")
+        .output()
+        .unwrap();
+
+    let trimmed_output = String::from_utf8(output.stdout).unwrap();
+
+    // println!("{}", trimmed_output);
+
+    let interface_name = trimmed_output.trim().to_string();
+    interface_name
+}
+
+fn format_bytes(bytes: u64) -> String {
+    let units = [" B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+    let mut size = bytes as f64;
+    let mut unit_index = 0;
+
+    while size >= 1024.0 && unit_index < units.len() - 1 {
+        size /= 1024.0;
+        unit_index += 1;
+    }
+
+    let formatted_size = if size.fract() < 0.01 {
+        format!("{:.0}", size.round() as u64)
+    } else {
+        format!("{:.2}", size)
+    };
+
+    let padding = 6 - formatted_size.len();
+    let formatted_unit = units[unit_index];
+
+    format!("{}{} {}", " ".repeat(padding), formatted_size, formatted_unit)
 }

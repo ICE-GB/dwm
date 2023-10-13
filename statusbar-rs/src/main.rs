@@ -16,6 +16,7 @@ mod music;
 mod net;
 mod vol;
 mod wifi;
+mod bus;
 
 lazy_static!(
     static ref battery_text: RwLock<String> = RwLock::new(String::new());
@@ -31,6 +32,13 @@ lazy_static!(
 
 #[tokio::main]
 async fn main() {
+    // 判断是否带有参数启动
+    let args: Vec<String> = std::env::args().collect();
+    if args.len() > 1 {
+        bus::send(args).await.expect("发送命令失败");
+        return;
+    }
+
     run().await;
 }
 
@@ -121,10 +129,15 @@ async fn run() {
         set_text().await;
     });
 
+    let server_task = tokio::spawn(async move {
+        bus::server().await.expect("bus服务启动失败");
+    });
+
     for task in tasks {
         task.await.expect("任务执行失败");
     }
 
+    server_task.await.expect("bus服务启动失败");
     print_task.await.expect("打印任务执行失败");
     set_task.await.expect("设置任务执行失败");
 }

@@ -46,7 +46,6 @@ pub fn get() -> PackageData {
 
     // Network interfaces name, data received and data transmitted:
     for (interface_name, data) in sys.networks() {
-
         if interface_name.eq(&current_interface_name) {
             rc = data.received();
             tr = data.transmitted();

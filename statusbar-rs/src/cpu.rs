@@ -34,7 +34,11 @@ pub fn get() -> PackageData {
     let temperature: f64 = output.trim().parse().expect("Failed to parse temperature");
     let temperature = (temperature / 1000.0) as i32;
 
-    let text = format!("{:.0}% {}", cpu_usage, temperature);
+    let mut text: String;
+
+    if cpu_usage < 10.0 {
+        text = format!(" {:.0}% {}", cpu_usage, temperature);
+    } else { text = format!("{:.0}% {}", cpu_usage, temperature); }
 
     // Assuming name and text_color are defined elsewhere
     let text = format!("^s{}^{} {} {}{} ", NAME, *common::ICON_COLOR, icon, *common::TEXT_COLOR, text);

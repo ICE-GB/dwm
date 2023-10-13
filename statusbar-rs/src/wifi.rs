@@ -10,7 +10,6 @@ use sysinfo::SystemExt;
 use crate::common;
 use crate::common::PackageData;
 
-
 const ICON_FG: &str = common::PINK;
 const ICON_BG: &str = common::BLACK;
 const ICON_TR: &str = "0xff";

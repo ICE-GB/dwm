@@ -1,13 +1,15 @@
-use zbus::Connection;
 use std::future::pending;
+
 use zbus::{ConnectionBuilder, dbus_interface};
+use zbus::{dbus_proxy, Result};
+use zbus::Connection;
 
 const DESTINATION: &str = "org.dwm.statusbar.rust";
 const PATH: &str = "/org/dwm/statusbar/rust";
 
 
 struct Greeter {
-    count: u64
+    count: u64,
 }
 
 struct Action {
@@ -30,9 +32,9 @@ impl Action {
     }
 }
 
-pub async fn server() -> Result<()>{
+pub async fn server() -> Result<()> {
     let greeter = Greeter { count: 0 };
-    let action = Action{ name: String::from("action"), button: String::from("button") };
+    let action = Action { name: String::from("action"), button: String::from("button") };
 
     let _conn = ConnectionBuilder::session()?
         .name(DESTINATION)?
@@ -45,8 +47,6 @@ pub async fn server() -> Result<()>{
     pending::<()>().await;
     Ok(())
 }
-
-use zbus::{Result, dbus_proxy};
 
 #[dbus_proxy(
 interface = "org.dwm.statusbar.rust.greeter",

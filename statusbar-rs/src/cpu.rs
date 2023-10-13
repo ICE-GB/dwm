@@ -18,10 +18,10 @@ pub fn get() -> PackageData {
     let mut system = SYSTEM.write().unwrap();
     system.refresh_cpu();
     let cpu_usage = system.global_cpu_info().cpu_usage();
-    let (icon) = if cpu_usage > 50.0 {
-        ("") // Replace 'color_when_high' with actual color value if necessary
+    let icon = if cpu_usage > 50.0 {
+        ""
     } else {
-        ("")  // Replace 'color_when_low' with actual color value if necessary
+        ""
     };
 
     let output = std::process::Command::new("cat")

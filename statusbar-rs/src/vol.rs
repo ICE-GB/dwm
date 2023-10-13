@@ -1,6 +1,7 @@
 use lazy_static::lazy_static;
+use pulsectl::controllers::DeviceControl;
+use pulsectl::controllers::SinkController;
 use regex::Regex;
-use rodio::{OutputStream, Sink};
 use sysinfo::SystemExt;
 
 use crate::common;
@@ -24,16 +25,28 @@ const NAME: &str = "vol";
 #[test]
 pub fn test() {
     println!("get() = {:?}", get());
-    let expected_regex = Regex::new(r"\^svol\^\^c#ff79c6\^\^b#282a360xff\^ . .+% ").unwrap();
+    let expected_regex = Regex::new(r"\^svol\^\^c#ff79c6\^\^b#282a360xff\^ .+").unwrap();
     assert!(expected_regex.is_match(&get().data));
 }
 
 pub fn get() -> PackageData {
-    let (_stream, stream_handle) = OutputStream::try_default().unwrap();
-    let sink = Sink::try_new(&stream_handle).unwrap();
-    let vol = sink.volume();
-    let text = format!("^s{}^{} {} {}{}% ", NAME, *ICON_COLOR, "", *TEXT_COLOR, vol);
+    // create handler that calls functions on playback devices and apps
+    let mut handler = SinkController::create().unwrap();
+    let devices = handler.get_default_device().expect("Could not get default device.");
 
+    println!("Playback Devices: ");
+    println!(
+        "[{}] {}, Volume: {}",
+        devices.index,
+        devices.description.as_ref().unwrap(),
+        devices.volume.avg().print()
+    );
+    let mut text: String;
+    if devices.mute {
+        text = format!("^s{}^{} {} ", NAME, *ICON_COLOR, "󰝟");
+    } else {
+        text = format!("^s{}^{} {} {}{} ", NAME, *ICON_COLOR, "", *TEXT_COLOR, devices.volume.avg().print());
+    }
 
     PackageData::new(NAME, text)
 }

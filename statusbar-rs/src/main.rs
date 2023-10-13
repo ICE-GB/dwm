@@ -64,7 +64,7 @@ async fn set_text() {
         let mut tmp = String::new();
 
         tmp = format!(
-            "{} {} {} {} {} {} {} {} {} {}",
+            "{} {} {} {} {} {} {} {} {}",
             music_text.read().unwrap(),
             wifi_text.read().unwrap(),
             net_text.read().unwrap(),
@@ -74,7 +74,6 @@ async fn set_text() {
             battery_text.read().unwrap(),
             date_text.read().unwrap(),
             icon_text.read().unwrap(),
-            ""
         );
 
         println!("{}", tmp);

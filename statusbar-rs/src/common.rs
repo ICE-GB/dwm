@@ -86,3 +86,14 @@ impl PackageData {
         }
     }
 }
+
+pub fn cmd(cmd: &str) -> String {
+    let output = std::process::Command::new("sh")
+        .arg("-c")
+        .arg(cmd)
+        .output()
+        .expect("failed to execute process");
+    let mut output = String::from_utf8(output.stdout).unwrap();
+    output = output.trim().to_string();
+    output
+}

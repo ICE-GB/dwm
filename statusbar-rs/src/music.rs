@@ -15,20 +15,69 @@ lazy_static! {
     static ref ICON_COLOR: String = format!("^c{}^^b{}{}^", ICON_FG, ICON_BG, ICON_TR);
     static ref TEXT_COLOR: String = format!("^c{}^^b{}{}^", TEXT_FG, TEXT_BG, TEXT_TR);
     static ref DELAY_TIME: i32 = *common::packages_lists().get(NAME).unwrap();
+    static ref TITLE:std::sync::Mutex<MusicTitle> = std::sync::Mutex::new(MusicTitle::new("".to_string()));
 }
 const NAME: &str = "music";
 
-pub fn get() -> PackageData {
-    let text = format!("^s{}^{} {} ", NAME, *ICON_COLOR, "󰝚");
-
-
-    PackageData::new(NAME, text)
-}
 
 #[cfg(test)]
 #[test]
 pub fn test() {
     println!("get() = {:?}", get());
-    let expected_regex = Regex::new(r"\^smusic\^\^c#ff79c6\^\^b#282a360xff\^ 󰝚 ").unwrap();
+    let expected_regex = Regex::new(r"\^smusic\^\^c#ff79c6\^\^b#282a360xff\^ 󰝚 .+").unwrap();
     assert!(expected_regex.is_match(&get().data));
+}
+
+pub fn get() -> PackageData {
+    let title = common::cmd("mpc current");
+    if title.is_empty() {
+        let text = format!("^s{}^{} {} ", NAME, *ICON_COLOR, "󰝚");
+        return PackageData::new(NAME, text);
+    }
+    let mut title_s = TITLE.lock().unwrap();
+
+    if title_s.title == title {
+        let text = format!("^s{}^{} {}{} {}", NAME, *ICON_COLOR, "󰝚", *TEXT_COLOR, title_s.get_rolling_title());
+        return PackageData::new(NAME, text);
+    }
+
+    title_s.title = title;
+    title_s.current_pos = 0;
+
+    let mut text;
+
+    text = format!("^s{}^{} {}{} {}", NAME, *ICON_COLOR, "󰝚", *TEXT_COLOR, title_s.get_rolling_title());
+
+
+    PackageData::new(NAME, text)
+}
+
+struct MusicTitle {
+    title: String,
+    current_pos: usize,
+}
+
+impl MusicTitle {
+    fn new(title: String) -> Self {
+        MusicTitle {
+            title,
+            current_pos: 0,
+        }
+    }
+
+    fn get_rolling_title(&mut self) -> String {
+        let title_len = self.title.chars().count();
+        if title_len <= 20 {
+            let rolling_title = &self.title;
+            self.current_pos = (self.current_pos + 1) % title_len;
+            rolling_title.to_string()
+        } else {
+            let mut char_indices = self.title.char_indices();
+            let start_index = char_indices.nth(self.current_pos).map(|(i, _)| i).unwrap_or(0);
+            let end_index = char_indices.nth(19).map(|(i, _)| i).unwrap_or(self.title.len());
+            let rolling_title = &self.title[start_index..end_index];
+            self.current_pos = (self.current_pos + 1) % (title_len - 19);
+            rolling_title.to_string()
+        }
+    }
 }

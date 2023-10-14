@@ -24,12 +24,10 @@ lazy_static! {
 const NAME: &str = "memory";
 
 pub fn get() -> PackageData {
-    // 获取内存占用率
-    let mut system = SYSTEM.write().unwrap();
-    system.refresh_memory();
-
-    let mem_usage = (system.used_memory() as f64 / system.total_memory() as f64) * 100.0;
-    let mem_usage = mem_usage as i32;
+    let memory = psutil::memory::virtual_memory().unwrap();
+    let percent_used = memory.percent();
+    // println!("Memory usage: {:.2}%", percent_used);
+    let mem_usage = percent_used as i32;
 
     if mem_usage > 90 {
         // kill_some_thing();

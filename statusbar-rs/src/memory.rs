@@ -5,7 +5,7 @@ use regex::Regex;
 use sysinfo::{System, SystemExt};
 
 use crate::common;
-use crate::common::PackageData;
+use crate::common::{Button, PackageData};
 
 const ICON_FG: &str = common::PINK;
 const ICON_BG: &str = common::BLACK;
@@ -42,6 +42,16 @@ pub fn get() -> PackageData {
 
 
     PackageData::new(NAME, text)
+}
+
+pub fn api(button: Button) {
+    match button {
+        Button::LEFT => {}
+        Button::RIGHT => {}
+        Button::MIDDLE => {}
+        Button::UP => {}
+        Button::DOWN => {}
+    }
 }
 
 #[cfg(test)]

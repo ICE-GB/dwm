@@ -2,7 +2,7 @@ use lazy_static::lazy_static;
 use regex::Regex;
 
 use crate::common;
-use crate::common::PackageData;
+use crate::common::{Button, cmd, PackageData};
 
 const ICON_FG: &str = common::PINK;
 const ICON_BG: &str = common::BLACK;
@@ -23,6 +23,20 @@ pub fn get() -> PackageData {
 
 
     PackageData::new(NAME, text)
+}
+
+pub fn api(button: Button) {
+    match button {
+        Button::LEFT => {
+            cmd("~/.config/rofi/scripts/powermenu_t2");
+        }
+        Button::RIGHT => {
+            cmd("feh --randomize --bg-fill ~/Pictures/wallpaper/*.*");
+        }
+        Button::MIDDLE => {}
+        Button::UP => {}
+        Button::DOWN => {}
+    }
 }
 
 #[cfg(test)]

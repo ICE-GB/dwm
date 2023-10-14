@@ -3,7 +3,7 @@ use lazy_static::lazy_static;
 use regex::Regex;
 
 use crate::common;
-use crate::common::PackageData;
+use crate::common::{Button, PackageData};
 
 const ICON_FG: &str = common::PINK;
 const ICON_BG: &str = common::BLACK;
@@ -26,6 +26,23 @@ pub fn get() -> PackageData {
 
 
     PackageData::new(NAME, text)
+}
+
+pub fn api(button: Button) {
+    match button {
+        Button::LEFT => {
+            let cmd = format!("notify-send \"{}\" \"{}\" -r {}",
+                              " Calendar",
+                              "\nData: $(date \'+%y-%m-%d \\nTime: %T\')",
+                              9540
+            );
+            common::cmd(&cmd);
+        }
+        Button::RIGHT => {}
+        Button::MIDDLE => {}
+        Button::UP => {}
+        Button::DOWN => {}
+    }
 }
 
 #[cfg(test)]

@@ -1,7 +1,8 @@
 use lazy_static::lazy_static;
+use regex::Regex;
 
 use crate::common;
-use crate::common::PackageData;
+use crate::common::{Button, PackageData};
 
 const ICON_FG: &str = common::PINK;
 const ICON_BG: &str = common::BLACK;
@@ -26,10 +27,7 @@ pub fn get() -> PackageData {
     let mut output = String::from_utf8(output.stdout).unwrap();
     output = output.trim().to_string();
 
-    // 从字符串中"Battery 0: Not charging, 99%"提取出是否正在充电的信息(Not charging)
-    let not_charging: bool = (output.contains("Not charging") || output.contains("Discharging"));
-
-    if !not_charging {
+    if output.contains("Charging") {
         // 如果正在充电，那么就显示充电图标
         let text = format!("^s{}^{} {} ", NAME, *ICON_COLOR, "");
         return PackageData::new(NAME, text);
@@ -57,8 +55,19 @@ pub fn get() -> PackageData {
     PackageData::new(NAME, text)
 }
 
+pub fn api(button: Button) {
+    match button {
+        Button::LEFT => {}
+        Button::RIGHT => {}
+        Button::MIDDLE => {}
+        Button::UP => {}
+        Button::DOWN => {}
+    }
+}
+
 #[cfg(test)]
 #[test]
 pub fn test() {
-    assert_eq!(get().data, "^sbattery^^c#ff79c6^^b#282a360xff^  ");
+    let expected_regex = Regex::new(r"\^sbattery\^\^c#ff79c6\^\^b#282a360xff\^ . ").unwrap();
+    assert!(expected_regex.is_match(&get().data));
 }

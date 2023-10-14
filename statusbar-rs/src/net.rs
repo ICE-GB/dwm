@@ -6,7 +6,7 @@ use regex::Regex;
 use sysinfo::{NetworkExt, System, SystemExt};
 
 use crate::common;
-use crate::common::PackageData;
+use crate::common::{Button, PackageData};
 
 const ICON_FG: &str = common::PINK;
 const ICON_BG: &str = common::BLACK;
@@ -52,11 +52,21 @@ pub fn get() -> PackageData {
             break;
         }
     }
-    let net = format!("{}  {}", format_bytes(tr), format_bytes(rc));
+    let net = format!("{} {}", format_bytes(tr), format_bytes(rc));
     let text = format!("^s{}^{} {} ", NAME, *ICON_COLOR, net);
 
 
     PackageData::new(NAME, text)
+}
+
+pub fn api(button: Button) {
+    match button {
+        Button::LEFT => {}
+        Button::RIGHT => {}
+        Button::MIDDLE => {}
+        Button::UP => {}
+        Button::DOWN => {}
+    }
 }
 
 fn get_current_interface_name() -> String {

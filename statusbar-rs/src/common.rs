@@ -7,7 +7,7 @@ pub const DWM_PATH: &str = "/home/gb/.dwm/";
 pub const PACKAGES_PATH: &str = "/home/gb/.dwm/statusbar/";
 pub const TEMP_FILE: &str = "/home/gb/python_tmp";
 
-pub const MUSIC_PROGRAM: &str = "yesplaymusic";
+pub const MUSIC_PROGRAM: &str = "mpc";
 
 pub const BLACK: &str = "#282a36";
 pub const WHITE: &str = "#f8f8f2";
@@ -49,11 +49,12 @@ lazy_static! {
     pub static ref TEXT_COLOR: String = format!("^c{}^^b{}{}^", TEXT_FG, TEXT_BG, TEXT_TR);
 }
 
-
+#[derive(Clone)]
 pub struct Package {
     pub name: &'static str,
     pub delay_time: Duration,
     pub fuc: fn() -> PackageData,
+    pub control_fuc: fn(Button),
     pub text: String,
 }
 
@@ -64,11 +65,12 @@ pub struct PackageData {
 }
 
 impl Package {
-    pub fn new(name: &'static str, delay_time: Duration, fuc: fn() -> PackageData) -> Self {
+    pub fn new(name: &'static str, delay_time: Duration, fuc: fn() -> PackageData, control_fuc: fn(Button)) -> Self {
         Self {
             name,
             delay_time,
             fuc,
+            control_fuc,
             text: String::new(),
         }
     }
@@ -96,4 +98,59 @@ pub fn cmd(cmd: &str) -> String {
     let mut output = String::from_utf8(output.stdout).unwrap();
     output = output.trim().to_string();
     output
+}
+
+#[derive(Debug, Clone)]
+pub enum Button {
+    LEFT,
+    RIGHT,
+    MIDDLE,
+    UP,
+    DOWN,
+}
+
+impl Button {
+    pub(crate) fn from_str(button: &str) -> Button {
+        match button {
+            "L" => { Button::LEFT }
+            "M" => { Button::MIDDLE }
+            "R" => { Button::RIGHT }
+            "U" => { Button::UP }
+            "D" => { Button::DOWN }
+            _ => Button::LEFT
+        }
+    }
+}
+
+pub(crate) trait Control {
+    fn control(&self, button: Button) {
+        match button {
+            Button::LEFT => {}
+            Button::RIGHT => {}
+            Button::MIDDLE => {}
+            Button::UP => {}
+            Button::DOWN => {}
+        }
+    }
+}
+
+impl Control for Package {
+    fn control(&self, button: Button) {
+        (self.control_fuc)(button)
+    }
+}
+
+#[derive(Clone, Debug)]
+pub struct Command {
+    pub(crate) name: String,
+    pub(crate) button: Button,
+}
+
+impl Command {
+    pub(crate) fn new(name: String, button: Button) -> Command {
+        Command {
+            name,
+            button,
+        }
+    }
 }

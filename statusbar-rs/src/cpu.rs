@@ -5,7 +5,7 @@ use regex::Regex;
 use sysinfo::{CpuExt, System, SystemExt};
 
 use crate::common;
-use crate::common::PackageData;
+use crate::common::{Button, PackageData};
 
 lazy_static! {
     static ref DELAY_TIME: i32 = *common::packages_lists().get(NAME).unwrap();
@@ -44,6 +44,23 @@ pub fn get() -> PackageData {
     let text = format!("^s{}^{} {} {}{} ", NAME, *common::ICON_COLOR, icon, *common::TEXT_COLOR, text);
 
     PackageData::new(NAME, text)
+}
+
+pub fn api(button: Button) {
+    match button {
+        Button::LEFT => {
+            let cmd = format!("notify-send \"{}\" \"{}\" -r {}",
+                              "  CPU tops",
+                              "$(ps axch -o cmd:15,%cpu --sort=-%cpu | head  | sed \'s/$/&\\%\\n/g\')",
+                              1014
+            );
+            common::cmd(&cmd);
+        }
+        Button::RIGHT => {}
+        Button::MIDDLE => {}
+        Button::UP => {}
+        Button::DOWN => {}
+    }
 }
 
 #[cfg(test)]

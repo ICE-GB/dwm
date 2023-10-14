@@ -5,7 +5,7 @@ use regex::Regex;
 use sysinfo::SystemExt;
 
 use crate::common;
-use crate::common::PackageData;
+use crate::common::{Button, cmd, PackageData};
 
 const ICON_FG: &str = common::PINK;
 const ICON_BG: &str = common::BLACK;
@@ -33,14 +33,6 @@ pub fn get() -> PackageData {
     // create handler that calls functions on playback devices and apps
     let mut handler = SinkController::create().unwrap();
     let devices = handler.get_default_device().expect("Could not get default device.");
-
-    println!("Playback Devices: ");
-    println!(
-        "[{}] {}, Volume: {}",
-        devices.index,
-        devices.description.as_ref().unwrap(),
-        devices.volume.avg().print()
-    );
     let mut text: String;
     if devices.mute {
         text = format!("^s{}^{} {} ", NAME, *ICON_COLOR, "󰝟");
@@ -49,4 +41,24 @@ pub fn get() -> PackageData {
     }
 
     PackageData::new(NAME, text)
+}
+
+pub fn api(button: Button) {
+    match button {
+        Button::LEFT => {
+            cmd("pactl set-sink-mute @DEFAULT_SINK@ toggle");
+        }
+        Button::RIGHT => {
+            cmd("killall pavucontrol || pavucontrol --class floatingTerminal &");
+        }
+        Button::MIDDLE => {
+            cmd("pactl set-sink-mute @DEFAULT_SINK@ toggle");
+        }
+        Button::UP => {
+            cmd("pactl set-sink-volume @DEFAULT_SINK@ +5%; notify");
+        }
+        Button::DOWN => {
+            cmd("pactl set-sink-volume @DEFAULT_SINK@ -5%; notify");
+        }
+    }
 }

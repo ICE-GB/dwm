@@ -3,7 +3,7 @@ use regex::Regex;
 use sysinfo::SystemExt;
 
 use crate::common;
-use crate::common::PackageData;
+use crate::common::{Button, cmd, PackageData};
 
 const ICON_FG: &str = common::PINK;
 const ICON_BG: &str = common::BLACK;
@@ -20,6 +20,10 @@ const NAME: &str = "wifi";
 
 const CMD: &str = "nmcli -t -f TYPE,STATE,NAME -e no connection show";
 
+const WIFI_ICON: &str = "󰤨";
+const ETHERNET_ICON: &str = "󰈀";
+const OFFLINE_ICON: &str = "󰤭";
+
 pub enum NetType {
     WIFI(String),
     ETHERNET(String),
@@ -29,9 +33,9 @@ pub enum NetType {
 impl NetType {
     pub fn get_icon(&self) -> &str {
         match self {
-            NetType::WIFI(_) => "󰤨", // 替换为你实际使用的 Wi-Fi 图标
-            NetType::ETHERNET(_) => "󰈀", // 替换为以太网图标
-            NetType::OFFLINE => "󰤭", // 替换为离线图标
+            NetType::WIFI(_) => WIFI_ICON,
+            NetType::ETHERNET(_) => ETHERNET_ICON,
+            NetType::OFFLINE => OFFLINE_ICON,
         }
     }
 
@@ -90,6 +94,29 @@ fn get_network_type() -> NetType {
         }
     }
     NetType::OFFLINE
+}
+
+pub fn api(button: Button) {
+    match button {
+        Button::LEFT => {
+            let network = get_network_type();
+            match network {
+                NetType::WIFI(name) => {
+                    cmd(&format!("notify-send '已连接到 {} {}'", WIFI_ICON, name));
+                }
+                NetType::ETHERNET(name) => {
+                    cmd(&format!("notify-send '已连接到 {} {}'", ETHERNET_ICON, name));
+                }
+                NetType::OFFLINE => {
+                    cmd(&format!("notify-send '无网络连接 {}'", OFFLINE_ICON));
+                }
+            }
+        }
+        Button::RIGHT => {}
+        Button::MIDDLE => {}
+        Button::UP => {}
+        Button::DOWN => {}
+    }
 }
 
 

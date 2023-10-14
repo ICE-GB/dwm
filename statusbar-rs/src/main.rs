@@ -1,10 +1,15 @@
+use std::process::exit;
 use std::sync::RwLock;
 use std::time::Duration;
 
 use lazy_static::lazy_static;
 use sysinfo::SystemExt;
+use tokio::sync::broadcast::Receiver;
 use tokio::sync::mpsc as async_mpsc;
 use tokio::sync::mpsc::Sender as AsyncSender;
+use zbus::export::futures_util::TryFutureExt;
+
+use crate::common::Command;
 
 mod common;
 mod battery;
@@ -67,6 +72,16 @@ async fn receive_text(mut rx: async_mpsc::Receiver<common::PackageData>) {
     }
 }
 
+async fn receive_command(mut package: common::Package, mut rx: Receiver<Command>, tx: AsyncSender<common::PackageData>) {
+    while let received = rx.recv().await.unwrap() {
+        if received.name == package.name {
+            (package.control_fuc)(received.button);
+            let data = (package.fuc)();
+            tx.send(data).await.expect("发送失败");
+        }
+    }
+}
+
 async fn set_text() {
     loop {
         let mut tmp = String::new();
@@ -101,17 +116,47 @@ async fn run() {
     let (tx, rx) = async_mpsc::channel(32);
 
     let mut packages: Vec<common::Package> = Vec::new();
-    packages.push(common::Package::new("battery", Duration::from_secs(10), battery::get));
-    packages.push(common::Package::new("cpu", Duration::from_secs(2), cpu::get));
-    packages.push(common::Package::new("date", Duration::from_secs(1), date::get));
-    packages.push(common::Package::new("icon", Duration::from_secs(100), icon::get));
-    packages.push(common::Package::new("memory", Duration::from_secs(2), memory::get));
-    packages.push(common::Package::new("music", Duration::from_secs(1), music::get));
-    packages.push(common::Package::new("net", Duration::from_secs(1), net::get));
-    packages.push(common::Package::new("vol", Duration::from_secs(1), vol::get));
-    packages.push(common::Package::new("wifi", Duration::from_secs(5), wifi::get));
+
+    packages.push(common::Package::new("battery", Duration::from_secs(10), battery::get, battery::api));
+    packages.push(common::Package::new("cpu", Duration::from_secs(2), cpu::get, cpu::api));
+    packages.push(common::Package::new("date", Duration::from_secs(1), date::get, date::api));
+    packages.push(common::Package::new("icon", Duration::from_secs(100), icon::get, icon::api));
+    packages.push(common::Package::new("memory", Duration::from_secs(2), memory::get, memory::api));
+    packages.push(common::Package::new("music", Duration::from_secs(1), music::get, music::api));
+    packages.push(common::Package::new("net", Duration::from_secs(1), net::get, net::api));
+    packages.push(common::Package::new("vol", Duration::from_secs(1), vol::get, vol::api));
+    packages.push(common::Package::new("wifi", Duration::from_secs(5), wifi::get, wifi::api));
 
     let mut tasks = Vec::new();
+
+    let packages_clone = packages.clone();
+
+    let (tx_command, _rx_command) = tokio::sync::broadcast::channel(32);
+    for package in packages_clone {
+        let rx_command_clone = tx_command.subscribe();
+        let tx_clone = tx.clone();
+        let task = tokio::spawn(async move {
+            receive_command(package, rx_command_clone, tx_clone).await;
+        });
+        tasks.push(task);
+    }
+
+    let server_task = tokio::spawn(async move {
+        match bus::server(tx_command).await {
+            Ok(_) => {}
+            Err(error) => {
+                match error.to_string().as_str() {
+                    "name already taken on the bus" => {
+                        println!("已有相同程序正在运行");
+                        exit(1)
+                    }
+                    _ => {
+                        println!("Error: {}", error);
+                    }
+                }
+            }
+        };
+    });
 
     for package in packages {
         let tx_clone = tx.clone();
@@ -129,15 +174,13 @@ async fn run() {
         set_text().await;
     });
 
-    let server_task = tokio::spawn(async move {
-        bus::server().await.expect("bus服务启动失败");
-    });
+
+    server_task.await.expect("bus服务启动失败");
 
     for task in tasks {
         task.await.expect("任务执行失败");
     }
 
-    server_task.await.expect("bus服务启动失败");
     print_task.await.expect("打印任务执行失败");
     set_task.await.expect("设置任务执行失败");
 }

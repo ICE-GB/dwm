@@ -4,6 +4,9 @@ use zbus::{ConnectionBuilder, dbus_interface};
 use zbus::{dbus_proxy, Result};
 use zbus::Connection;
 
+use crate::common::Button;
+use crate::common::Command;
+
 const DESTINATION: &str = "org.dwm.statusbar.rust";
 const PATH: &str = "/org/dwm/statusbar/rust";
 
@@ -15,6 +18,7 @@ struct Greeter {
 struct Action {
     name: String,
     button: String,
+    tx: tokio::sync::broadcast::Sender<Command>,
 }
 
 #[dbus_interface(name = "org.dwm.statusbar.rust.greeter")]
@@ -27,14 +31,17 @@ impl Greeter {
 
 #[dbus_interface(name = "org.dwm.statusbar.rust.action")]
 impl Action {
-    async fn do_action(&mut self, name: String, button: String) -> String {
-        format!("call {} by button {}.", name, button)
+    fn do_action(&mut self, name: String, button: String) -> String {
+        let text =
+            format!("call {} by button {}.", &name, &button);
+        self.tx.send(Command::new(name, Button::from_str(&button))).expect("发送失败");
+        text
     }
 }
 
-pub async fn server() -> Result<()> {
+pub async fn server(tx: tokio::sync::broadcast::Sender<Command>) -> Result<()> {
     let greeter = Greeter { count: 0 };
-    let action = Action { name: String::from("action"), button: String::from("button") };
+    let action = Action { name: String::from("action"), button: String::from("button"), tx };
 
     let _conn = ConnectionBuilder::session()?
         .name(DESTINATION)?

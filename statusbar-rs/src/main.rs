@@ -99,7 +99,7 @@ async fn set_text() {
             icon_text.read().unwrap(),
         );
 
-        println!("{}", tmp);
+        // println!("{}", tmp);
 
         // 执行系统命令 "xsetroot -name '" + str(tmp) + "'" 更新状态栏
         std::process::Command::new("xsetroot")

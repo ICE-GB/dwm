@@ -69,7 +69,7 @@ pub fn get() -> PackageData {
 
 
     let net_type = get_network_type();
-    println!("{}", net_type.get_network_name().unwrap_or("无网络连接"));
+    // println!("{}", net_type.get_network_name().unwrap_or("无网络连接"));
 
     let text = format!("^s{}^{} {} ", NAME, *ICON_COLOR, get_network_type().get_icon());
 

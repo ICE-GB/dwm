@@ -15,7 +15,6 @@ const TEXT_TR: &str = "0xff";
 lazy_static! {
     static ref ICON_COLOR: String = format!("^c{}^^b{}{}^", ICON_FG, ICON_BG, ICON_TR);
     static ref TEXT_COLOR: String = format!("^c{}^^b{}{}^", TEXT_FG, TEXT_BG, TEXT_TR);
-    static ref DELAY_TIME: i32 = *common::packages_lists().get(NAME).unwrap();
 }
 const NAME: &str = "battery";
 

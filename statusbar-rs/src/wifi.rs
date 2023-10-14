@@ -1,7 +1,6 @@
 use lazy_static::lazy_static;
 #[cfg(test)]
 use regex::Regex;
-use sysinfo::SystemExt;
 
 use crate::common;
 use crate::common::{Button, cmd, PackageData};
@@ -37,14 +36,6 @@ impl NetType {
             NetType::WIFI(_) => WIFI_ICON,
             NetType::ETHERNET(_) => ETHERNET_ICON,
             NetType::OFFLINE => OFFLINE_ICON,
-        }
-    }
-
-    pub fn get_network_name(&self) -> Option<&str> {
-        match self {
-            NetType::WIFI(ssid) => Some(ssid),
-            NetType::ETHERNET(name) => Some(name),
-            NetType::OFFLINE => None,
         }
     }
 }

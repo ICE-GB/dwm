@@ -1,13 +1,6 @@
-use std::collections::HashMap;
 use std::time::Duration;
 
 use lazy_static::lazy_static;
-
-pub const DWM_PATH: &str = "/home/gb/.dwm/";
-pub const PACKAGES_PATH: &str = "/home/gb/.dwm/statusbar/";
-pub const TEMP_FILE: &str = "/home/gb/python_tmp";
-
-pub const MUSIC_PROGRAM: &str = "mpc";
 
 pub const BLACK: &str = "#282a36";
 pub const WHITE: &str = "#f8f8f2";
@@ -23,19 +16,6 @@ pub const YELLOW: &str = "#f1fa8c";
 pub const ORANGE: &str = "#ffb86c";
 pub const DARKBLUE: &str = "#6272a4";
 
-pub fn packages_lists() -> HashMap<&'static str, i32> {
-    let mut packages_lists: HashMap<&str, i32> = HashMap::new();
-    packages_lists.insert("music", 1);
-    packages_lists.insert("wifi", 5);
-    packages_lists.insert("net", 1);
-    packages_lists.insert("cpu", 2);
-    packages_lists.insert("memory", 2);
-    packages_lists.insert("vol", 2);
-    packages_lists.insert("battery", 10);
-    packages_lists.insert("date", 1);
-    packages_lists.insert("icon", 100);
-    return packages_lists;
-}
 
 const ICON_FG: &str = PINK;
 const ICON_BG: &str = BLACK;
@@ -55,7 +35,6 @@ pub struct Package {
     pub delay_time: Duration,
     pub fuc: fn() -> PackageData,
     pub control_fuc: fn(Button),
-    pub text: String,
 }
 
 #[derive(Debug)]
@@ -71,12 +50,7 @@ impl Package {
             delay_time,
             fuc,
             control_fuc,
-            text: String::new(),
         }
-    }
-
-    pub fn set_text(&mut self, text: String) {
-        self.text = text;
     }
 }
 

@@ -3,13 +3,13 @@ use std::sync::RwLock;
 use std::time::Duration;
 
 use lazy_static::lazy_static;
-use sysinfo::SystemExt;
 use tokio::sync::broadcast::Receiver;
 use tokio::sync::mpsc as async_mpsc;
 use tokio::sync::mpsc::Sender as AsyncSender;
 
 use crate::common::Command;
 
+#[allow(dead_code)]
 mod common;
 mod battery;
 mod cpu;
@@ -23,15 +23,15 @@ mod wifi;
 mod bus;
 
 lazy_static!(
-    static ref battery_text: RwLock<String> = RwLock::new(String::new());
-    static ref cpu_text: RwLock<String> = RwLock::new(String::new());
-    static ref date_text: RwLock<String> = RwLock::new(String::new());
-    static ref icon_text: RwLock<String> = RwLock::new(String::new());
-    static ref memory_text: RwLock<String> = RwLock::new(String::new());
-    static ref music_text: RwLock<String> = RwLock::new(String::new());
-    static ref net_text: RwLock<String> = RwLock::new(String::new());
-    static ref vol_text: RwLock<String> = RwLock::new(String::new());
-    static ref wifi_text: RwLock<String> = RwLock::new(String::new());
+    static ref BATTERY_TEXT: RwLock<String> = RwLock::new(String::new());
+    static ref CPU_TEXT: RwLock<String> = RwLock::new(String::new());
+    static ref DATE_TEXT: RwLock<String> = RwLock::new(String::new());
+    static ref ICON_TEXT: RwLock<String> = RwLock::new(String::new());
+    static ref MEMORY_TEXT: RwLock<String> = RwLock::new(String::new());
+    static ref MUSIC_TEXT: RwLock<String> = RwLock::new(String::new());
+    static ref NET_TEXT: RwLock<String> = RwLock::new(String::new());
+    static ref VOL_TEXT: RwLock<String> = RwLock::new(String::new());
+    static ref WIFI_TEXT: RwLock<String> = RwLock::new(String::new());
 );
 
 #[tokio::main]
@@ -55,24 +55,31 @@ async fn get_package_data(package: common::Package, tx: AsyncSender<common::Pack
 }
 
 async fn receive_text(mut rx: async_mpsc::Receiver<common::PackageData>) {
-    while let Some(received) = rx.recv().await {
-        match received.module_name {
-            "battery" => { *battery_text.write().unwrap() = received.data }
-            "cpu" => { *cpu_text.write().unwrap() = received.data }
-            "date" => { *date_text.write().unwrap() = received.data }
-            "icon" => { *icon_text.write().unwrap() = received.data }
-            "memory" => { *memory_text.write().unwrap() = received.data }
-            "music" => { *music_text.write().unwrap() = received.data }
-            "net" => { *net_text.write().unwrap() = received.data }
-            "vol" => { *vol_text.write().unwrap() = received.data }
-            "wifi" => { *wifi_text.write().unwrap() = received.data }
-            _ => {}
+    loop {
+        let received = rx.recv().await;
+        match received {
+            None => { println!("什么也没有收到"); }
+            Some(received) => {
+                match received.module_name {
+                    "battery" => { *BATTERY_TEXT.write().unwrap() = received.data }
+                    "cpu" => { *CPU_TEXT.write().unwrap() = received.data }
+                    "date" => { *DATE_TEXT.write().unwrap() = received.data }
+                    "icon" => { *ICON_TEXT.write().unwrap() = received.data }
+                    "memory" => { *MEMORY_TEXT.write().unwrap() = received.data }
+                    "music" => { *MUSIC_TEXT.write().unwrap() = received.data }
+                    "net" => { *NET_TEXT.write().unwrap() = received.data }
+                    "vol" => { *VOL_TEXT.write().unwrap() = received.data }
+                    "wifi" => { *WIFI_TEXT.write().unwrap() = received.data }
+                    _ => {}
+                }
+            }
         }
     }
 }
 
 async fn receive_command(package: common::Package, mut rx: Receiver<Command>, tx: AsyncSender<common::PackageData>) {
-    while let received = rx.recv().await.unwrap() {
+    loop {
+        let received = rx.recv().await.unwrap();
         if received.name == package.name {
             (package.control_fuc)(received.button);
             let data = (package.fuc)();
@@ -83,19 +90,17 @@ async fn receive_command(package: common::Package, mut rx: Receiver<Command>, tx
 
 async fn set_text() {
     loop {
-        let mut tmp = String::new();
-
-        tmp = format!(
+        let tmp = format!(
             "{} {} {} {} {} {} {} {} {}",
-            music_text.read().unwrap(),
-            wifi_text.read().unwrap(),
-            net_text.read().unwrap(),
-            cpu_text.read().unwrap(),
-            memory_text.read().unwrap(),
-            vol_text.read().unwrap(),
-            battery_text.read().unwrap(),
-            date_text.read().unwrap(),
-            icon_text.read().unwrap(),
+            MUSIC_TEXT.read().unwrap(),
+            WIFI_TEXT.read().unwrap(),
+            NET_TEXT.read().unwrap(),
+            CPU_TEXT.read().unwrap(),
+            MEMORY_TEXT.read().unwrap(),
+            VOL_TEXT.read().unwrap(),
+            BATTERY_TEXT.read().unwrap(),
+            DATE_TEXT.read().unwrap(),
+            ICON_TEXT.read().unwrap(),
         );
 
         // println!("{}", tmp);

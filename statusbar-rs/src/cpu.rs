@@ -8,9 +8,18 @@ use sysinfo::{CpuExt, System, SystemExt};
 use crate::common;
 use crate::common::{Button, PackageData};
 
+const ICON_FG: &str = common::PINK;
+const ICON_BG: &str = common::BLACK;
+const ICON_TR: &str = "0xff";
+const TEXT_FG: &str = common::PINK;
+const TEXT_BG: &str = common::BLACK;
+const TEXT_TR: &str = "0xff";
+
 lazy_static! {
-    static ref DELAY_TIME: i32 = *common::packages_lists().get(NAME).unwrap();
+    static ref ICON_COLOR: String = format!("^c{}^^b{}{}^", ICON_FG, ICON_BG, ICON_TR);
+    static ref TEXT_COLOR: String = format!("^c{}^^b{}{}^", TEXT_FG, TEXT_BG, TEXT_TR);
     static ref SYSTEM: RwLock<System> = RwLock::new(System::new_all());
+
 }
 
 const NAME: &str = "cpu";
@@ -42,7 +51,7 @@ pub fn get() -> PackageData {
     } else { text = format!("{:.0}% {}", cpu_usage, temperature); }
 
     // Assuming name and text_color are defined elsewhere
-    let text = format!("^s{}^{} {} {}{} ", NAME, *common::ICON_COLOR, icon, *common::TEXT_COLOR, text);
+    let text = format!("^s{}^{} {} {}{} ", NAME, *ICON_COLOR, icon, *TEXT_COLOR, text);
 
     PackageData::new(NAME, text)
 }

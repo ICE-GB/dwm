@@ -1,4 +1,5 @@
 use lazy_static::lazy_static;
+#[cfg(test)]
 use regex::Regex;
 
 use crate::common;
@@ -24,7 +25,7 @@ const NAME: &str = "music";
 #[test]
 pub fn test() {
     println!("get() = {:?}", get());
-    let expected_regex = Regex::new(r"\^smusic\^\^c#ff79c6\^\^b#282a360xff\^ 󰝚 .+").unwrap();
+    let expected_regex = Regex::new(r"\^smusic\^\^c#ff79c6\^\^b#282a360xff\^ 󰝚.+").unwrap();
     assert!(expected_regex.is_match(&get().data));
 }
 
@@ -46,7 +47,7 @@ pub fn get() -> PackageData {
     title_s.title = title;
     title_s.current_pos = 0;
 
-    let mut text;
+    let text;
 
     text = format!("^s{}^{} {}{} {}", NAME, *ICON_COLOR, "󰝚", *TEXT_COLOR, title_s.get_rolling_title(playing));
 

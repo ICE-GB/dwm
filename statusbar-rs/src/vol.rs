@@ -1,6 +1,7 @@
 use lazy_static::lazy_static;
 use pulsectl::controllers::DeviceControl;
 use pulsectl::controllers::SinkController;
+#[cfg(test)]
 use regex::Regex;
 use sysinfo::SystemExt;
 
@@ -33,7 +34,7 @@ pub fn get() -> PackageData {
     // create handler that calls functions on playback devices and apps
     let mut handler = SinkController::create().unwrap();
     let devices = handler.get_default_device().expect("Could not get default device.");
-    let mut text: String;
+    let text: String;
     if devices.mute {
         text = format!("^s{}^{} {} ", NAME, *ICON_COLOR, "󰝟");
     } else {

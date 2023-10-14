@@ -1,4 +1,5 @@
 use lazy_static::lazy_static;
+#[cfg(test)]
 use regex::Regex;
 
 use crate::common;

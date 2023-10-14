@@ -1,6 +1,7 @@
 use std::sync::RwLock;
 
 use lazy_static::lazy_static;
+#[cfg(test)]
 use regex::Regex;
 use sysinfo::{System, SystemExt};
 

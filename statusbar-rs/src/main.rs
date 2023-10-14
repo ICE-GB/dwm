@@ -7,7 +7,6 @@ use sysinfo::SystemExt;
 use tokio::sync::broadcast::Receiver;
 use tokio::sync::mpsc as async_mpsc;
 use tokio::sync::mpsc::Sender as AsyncSender;
-use zbus::export::futures_util::TryFutureExt;
 
 use crate::common::Command;
 
@@ -47,7 +46,7 @@ async fn main() {
     run().await;
 }
 
-async fn get_package_data(mut package: common::Package, tx: AsyncSender<common::PackageData>) {
+async fn get_package_data(package: common::Package, tx: AsyncSender<common::PackageData>) {
     loop {
         let data = (package.fuc)();
         tx.send(data).await.expect("发送失败");
@@ -72,7 +71,7 @@ async fn receive_text(mut rx: async_mpsc::Receiver<common::PackageData>) {
     }
 }
 
-async fn receive_command(mut package: common::Package, mut rx: Receiver<Command>, tx: AsyncSender<common::PackageData>) {
+async fn receive_command(package: common::Package, mut rx: Receiver<Command>, tx: AsyncSender<common::PackageData>) {
     while let received = rx.recv().await.unwrap() {
         if received.name == package.name {
             (package.control_fuc)(received.button);

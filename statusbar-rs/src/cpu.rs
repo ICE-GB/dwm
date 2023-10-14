@@ -1,6 +1,7 @@
 use std::sync::RwLock;
 
 use lazy_static::lazy_static;
+#[cfg(test)]
 use regex::Regex;
 use sysinfo::{CpuExt, System, SystemExt};
 
@@ -34,7 +35,7 @@ pub fn get() -> PackageData {
     let temperature: f64 = output.trim().parse().expect("Failed to parse temperature");
     let temperature = (temperature / 1000.0) as i32;
 
-    let mut text: String;
+    let text: String;
 
     if cpu_usage < 10.0 {
         text = format!(" {:.0}% {}", cpu_usage, temperature);

@@ -1,4 +1,5 @@
 use lazy_static::lazy_static;
+#[cfg(test)]
 use regex::Regex;
 
 use crate::common;
@@ -33,11 +34,11 @@ pub fn get() -> PackageData {
         return PackageData::new(NAME, text);
     }
 
-    let mut output = output.split(',').collect::<Vec<&str>>();
+    let output = output.split(',').collect::<Vec<&str>>();
     let mut output = output[1].to_string();
     output = output.trim().to_string();
     // 从99%中提取出99
-    let mut output = output.split('%').collect::<Vec<&str>>();
+    let output = output.split('%').collect::<Vec<&str>>();
     let percent = output[0].to_string().parse::<i32>().unwrap();
 
 

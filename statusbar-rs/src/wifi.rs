@@ -1,9 +1,4 @@
-extern crate pnet;
-
-use std::process::Command;
-
 use lazy_static::lazy_static;
-use pnet::datalink::{self};
 use regex::Regex;
 use sysinfo::SystemExt;
 
@@ -20,9 +15,35 @@ const TEXT_TR: &str = "0xff";
 lazy_static! {
     static ref ICON_COLOR: String = format!("^c{}^^b{}{}^", ICON_FG, ICON_BG, ICON_TR);
     static ref TEXT_COLOR: String = format!("^c{}^^b{}{}^", TEXT_FG, TEXT_BG, TEXT_TR);
-    static ref DELAY_TIME: i32 = *common::packages_lists().get(NAME).unwrap();
 }
 const NAME: &str = "wifi";
+
+const CMD: &str = "nmcli -t -f TYPE,STATE,NAME -e no connection show";
+
+pub enum NetType {
+    WIFI(String),
+    ETHERNET(String),
+    OFFLINE,
+}
+
+impl NetType {
+    pub fn get_icon(&self) -> &str {
+        match self {
+            NetType::WIFI(_) => "󰤨", // 替换为你实际使用的 Wi-Fi 图标
+            NetType::ETHERNET(_) => "󰈀", // 替换为以太网图标
+            NetType::OFFLINE => "󰤭", // 替换为离线图标
+        }
+    }
+
+    pub fn get_network_name(&self) -> Option<&str> {
+        match self {
+            NetType::WIFI(ssid) => Some(ssid),
+            NetType::ETHERNET(name) => Some(name),
+            NetType::OFFLINE => None,
+        }
+    }
+}
+
 
 #[cfg(test)]
 #[test]
@@ -36,47 +57,40 @@ pub fn get() -> PackageData {
     // print_interfaces();
 
 
-    match get_current_network_name() {
-        Some(network_name) => println!("Current network name: {}", network_name),
-        None => eprintln!("Failed to get network name."),
-    }
+    // match get_current_network_name() {
+    //     Some(network_name) => println!("Current network name: {}", network_name),
+    //     None => eprintln!("Failed to get network name."),
+    // }
 
-    let text = format!("^s{}^{} {} ", NAME, *ICON_COLOR, "󰤨");
+
+
+    let net_type = get_network_type();
+    println!("{}", net_type.get_network_name().unwrap_or("无网络连接"));
+
+    let text = format!("^s{}^{} {} ", NAME, *ICON_COLOR, get_network_type().get_icon());
 
 
     PackageData::new(NAME, text)
 }
 
-fn print_interfaces() {
-    let interfaces = datalink::interfaces();
 
-    for interface in interfaces {
-        println!("Interface Name: {}", interface.name);
-        println!("Interface Description: {}", interface.description);
-
-        println!("Interface: {:?}", interface);
-
-
-        if let Some(ipv4) = interface.ips.into_iter().find(|ip| ip.is_ipv4()) {
-            println!("IPv4 Address: {}", ipv4.ip());
-            println!("Subnet Mask: {}", ipv4.mask());
+fn get_network_type() -> NetType {
+    let output = common::cmd(CMD);
+    for line in output.lines() {
+        let fields: Vec<&str> = line.split(':').collect();
+        if fields.len() == 3 {
+            let device_type = fields[0];
+            let device_state = fields[1];
+            let device_name = fields[2];
+            if device_type.contains("wireless") && device_state == "activated" {
+                return NetType::WIFI(device_name.to_string());
+            } else if device_type.contains("ethernet") && device_state == "activated" {
+                return NetType::ETHERNET(device_name.to_string());
+            }
         }
-
-        if let Some(mac) = interface.mac {
-            println!("MAC Address: {}", mac);
-        }
-
-        println!();
     }
+    NetType::OFFLINE
 }
 
 
-fn get_current_network_name() -> Option<String> {
-    let output = Command::new("iwgetid")
-        .arg("-r")
-        .output()
-        .ok()?;
-
-    String::from_utf8(output.stdout).ok()
-}
 

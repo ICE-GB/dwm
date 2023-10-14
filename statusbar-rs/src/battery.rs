@@ -27,7 +27,7 @@ pub fn get() -> PackageData {
     output = output.trim().to_string();
 
     // 从字符串中"Battery 0: Not charging, 99%"提取出是否正在充电的信息(Not charging)
-    let not_charging: bool = output.contains(&"Not charging");
+    let not_charging: bool = (output.contains("Not charging") || output.contains("Discharging"));
 
     if !not_charging {
         // 如果正在充电，那么就显示充电图标

@@ -39,15 +39,7 @@ daemons() {
     fi
   fi
 
-  command -v nix-shell >/dev/null 2>&1
-
-  if [ $? -eq 0 ]; then
-    echo "nix-shell command exists"
-    nix-shell ~/.dwm/shell.nix --run "python3 ~/.dwm/statusbar/statusbar.py cron >/dev/null &"
-  else
-    echo "nix-shell command does not exist"
-    python3 ~/.dwm/statusbar/statusbar.py cron >/dev/null &
-  fi
+  ~/.dwm/statusbar-rs/target/release/statusbar-rs &
 
   fcitx5 &                                                 # 开启输入法
   flameshot &                                              # 截图要跑一个程序在后台 不然无法将截图保存到剪贴板

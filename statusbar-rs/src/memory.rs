@@ -30,7 +30,7 @@ pub fn get() -> PackageData {
     let mem_usage = percent_used as i32;
 
     if mem_usage > 90 {
-        // kill_some_thing();
+      common::cmd("pkill -f barrier");
     }
 
     if mem_usage > 95 {

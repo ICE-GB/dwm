@@ -101,7 +101,7 @@ fn format_bytes(bytes: u64) -> String {
         format!("{:.2}", size)
     };
 
-    let padding = 6 - formatted_size.len();
+    let padding = 7 - formatted_size.len();
     let formatted_unit = units[unit_index];
 
     format!("{}{} {}", " ".repeat(padding), formatted_size, formatted_unit)

@@ -1,26 +1,9 @@
-use std::sync::RwLock;
-
-use lazy_static::lazy_static;
 #[cfg(test)]
 use regex::Regex;
-use sysinfo::{System, SystemExt};
 
 use crate::common;
-use crate::common::{Button, PackageData};
+use crate::common::{Button, ICON_COLOR, PackageData, TEXT_COLOR};
 
-const ICON_FG: &str = common::PINK;
-const ICON_BG: &str = common::BLACK;
-const ICON_TR: &str = "0xff";
-const TEXT_FG: &str = common::PINK;
-const TEXT_BG: &str = common::BLACK;
-const TEXT_TR: &str = "0xff";
-
-lazy_static! {
-    static ref ICON_COLOR: String = format!("^c{}^^b{}{}^", ICON_FG, ICON_BG, ICON_TR);
-    static ref TEXT_COLOR: String = format!("^c{}^^b{}{}^", TEXT_FG, TEXT_BG, TEXT_TR);
-    static ref SYSTEM: RwLock<System> = RwLock::new(System::new_all());
-
-}
 const NAME: &str = "memory";
 
 pub fn get() -> PackageData {
@@ -30,7 +13,7 @@ pub fn get() -> PackageData {
     let mem_usage = percent_used as i32;
 
     if mem_usage > 90 {
-      common::cmd("pkill -f barrier");
+        common::cmd("pkill -f barrier");
     }
 
     if mem_usage > 95 {

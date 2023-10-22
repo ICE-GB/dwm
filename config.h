@@ -53,7 +53,7 @@ static const char *cursor_theme[] = {"Dracula-cursors"};
 //=============================================================================
 /* 颜色设置 ColFg, ColBg, ColBorder */
 //=============================================================================
-#include "themes/dracula.h"
+#include "themes/catppuccin.h"
 
 // 千万不可以修改顺序，只可以在当前位置改颜色，修改顺序就乱了
 static const char *colors[][3]{

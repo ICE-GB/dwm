@@ -1,21 +1,9 @@
-use lazy_static::lazy_static;
 #[cfg(test)]
 use regex::Regex;
 
 use crate::common;
-use crate::common::{Button, cmd, PackageData};
+use crate::common::{Button, cmd, ICON_COLOR, PackageData};
 
-const ICON_FG: &str = common::PINK;
-const ICON_BG: &str = common::BLACK;
-const ICON_TR: &str = "0xff";
-const TEXT_FG: &str = common::PINK;
-const TEXT_BG: &str = common::BLACK;
-const TEXT_TR: &str = "0xff";
-
-lazy_static! {
-    static ref ICON_COLOR: String = format!("^c{}^^b{}{}^", ICON_FG, ICON_BG, ICON_TR);
-    static ref TEXT_COLOR: String = format!("^c{}^^b{}{}^", TEXT_FG, TEXT_BG, TEXT_TR);
-}
 const NAME: &str = "wifi";
 
 const CMD: &str = "nmcli -t -f TYPE,STATE,NAME -e no connection show";
@@ -57,7 +45,6 @@ pub fn get() -> PackageData {
     //     Some(network_name) => println!("Current network name: {}", network_name),
     //     None => eprintln!("Failed to get network name."),
     // }
-
 
 
     // let net_type = get_network_type();

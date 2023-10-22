@@ -21,6 +21,8 @@ mod net;
 mod vol;
 mod wifi;
 mod bus;
+#[allow(dead_code)]
+mod theme;
 
 lazy_static!(
     static ref BATTERY_TEXT: RwLock<String> = RwLock::new(String::new());

@@ -5,6 +5,7 @@ static const char gray4[]       = "#282737";
 static const char blue[]        = "#96CDFB";  // focused window border
 static const char green[]       = "#ABE9B3";
 static const char red[]         = "#F28FAD";
+static const char red2[]        = "#F28FAD";
 static const char orange[]      = "#F8BD96";
 static const char yellow[]      = "#FAE3B0";
 static const char pink[]        = "#d5aeea";
